@@ -128,41 +128,21 @@ a { color: inherit; }
 }
 .btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
 
-/* ---------- Barre des tâches ---------- */
+/* ---------- Barre du bas ---------- */
 #taskbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 200;
-  height: 38px;
-  display: flex; align-items: center; gap: 6px; padding: 0 6px;
-  background: linear-gradient(180deg, #245edc 0%, #1941b8 40%, #1538a8 60%, #2255d0 100%);
-  border-top: 1px solid #5080d8;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3);
+  height: 36px; display: flex; align-items: stretch; justify-content: space-between;
+  background: var(--glass-strong);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-top: 1px solid var(--glass-border);
+  font: 500 12px var(--mono); letter-spacing: .04em; text-transform: uppercase;
 }
-.start-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 3px 16px 3px 10px;
-  font: italic 700 14px Tahoma, sans-serif; color: #fff;
-  background: linear-gradient(180deg, #5fbd42 0%, #3a9e1a 40%, #2e8e12 60%, #4ab832 100%);
-  border: 1px solid #1e6e08; border-radius: 12px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 1px 3px rgba(0, 0, 0, .4);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
-  cursor: pointer;
-}
-.taskbar-btn {
-  height: 28px; padding: 0 12px;
-  font: 12px Tahoma, sans-serif; color: #fff; text-decoration: none;
-  display: inline-flex; align-items: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .25), rgba(255, 255, 255, .06) 50%, rgba(0, 0, 0, .1));
-  border: 1px solid rgba(255, 255, 255, .3); border-radius: 3px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
-}
-.taskbar-btn:hover, .taskbar-btn.active { background: linear-gradient(180deg, rgba(255, 255, 255, .42), rgba(255, 255, 255, .18)); }
-.taskbar-tray {
-  margin-left: auto; display: flex; align-items: center; gap: 10px;
-  height: 28px; padding: 0 10px;
-  font: 12px Tahoma, sans-serif; color: #fff;
-  background: linear-gradient(180deg, rgba(0, 0, 40, .3), rgba(0, 0, 80, .2));
-  border: 1px solid rgba(255, 255, 255, .2); border-radius: 3px;
-}
+.start-btn, .taskbar-tray { display: flex; align-items: center; gap: 8px; padding: 0 16px; color: var(--text); }
+.start-btn { border-right: 1px solid var(--glass-border); font-weight: 600; }
+.start-btn:hover { background: var(--accent-soft); }
+.taskbar-tray { border-left: 1px solid var(--glass-border); color: var(--text2); }
+.taskbar-tray span + span { padding-left: 10px; border-left: 1px solid var(--glass-border); }
 
 /* ---------- Mise en page ---------- */
 main {
@@ -339,7 +319,7 @@ h1 mark {
 /* ---------- En-tête (HUD) ---------- */
 .hud {
   position: fixed; top: 0; left: 0; right: 0; z-index: 150;
-  display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 22px;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px;
   padding: 0 18px; height: 48px;
   background: var(--glass-strong);
   backdrop-filter: blur(16px) saturate(160%);
@@ -354,12 +334,12 @@ h1 mark {
 .hud-id { display: flex; align-items: baseline; gap: 10px; color: var(--text); }
 .hud-id b { font: 700 14px var(--display); letter-spacing: .02em; }
 .hud-id span { color: var(--text2); }
-.hud nav { display: flex; gap: 4px; justify-content: center; }
-.hud nav a { padding: 6px 12px; color: var(--text2); border-radius: 4px; border: 1px solid transparent; transition: color .15s, border-color .15s; }
+.hud nav { display: flex; align-self: stretch; align-items: stretch; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
+.hud nav a { padding: 15px 16px; color: var(--text2); transition: color .15s, background .15s; }
+.hud nav a + a { border-left: 1px solid var(--glass-border); }
 .hud nav a i { font-style: normal; color: var(--accent); margin-right: 6px; }
 .hud nav a:hover { color: var(--text); }
-.hud nav a[aria-current="page"] { color: var(--text); border-color: var(--glass-border); background: var(--accent-soft); }
-.hud-meta { display: flex; gap: 14px; color: var(--text2); font-variant-numeric: tabular-nums; }
+.hud nav a[aria-current="page"] { color: var(--text); background: var(--accent-soft); }
 .hud-right { display: flex; align-items: center; gap: 10px; }
 .lang { display: flex; border: 1px solid var(--glass-border); border-radius: 4px; overflow: hidden; }
 .lang a { padding: 5px 10px; color: var(--text2); }
@@ -437,14 +417,14 @@ a.proj { text-decoration: none; color: inherit; }
 /* ---------- Adaptations ---------- */
 @media (max-width: 960px) {
   .hud { grid-template-columns: auto 1fr auto; gap: 12px; }
-  .hud-meta { display: none; }
   .detail-grid, .contact-wrap { grid-template-columns: 1fr; }
   .side { position: static; }
   .foot-top { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
   .hud { height: auto; grid-template-columns: 1fr auto; padding: 8px 12px; gap: 6px 10px; }
-  .hud nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; overflow-x: auto; }
+  .hud nav { grid-column: 1 / -1; grid-row: 2; overflow-x: auto; border: none; border-top: 1px solid var(--glass-border); }
+  .hud nav a { padding: 10px 12px; }
   .hud-id span { display: none; }
   main { padding-top: 112px !important; }
 }
@@ -452,9 +432,6 @@ a.proj { text-decoration: none; color: inherit; }
   .foot-top { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 560px) {
-  .taskbar-btn { display: none; }
-}
 
 /* ---------- Terminal, formulaire ---------- */
 .term pre { white-space: pre; overflow-x: auto; }
@@ -481,6 +458,9 @@ a.proj { text-decoration: none; color: inherit; }
 .heat-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; font: 12px var(--mono); color: var(--text2); }
 .legend { display: inline-flex; align-items: center; gap: 4px; }
 .tiles { display: flex; flex-wrap: wrap; gap: 18px; }
+a.tile { text-decoration: none; transition: transform .15s; }
+a.tile:hover { transform: translateY(-3px); }
+a.tile:hover .tile-ico { border-color: var(--accent); }
 .tile { display: grid; justify-items: center; gap: 4px; width: 140px; text-align: center; }
 .tile small { font: 12px var(--mono); color: var(--text2); }
 .tile-ico { width: 84px; height: 84px; display: grid; place-items: center; color: var(--text); background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 6px; }

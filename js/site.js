@@ -1,19 +1,10 @@
 (function () {
   var pad = function (n) { return String(n).padStart(2, '0'); };
 
-  // horloge et taille de la fenêtre dans l'en-tête
-  var clock = document.querySelector('[data-clock]');
-  var view = document.querySelector('[data-view]');
-  function tick() {
-    var d = new Date();
-    var t = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-    if (clock) clock.textContent = t;
-    var tray = document.getElementById('tray-clock');
-    if (tray) tray.textContent = t.slice(0, 5);
-    if (view) view.textContent = 'L' + innerWidth + 'H' + innerHeight;
-  }
-  tick(); setInterval(tick, 1000);
-  addEventListener('resize', tick);
+  // heure dans la barre du bas
+  var tray = document.getElementById('tray-clock');
+  function tick() { var d = new Date(); tray.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  tick(); setInterval(tick, 10000);
 
   // apparition des fenêtres
   var io = new IntersectionObserver(function (entries) {
