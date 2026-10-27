@@ -262,7 +262,7 @@ h2 { font: 700 clamp(24px, 3.4vw, 34px)/1.15 var(--display); margin-bottom: 8px;
 @keyframes tileAppear { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes tileMerge { 0% { transform: scale(.5); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
 #g-pseudo, .sb-form input, .form input, .form textarea { padding: 10px 14px; font: 15px var(--sans); color: var(--text); background: var(--card); border: 1px solid var(--edge); border-radius: 14px; }
-.cols { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
+.cols { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; justify-content: center; }
 .play { display: grid; justify-items: center; gap: 12px; }
 #snake { width: min(380px, 100%); aspect-ratio: 1; background: var(--term-bg); border: 1px solid var(--edge); border-radius: 20px; touch-action: none; }
 .mem { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: min(380px, 100%); }
