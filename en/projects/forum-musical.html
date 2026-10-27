@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Music Forum — Alexandre Klotz</title>
+  <meta name="description" content="A music forum: topics, replies, votes, accounts and an admin area.">
+  <link rel="alternate" hreflang="fr" href="../../projects/forum-musical.html"><link rel="alternate" hreflang="en" href="forum-musical.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<header class="hud">
+  <a class="hud-id" href="../index.html"><b>ALEXANDRE KLOTZ</b><span>/ 01</span></a>
+  <nav aria-label="Navigation"><a href="../index.html"><i>00</i>Home</a><a href="../projects.html" aria-current="page"><i>01</i>Projects</a><a href="../index.html#jeu"><i>02</i>Game</a><a href="../contact.html"><i>03</i>Contact</a></nav>
+  <div class="hud-meta"><span data-clock>00:00:00</span><span data-view>L0H0</span></div>
+  <div class="hud-right">
+    <div class="lang" role="group" aria-label="Langue / Language"><a href="../../projects/forum-musical.html" hreflang="fr" lang="fr">FR</a><a href="forum-musical.html" hreflang="en" lang="en" aria-current="true">EN</a></div>
+    <button id="theme-toggle" type="button" aria-label="Thème / Theme">◐</button>
+  </div>
+</header>
+
+<div id="taskbar">
+  <a class="start-btn" href="../index.html" style="text-decoration:none">
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4" r="3.5" fill="#ff4444"/><circle cx="12" cy="4" r="3.5" fill="#44cc44"/><circle cx="4" cy="12" r="3.5" fill="#4444ff"/><circle cx="12" cy="12" r="3.5" fill="#ffcc00"/></svg>
+    start
+  </a>
+  <a class="taskbar-btn" href="../projects.html">Projects</a>
+  <a class="taskbar-btn" href="../contact.html">Contact</a>
+  <div class="taskbar-tray"><span class="dot"></span><span>Available</span><span id="tray-clock">00:00</span></div>
+</div>
+<main>
+<div class="crumbs"><a href="../index.html">Home</a><span>/</span><a href="../projects.html">Projects</a><span>/</span><span>Music Forum</span></div>
+<div class="page-head">
+  <h1 class="page-title">Music Forum <em>DETAILS</em></h1>
+  <a class="btn btn-primary" href="https://github.com/amex-32/forum-team-xxl" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg> View the code</a>
+</div>
+<div class="meta-line"><span>Web</span><span>School project</span><span>JavaScript</span></div>
+<div class="detail-grid" style="margin-top:26px">
+  <div>
+    <div class="block"><h3>Description</h3><p>A forum about music, built as a pair with Omrane Riahi. The API runs on Node.js with Express and MySQL, authentication relies on JWT tokens, and the front end is HTML and JavaScript.</p><p>Users create topics, reply and vote. An admin area handles moderation: banning a user, changing a topic's status or deleting content.</p></div>
+    <div class="block"><h3>Technologies</h3><div class="chips"><span>Node.js</span><span>Express</span><span>MySQL</span><span>JWT</span><span>HTML/JS</span></div></div>
+    <div class="block"><h3>Features</h3><ul class="feat"><li>Sign-up and login with JWT</li><li>Create, edit and delete topics</li><li>Tags to organise topics</li><li>Replies and votes on messages</li><li>User profile</li><li>Admin dashboard: bans, topic status, content removal</li></ul></div>
+  </div>
+  <aside class="side">
+    <div class="term"><div class="term-bar"><span></span><span></span><span></span><em>forum-musical ~ repository structure</em></div><pre class="tree">backend/
+  config/
+  controllers/
+  database/
+  middleware/
+  routes/
+  app.js
+  package.json
+frontend/
+  js/
+  static/
+  admin.html
+  connexion.html
+  index.html
+  topic.html
+README.md</pre></div>
+    <dl class="facts">
+      <div><dt>Type</dt><dd>Web</dd></div>
+      <div><dt>Context</dt><dd>School project</dd></div>
+      <div><dt>Language</dt><dd>JavaScript</dd></div>
+      <div><dt>Repository</dt><dd><a href="https://github.com/amex-32/forum-team-xxl" target="_blank" rel="noopener">GitHub ↗</a></dd></div>
+    </dl>
+  </aside>
+</div>
+<div class="similar"><div class="head"><small>Similar projects</small><h2>You may also <em>like</em></h2></div><div class="proj-grid">
+        <a class="proj" href="boutique-cyberpunk.html" data-kind="web">
+          <div class="proj-bar">boutique-cyberpunk</div>
+          <div class="proj-body"><div class="proj-num">Web</div><h3>Cyberpunk Shop</h3><p>A cyberpunk-themed vehicle shop: catalogue, colour variants, orders and user accounts.</p><div class="tags"><span>JavaScript</span><span>Node.js</span><span>Express</span><span>MySQL</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Details →</span><span class="kind">JavaScript</span></div>
+        </a>
+        <a class="proj" href="pixelworld.html" data-kind="web">
+          <div class="proj-bar">pixelworld</div>
+          <div class="proj-body"><div class="proj-num">Web</div><h3>PixelWorld</h3><p>A real-time collaborative canvas in the spirit of r/place, on a 1000 × 1000 grid.</p><div class="tags"><span>Node.js</span><span>Express</span><span>Socket.IO</span><span>Canvas</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Details →</span><span class="kind">JavaScript</span></div>
+        </a>
+        <a class="proj" href="pokedex-interactive.html" data-kind="api">
+          <div class="proj-bar">pokedex-interactive</div>
+          <div class="proj-body"><div class="proj-num">API</div><h3>Interactive Pokédex</h3><p>A Go app built on the Tyradex API: search, filters, detail pages and favourites.</p><div class="tags"><span>Go</span><span>net/http</span><span>html/template</span><span>Tyradex API</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Details →</span><span class="kind">Go</span></div>
+        </a></div></div>
+</main>
+<footer class="site-footer">
+  <div class="foot-box">
+    <div class="foot-top">
+      <div><div class="foot-logo">A<em>K</em></div><p>Cybersecurity and web development student. Thanks for stopping by.</p></div>
+      <div class="foot-col"><h4>General</h4>
+        <a href="../index.html">Home</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../contact.html">Contact</a></div>
+      <div class="foot-col"><h4>Elsewhere</h4>
+        <a href="https://github.com/amex-32" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/amex-32/portfolio" target="_blank" rel="noopener">Site source code</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Alexandre Klotz</span>
+      <div class="socials"><a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></a><a href="https://github.com/amex-32" target="_blank" rel="noopener" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg></a></div>
+    </div>
+  </div>
+</footer>
+<script src="../../js/site.js"></script>
+
+</body>
+</html>

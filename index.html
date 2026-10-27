@@ -1,172 +1,114 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Alexandre Klotz — Portfolio</title>
   <meta name="description" content="Portfolio d'Alexandre Klotz, étudiant en cybersécurité et développement web à Marseille.">
+  <link rel="alternate" hreflang="fr" href="index.html"><link rel="alternate" hreflang="en" href="en/index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
 <body>
-
-<nav id="nav" aria-label="Navigation principale">
-  <a href="#profil" class="active">Profil</a>
-  <a href="#competences">Compétences</a>
-  <a href="#projets">Projets</a>
-  <a href="#jeu">Jeu</a>
-  <a href="#contact">Contact</a>
-  <button id="theme-toggle" type="button" aria-label="Changer de thème">◐</button>
-</nav>
+<header class="hud">
+  <a class="hud-id" href="index.html"><b>ALEXANDRE KLOTZ</b><span>/ 00</span></a>
+  <nav aria-label="Navigation"><a href="index.html" aria-current="page"><i>00</i>Accueil</a><a href="projets.html"><i>01</i>Projets</a><a href="index.html#jeu"><i>02</i>Jeu</a><a href="contact.html"><i>03</i>Contact</a></nav>
+  <div class="hud-meta"><span data-clock>00:00:00</span><span data-view>L0H0</span></div>
+  <div class="hud-right">
+    <div class="lang" role="group" aria-label="Langue / Language"><a href="index.html" hreflang="fr" lang="fr" aria-current="true">FR</a><a href="en/index.html" hreflang="en" lang="en">EN</a></div>
+    <button id="theme-toggle" type="button" aria-label="Thème / Theme">◐</button>
+  </div>
+</header>
 
 <div id="taskbar">
-  <a class="start-btn" href="#profil" style="text-decoration:none">
+  <a class="start-btn" href="index.html" style="text-decoration:none">
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4" r="3.5" fill="#ff4444"/><circle cx="12" cy="4" r="3.5" fill="#44cc44"/><circle cx="4" cy="12" r="3.5" fill="#4444ff"/><circle cx="12" cy="12" r="3.5" fill="#ffcc00"/></svg>
     démarrer
   </a>
-  <a class="taskbar-btn" href="#profil">Profil</a>
-  <a class="taskbar-btn" href="#competences">Compétences</a>
-  <a class="taskbar-btn" href="#projets">Projets</a>
-  <a class="taskbar-btn" href="#contact">Contact</a>
-  <div class="taskbar-tray"><span class="dot"></span><span>Disponible</span><span id="clock">00:00</span></div>
+  <a class="taskbar-btn" href="projets.html">Projets</a>
+  <a class="taskbar-btn" href="contact.html">Contact</a>
+  <div class="taskbar-tray"><span class="dot"></span><span>Disponible</span><span id="tray-clock">00:00</span></div>
 </div>
-
 <main>
-
-  <section id="profil" class="win fadein">
-    <div class="win-title">Profil.exe<div class="win-controls"><i></i><i></i><i></i></div></div>
-    <div class="win-body">
+<section id="profil" class="win fadein"><div class="win-title">Profil.exe<div class="win-controls"><i></i><i></i><i></i></div></div><div class="win-body">
       <div class="hero-grid">
         <div>
-          <span class="label"><b>01</b> / Bienvenue</span>
+          <span class="label"><b>00</b> / Bienvenue</span>
           <h1>Je suis <mark>Alexandre Klotz</mark>, étudiant en cybersécurité.</h1>
           <p class="hero-bio">Je développe des sites web et des outils autour d'APIs, avec un intérêt pour la sécurité : authentification, accès aux données, bonnes pratiques côté serveur. Je cherche un stage ou une alternance.</p>
           <div class="btn-row">
-            <a class="btn btn-primary" href="#projets">Voir mes projets</a>
-            <a class="btn" href="https://github.com/amex-32" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg> GitHub</a>
-            <a class="btn" href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg> LinkedIn</a>
+            <a class="btn btn-primary" href="projets.html">Voir mes projets</a>
+            <a class="btn" href="contact.html">Me contacter</a>
+            <a class="btn" href="https://github.com/amex-32" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg> GitHub</a>
           </div>
         </div>
         <div class="term" aria-hidden="true">
           <div class="term-bar"><span></span><span></span><span></span><em>alexandre@marseille: ~</em></div>
-          <pre><span class="line" style="animation-delay:.3s"><span class="p">$</span> whoami</span>
-<span class="line" style="animation-delay:.9s">alexandre-klotz</span>
+          <pre><span class="line" style="animation-delay:0.3s"><span class="p">$</span> whoami</span>
+<span class="line" style="animation-delay:0.9s">alexandre-klotz</span>
 <span class="line" style="animation-delay:1.5s"><span class="p">$</span> cat formation.txt</span>
 <span class="line" style="animation-delay:2.1s"><span class="c"># Bachelor, cybersécurité</span></span>
-<span class="line" style="animation-delay:2.1s">web &middot; réseau &middot; systèmes &middot; sécurité</span>
+<span class="line" style="animation-delay:2.1s">web · réseau · systèmes · sécurité</span>
 <span class="line" style="animation-delay:2.7s"><span class="p">$</span> ls projets/</span>
-<span class="line" style="animation-delay:3.3s"><span class="k">boutique-js  groupie-tracker  forum  pixelworld</span></span>
+<span class="line" style="animation-delay:3.3s"><span class="k">boutique-js  pokedex  forum  pixelworld</span></span>
 <span class="line" style="animation-delay:3.9s"><span class="p">$</span> <span class="cursor"></span></span></pre>
         </div>
-      </div>
-    </div>
-    <div class="status-bar"><span class="dot"></span>Disponible pour stage / alternance &middot; Marseille, France</div>
-  </section>
-
-  <section id="competences" class="win fadein">
-    <div class="win-title">Compétences — stack technique<div class="win-controls"><i></i><i></i><i></i></div></div>
-    <div class="win-body">
-      <span class="label"><b>02</b> / Compétences</span>
-      <h2>Ce que j'utilise</h2>
-      <p class="lead">Du front au back, avec une approche sécurité dès la conception.</p>
-      <div class="skills">
-        <div class="skill-box"><h3>Front-end</h3><div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Responsive</span></div></div>
-        <div class="skill-box"><h3>Back-end &amp; données</h3><div class="tags"><span>Node.js</span><span>Go</span><span>API REST</span><span>SQL</span><span>Authentification</span></div></div>
-        <div class="skill-box"><h3>Sécurité &amp; outils</h3><div class="tags"><span>Git &amp; GitHub</span><span>Stormshield</span><span>OSINT</span></div></div>
-        <div class="skill-box"><h3>Systèmes</h3><div class="tags"><span>macOS</span><span>Windows 10 / 11</span><span>Debian</span><span>Kali Linux</span></div></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="projets" class="win fadein">
-    <div class="win-title">Mes projets<div class="win-controls"><i></i><i></i><i></i></div></div>
-    <div class="win-body">
-      <span class="label"><b>03</b> / Projets</span>
-      <h2>Réalisations</h2>
-      <p class="lead">Projets de formation, en solo ou en équipe.</p>
+      </div></div><div class="status-bar"><span class="dot"></span>Disponible pour stage / alternance · Marseille, France</div></section>
+<section id="competences" class="win fadein"><div class="win-title">Compétences<div class="win-controls"><i></i><i></i><i></i></div></div><div class="win-body">
+      <span class="label"><b>01</b> / Compétences</span>
+      <h2>Ce que j'utilise</h2><p class="lead">Du front au back, avec une approche sécurité dès la conception.</p>
+      <div class="skills"><div class="skill-box"><h3>Front-end</h3><div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Responsive</span></div></div><div class="skill-box"><h3>Back-end & données</h3><div class="tags"><span>Node.js</span><span>Go</span><span>API REST</span><span>SQL</span><span>Authentification</span></div></div><div class="skill-box"><h3>Sécurité & outils</h3><div class="tags"><span>Git & GitHub</span><span>Stormshield</span><span>OSINT</span></div></div><div class="skill-box"><h3>Systèmes</h3><div class="tags"><span>macOS</span><span>Windows 10 / 11</span><span>Debian</span><span>Kali Linux</span></div></div></div></div></section>
+<section id="projets" class="win fadein"><div class="win-title">Projets<div class="win-controls"><i></i><i></i><i></i></div></div><div class="win-body">
+      <span class="label"><b>02</b> / Projets</span>
+      <h2>Réalisations</h2><p class="lead">Projets de formation, en solo ou en équipe.</p>
       <div class="proj-grid">
-        <article class="proj">
+        <a class="proj" href="projects/boutique-cyberpunk.html" data-kind="web">
           <div class="proj-bar">boutique-cyberpunk</div>
-          <div class="proj-body">
-            <div class="proj-num">P-01</div>
-            <h3>Boutique Cyberpunk</h3>
-            <p>Boutique de vente de véhicules thème Cyberpunk avec gestion de stock, sprites, choix de couleurs, livraison et connexion utilisateur.</p>
-            <div class="tags"><span>JavaScript</span><span>HTML/CSS</span><span>Stock</span><span>Auth</span></div>
-          </div>
-          <div class="proj-foot"><a href="projects/boutique-cyberpunk.html" class="xp-btn">Détails</a><a href="https://github.com/amex-32/boutique-js" target="_blank" rel="noopener" class="xp-btn">Code</a><span class="kind">Web</span></div>
-        </article>
-
-        <article class="proj">
+          <div class="proj-body"><div class="proj-num">Web</div><h3>Boutique Cyberpunk</h3><p>Boutique de véhicules à l'univers cyberpunk : catalogue, variantes de couleur, commandes et comptes utilisateurs.</p><div class="tags"><span>JavaScript</span><span>Node.js</span><span>Express</span><span>MySQL</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Détails →</span><span class="kind">JavaScript</span></div>
+        </a>
+        <a class="proj" href="projects/pokedex-interactive.html" data-kind="api">
           <div class="proj-bar">pokedex-interactive</div>
-          <div class="proj-body">
-            <div class="proj-num">P-02</div>
-            <h3>Pokédex Interactif</h3>
-            <p>Application consommant l'API Pokémon avec filtres multi-critères, favoris, connexion et Pokémon aléatoire en page d'accueil.</p>
-            <div class="tags"><span>JavaScript</span><span>REST API</span><span>Filtres</span><span>Auth</span></div>
-          </div>
-          <div class="proj-foot"><a href="projects/pokedex-interactive.html" class="xp-btn">Détails</a><a href="https://github.com/amex-32/choubigroup-groupie-tracker" target="_blank" rel="noopener" class="xp-btn">Code</a><span class="kind">API</span></div>
-        </article>
-
-        <article class="proj">
+          <div class="proj-body"><div class="proj-num">API</div><h3>Pokédex Interactif</h3><p>Application en Go qui exploite l'API Tyradex : recherche, filtres, fiches détaillées et favoris.</p><div class="tags"><span>Go</span><span>net/http</span><span>html/template</span><span>Tyradex API</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Détails →</span><span class="kind">Go</span></div>
+        </a>
+        <a class="proj" href="projects/forum-musical.html" data-kind="web">
           <div class="proj-bar">forum-musical</div>
-          <div class="proj-body">
-            <div class="proj-num">P-03</div>
-            <h3>Forum Musical</h3>
-            <p>Forum dédié à la musique avec base de données personnelle, filtres artiste/genre, connexion et panel administrateur de modération.</p>
-            <div class="tags"><span>HTML/CSS</span><span>JavaScript</span><span>Base de données</span><span>Admin</span></div>
-          </div>
-          <div class="proj-foot"><a href="projects/forum-musical.html" class="xp-btn">Détails</a><a href="https://github.com/amex-32/forum-team-xxl" target="_blank" rel="noopener" class="xp-btn">Code</a><span class="kind">Web</span></div>
-        </article>
-
-        <article class="proj">
+          <div class="proj-body"><div class="proj-num">Web</div><h3>Forum Musical</h3><p>Forum autour de la musique : sujets, réponses, votes, comptes et espace d'administration.</p><div class="tags"><span>Node.js</span><span>Express</span><span>MySQL</span><span>JWT</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Détails →</span><span class="kind">JavaScript</span></div>
+        </a>
+        <a class="proj" href="projects/pixelworld.html" data-kind="web">
+          <div class="proj-bar">pixelworld</div>
+          <div class="proj-body"><div class="proj-num">Web</div><h3>PixelWorld</h3><p>Toile collaborative en temps réel, dans l'esprit de r/place, sur une grille de 1000 × 1000.</p><div class="tags"><span>Node.js</span><span>Express</span><span>Socket.IO</span><span>Canvas</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Détails →</span><span class="kind">JavaScript</span></div>
+        </a>
+        <a class="proj" href="projects/puissance4.html" data-kind="jeu">
           <div class="proj-bar">puissance4</div>
-          <div class="proj-body">
-            <div class="proj-num">P-04</div>
-            <h3>Puissance 4</h3>
-            <p>Implémentation complète du Puissance 4 avec logique JavaScript soignée, connexion des joueurs et gestion robuste des erreurs.</p>
-            <div class="tags"><span>JavaScript</span><span>HTML/CSS</span><span>Logique jeu</span><span>Erreurs</span></div>
-          </div>
-          <div class="proj-foot"><a href="projects/puissance4.html" class="xp-btn">Détails</a><a href="https://github.com/nikita-ynov/PUISSANCE4" target="_blank" rel="noopener" class="xp-btn">Code</a><span class="kind">Jeu</span></div>
-        </article>
-
-        <article class="proj">
+          <div class="proj-body"><div class="proj-num">Jeu</div><h3>Puissance 4</h3><p>Le jeu de Puissance 4 à deux joueurs, avec la logique de jeu écrite en Go.</p><div class="tags"><span>Go</span><span>html/template</span><span>HTML/CSS</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Détails →</span><span class="kind">Go</span></div>
+        </a>
+        <a class="proj" href="projects/spotify-api.html" data-kind="api">
           <div class="proj-bar">spotify-api</div>
-          <div class="proj-body">
-            <div class="proj-num">P-05</div>
-            <h3>API Spotify</h3>
-            <p>Exploration de l'API Spotify pour accéder aux données d'artistes, avec système de recherche et affichage soigné des résultats.</p>
-            <div class="tags"><span>JavaScript</span><span>Spotify API</span><span>OAuth</span><span>Recherche</span></div>
-          </div>
-          <div class="proj-foot"><a href="projects/spotify-api.html" class="xp-btn">Détails</a><a href="https://github.com/AM3X-svg/tpapispotify" target="_blank" rel="noopener" class="xp-btn">Code</a><span class="kind">API</span></div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- JEU 2048 -->
-  <div id="jeu" class="win fadein">
+          <div class="proj-body"><div class="proj-num">API</div><h3>API Spotify</h3><p>Application Go qui interroge l'API Spotify pour afficher les albums de Damso et les morceaux de Laylow.</p><div class="tags"><span>Go</span><span>Spotify Web API</span><span>OAuth (client credentials)</span><span>HTML/CSS</span></div></div>
+          <div class="proj-foot"><span class="proj-more">Détails →</span><span class="kind">Go</span></div>
+        </a></div>
+      <div class="btn-row" style="margin-top:22px"><a class="btn" href="projets.html">Tous les projets →</a></div></div></section>
+<section id="jeu" class="win fadein">
     <div class="win-title">
       Mini-jeu — 2048
       <div class="win-controls"><i></i><i></i><i></i></div>
     </div>
     <div class="win-body">
-      <!-- Top bar -->
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
         <button id="g-new" class="xp-btn">Nouvelle partie</button>
         <div style="font-weight:700;color:var(--text2)">Score : <span id="g-score">0</span></div>
         <div style="font-weight:700;color:var(--text2)">Meilleur : <span id="g-best">0</span></div>
         <span id="g-msg" style="color:#c04000;font-weight:700;font-size:12px"></span>
       </div>
-
-      <!-- Board + Leaderboard -->
       <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
-
-        <!-- Board -->
         <div>
           <div id="g2048-board">
-            <!-- 16 background cells -->
             <div class="g2048-cell"></div><div class="g2048-cell"></div><div class="g2048-cell"></div><div class="g2048-cell"></div>
             <div class="g2048-cell"></div><div class="g2048-cell"></div><div class="g2048-cell"></div><div class="g2048-cell"></div>
             <div class="g2048-cell"></div><div class="g2048-cell"></div><div class="g2048-cell"></div><div class="g2048-cell"></div>
@@ -174,8 +116,6 @@
           </div>
           <p style="font-size:11px;color:var(--text2);margin-top:6px">Flèches clavier ou swipe mobile</p>
         </div>
-
-        <!-- Leaderboard -->
         <div style="flex:1;min-width:190px">
           <div style="font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px">
             Classement global
@@ -198,372 +138,32 @@
         </div>
       </div>
     </div>
-  </div>
-
-
-  <section id="contact" class="win fadein">
-    <div class="win-title">Contact<div class="win-controls"><i></i><i></i><i></i></div></div>
-    <div class="win-body">
-      <span class="label"><b>05</b> / Contact</span>
-      <h2>Travaillons ensemble</h2>
-      <p class="lead">Ouvert aux stages, aux alternances et aux collaborations. Le plus simple : un message sur LinkedIn.</p>
-      <div class="contact-grid">
-        <a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener" class="contact-row"><div class="contact-icon ci-li"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></div><div><div class="contact-label">LinkedIn</div><div class="contact-url">alexandre-k-801438256</div></div></a>
-        <a href="https://github.com/amex-32" target="_blank" rel="noopener" class="contact-row"><div class="contact-icon ci-gh"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg></div><div><div class="contact-label">GitHub</div><div class="contact-url">github.com/amex-32</div></div></a>
-      </div>
-    </div>
   </section>
-
+<section id="contact" class="win fadein"><div class="win-title">Contact<div class="win-controls"><i></i><i></i><i></i></div></div><div class="win-body">
+      <span class="label"><b>04</b> / Contact</span>
+      <h2>Travaillons <em>ensemble</em></h2><p class="lead">Ouvert aux stages, aux alternances et aux collaborations. Le plus simple : un message sur LinkedIn.</p>
+      <div class="btn-row"><a class="btn btn-primary" href="contact.html">Me contacter</a>
+      <a class="btn" href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg> LinkedIn</a></div></div></section>
 </main>
-
-<footer>© 2026 Alexandre Klotz &middot; HTML / CSS / JS</footer>
-
-<script>
-  function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
-
-  (function(){
-    // heure dans la barre des tâches
-    var clock = document.getElementById('clock');
-    function tick(){ var d = new Date(); clock.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
-    tick(); setInterval(tick, 10000);
-
-    // apparition des fenêtres
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.fadein').forEach(function(el){ io.observe(el); });
-
-    // lien actif dans la navigation
-    var links = document.querySelectorAll('#nav a, .taskbar-btn');
-    var spy = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if (!e.isIntersecting) return;
-        links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); });
-      });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-    document.querySelectorAll('main > .win').forEach(function(s){ spy.observe(s); });
-
-    // thème clair / sombre
-    var root = document.documentElement, btn = document.getElementById('theme-toggle');
-    function paint(){ btn.textContent = root.dataset.theme === 'dark' ? '●' : '◐'; }
-    paint();
-    btn.addEventListener('click', function(){
-      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-      paint();
-    });
-  })();
-</script>
-
-<script>
-  // ===========================
-  //   2048 GAME ENGINE
-  // ===========================
-  (function(){
-    'use strict';
-
-    // ---- DOM refs ----
-    const boardEl   = document.getElementById('g2048-board');
-    const scoreEl   = document.getElementById('g-score');
-    const bestEl    = document.getElementById('g-best');
-    const msgEl     = document.getElementById('g-msg');
-    const lbEl      = document.getElementById('lb-list');
-    const lbStatus  = document.getElementById('lb-status');
-    const newBtn    = document.getElementById('g-new');
-    const submitBtn = document.getElementById('g-submit');
-    const refreshBtn= document.getElementById('g-refresh');
-    const pseudoIn  = document.getElementById('g-pseudo');
-
-    // ---- State ----
-    const SIZE = 4;
-    let board = []; // flat 16-element array
-    let score = 0;
-    let best  = parseInt(localStorage.getItem('ak2048best')||'0',10);
-
-    // ---- Tile colors ----
-    const COLORS = {
-      2:    {bg:'#f0f8ff',color:'#1a3050'},
-      4:    {bg:'#d0e8ff',color:'#1a3050'},
-      8:    {bg:'#88c8ff',color:'#0a2040'},
-      16:   {bg:'#6699ff',color:'#fff'},
-      32:   {bg:'#ffcc66',color:'#5a3000'},
-      64:   {bg:'#ff9944',color:'#fff'},
-      128:  {bg:'#ff7777',color:'#fff'},
-      256:  {bg:'#ff55aa',color:'#fff'},
-      512:  {bg:'#cc44ff',color:'#fff'},
-      1024: {bg:'#7744ff',color:'#fff'},
-      2048: {bg:'#ffd700',color:'#3a2000'},
-    };
-
-    function tileStyle(v){
-      const c = COLORS[v] || {bg:'#4488ff',color:'#fff'};
-      return `background:${c.bg};color:${c.color};`;
-    }
-
-    // ---- Board helpers ----
-    function emptyBoard(){ return Array(SIZE*SIZE).fill(0); }
-
-    function idx(r,c){ return r*SIZE+c; }
-
-    function empties(b){ const e=[]; b.forEach((v,i)=>{ if(!v) e.push(i); }); return e; }
-
-    function addRandom(b){
-      const e = empties(b);
-      if(!e.length) return b;
-      const pos = e[Math.floor(Math.random()*e.length)];
-      const nb = b.slice();
-      nb[pos] = Math.random()<0.9?2:4;
-      return nb;
-    }
-
-    // ---- Slide one row left, returns {row, gain, moved} ----
-    function slideRow(row){
-      let arr = row.filter(v=>v!==0);
-      let gain = 0;
-      for(let i=0;i<arr.length-1;i++){
-        if(arr[i]===arr[i+1]){
-          arr[i]*=2; gain+=arr[i]; arr.splice(i+1,1);
-        }
-      }
-      while(arr.length<SIZE) arr.push(0);
-      const moved = arr.some((v,i)=>v!==row[i]);
-      return {row:arr, gain, moved};
-    }
-
-    // ---- Move in a direction ----
-    function move(b, dir){
-      let nb = b.slice();
-      let totalGain = 0;
-      let anyMoved  = false;
-
-      // Transform board so we always slide left on rows
-      if(dir==='left'||dir==='right'){
-        for(let r=0;r<SIZE;r++){
-          let row = nb.slice(r*SIZE,(r+1)*SIZE);
-          if(dir==='right') row.reverse();
-          const res = slideRow(row);
-          if(res.moved) anyMoved=true;
-          totalGain += res.gain;
-          const outRow = dir==='right'?res.row.slice().reverse():res.row;
-          for(let c=0;c<SIZE;c++) nb[idx(r,c)]=outRow[c];
-        }
-      } else {
-        // up / down: work on columns
-        for(let c=0;c<SIZE;c++){
-          let col = [];
-          for(let r=0;r<SIZE;r++) col.push(nb[idx(r,c)]);
-          if(dir==='down') col.reverse();
-          const res = slideRow(col);
-          if(res.moved) anyMoved=true;
-          totalGain += res.gain;
-          const outCol = dir==='down'?res.row.slice().reverse():res.row;
-          for(let r=0;r<SIZE;r++) nb[idx(r,c)]=outCol[r];
-        }
-      }
-      return {nb, gain:totalGain, moved:anyMoved};
-    }
-
-    // ---- Game over / win checks ----
-    function hasMove(b){
-      if(empties(b).length) return true;
-      for(let r=0;r<SIZE;r++){
-        for(let c=0;c<SIZE;c++){
-          const v = b[idx(r,c)];
-          if(r+1<SIZE && b[idx(r+1,c)]===v) return true;
-          if(c+1<SIZE && b[idx(r,c+1)]===v) return true;
-        }
-      }
-      return false;
-    }
-
-    function hasWon(b){ return b.some(v=>v>=2048); }
-
-    // ---- Render ----
-    function render(b, mergedIdx){
-      // Remove existing tiles (not the background cells)
-      boardEl.querySelectorAll('.g2048-tile').forEach(el=>el.remove());
-
-      // Get cell positions from background cells
-      const cells = boardEl.querySelectorAll('.g2048-cell');
-
-      b.forEach((v,i)=>{
-        if(!v) return;
-        const cellRect = cells[i].getBoundingClientRect();
-        const boardRect = boardEl.getBoundingClientRect();
-
-        const tile = document.createElement('div');
-        tile.className = 'g2048-tile' + (mergedIdx && mergedIdx.has(i) ? ' merged' : '');
-        tile.textContent = v;
-        tile.style.cssText = `
-        position:absolute;
-        left:${cells[i].offsetLeft}px;
-        top:${cells[i].offsetTop}px;
-        width:${cells[i].offsetWidth}px;
-        height:${cells[i].offsetHeight}px;
-        line-height:${cells[i].offsetHeight}px;
-        font-size:${v>=1000?14:v>=100?16:18}px;
-        ${tileStyle(v)}
-      `;
-        boardEl.appendChild(tile);
-      });
-    }
-
-    function updateScore(){
-      scoreEl.textContent = score;
-      if(score>best){ best=score; localStorage.setItem('ak2048best',best); }
-      bestEl.textContent = best;
-    }
-
-    // ---- Game flow ----
-    function newGame(){
-      board = emptyBoard();
-      board = addRandom(board);
-      board = addRandom(board);
-      score = 0;
-      msgEl.textContent = '';
-      updateScore();
-      render(board, null);
-    }
-
-    function applyMove(dir){
-      const {nb, gain, moved} = move(board, dir);
-      if(!moved) return;
-
-      // Track merged indices for animation
-      const mergedSet = new Set();
-      nb.forEach((v,i)=>{ if(v!==board[i] && v!==0) mergedSet.add(i); });
-
-      board = addRandom(nb);
-      score += gain;
-      updateScore();
-      render(board, mergedSet);
-
-      if(hasWon(board) && !msgEl.textContent){
-        msgEl.textContent = '2048 atteint ! Continuez…';
-      } else if(!hasMove(board)){
-        msgEl.textContent = 'Game over !';
-      }
-    }
-
-    // ---- Input ----
-    document.addEventListener('keydown', e=>{
-      if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return;
-      e.preventDefault();
-      applyMove(e.key.replace('Arrow','').toLowerCase());
-    });
-
-    // Touch swipe — prevent page scroll only when interacting with the board element
-    let tx=null, ty=null;
-    // boardEl is the actual tile container (id="g2048-board")
-    // attach touch handlers to the board only so page scrolling outside remains normal
-    // touchstart must be non-passive so we can prevent default on touchmove
-    boardEl.addEventListener('touchstart', e=>{
-      const t=e.touches[0]; tx=t.clientX; ty=t.clientY;
-    }, {passive:false});
-    // prevent page from scrolling when moving finger within the board
-    boardEl.addEventListener('touchmove', e=>{
-      if(tx===null) return; e.preventDefault(); // stops page scroll while interacting with the board
-    }, {passive:false});
-    boardEl.addEventListener('touchend', e=>{
-      if(tx===null) return;
-      const t=e.changedTouches[0];
-      const dx=t.clientX-tx, dy=t.clientY-ty;
-      if(Math.abs(dx)<20 && Math.abs(dy)<20){ tx=ty=null; return; }
-      if(Math.abs(dx)>Math.abs(dy)) applyMove(dx>0?'right':'left');
-      else applyMove(dy>0?'down':'up');
-      tx=ty=null;
-    });
-
-    newBtn.addEventListener('click', newGame);
-
-    // Make board position:relative for absolute tile placement
-    boardEl.style.position = 'relative';
-
-    // ===========================
-    //   LEADERBOARD
-    // ===========================
-    async function fetchLeaderboard(){
-      // 1. Try global API
-      try{
-        const r = await fetch('/api/leaderboard?all=1', {cache:'no-store'});
-        if(r.ok){
-          const j = await r.json();
-          const rows = j.rows || j;
-          if(Array.isArray(rows)){
-            setLbStatus('Classement global');
-            return {rows, global:true};
-          }
-        }
-      }catch(e){ /* réseau indispo */ }
-
-      // 2. Fallback localStorage
-      setLbStatus('Classement local (API indisponible)');
-      const rows = JSON.parse(localStorage.getItem('ak2048lb')||'[]');
-      return {rows, global:false};
-    }
-
-    async function renderLeaderboard(){
-      lbEl.innerHTML = '<div style="color:var(--text2);font-size:12px;padding:6px">Chargement…</div>';
-      const {rows} = await fetchLeaderboard();
-      const sorted = rows.slice().sort((a,b)=>b.score-a.score);
-      if(!sorted.length){ lbEl.innerHTML='<div style="color:var(--text2);font-size:12px;padding:6px">Aucun score</div>'; return; }
-      lbEl.innerHTML = sorted.map((e,i)=>`
-      <div class="lb-row">
-        <div><span class="lb-rank">${i+1}.</span> <strong class="${i===0?'lb-gold':''}">${esc(e.user||e.username||'—')}</strong></div>
-        <div style="font-weight:700">${e.score.toLocaleString('fr-FR')}</div>
-      </div>
-    `).join('');
-    }
-
-    function setLbStatus(msg){ lbStatus.textContent=msg; }
-
-    async function submitScore(){
-      const user = pseudoIn.value.trim();
-      if(!user){ alert('Entrez un pseudo avant de soumettre.'); pseudoIn.focus(); return; }
-      if(score===0){ alert('Votre score est 0 — jouez d\'abord !'); return; }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Envoi…';
-
-      let success = false;
-
-      // 1. Try global API
-      try{
-        const r = await fetch('/api/leaderboard',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({user,score})
-        });
-        if(r.ok){ const j=await r.json(); success=j.success; }
-      }catch(e){}
-
-      // 2. Always also save locally as backup
-      const local = JSON.parse(localStorage.getItem('ak2048lb')||'[]');
-      const existIdx = local.findIndex(e=>e.user===user);
-      if(existIdx>=0){ if(score>local[existIdx].score){ local[existIdx].score=score; local[existIdx].date=new Date().toISOString(); } }
-      else { local.push({user,score,date:new Date().toISOString()}); }
-      local.sort((a,b)=>b.score-a.score); if(local.length>100) local.length=100;
-      localStorage.setItem('ak2048lb',JSON.stringify(local));
-
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Soumettre score';
-
-      if(success){
-        alert('Score soumis au classement global !');
-      } else {
-        alert('Score sauvegardé localement (API non disponible).');
-      }
-      await renderLeaderboard();
-    }
-
-    submitBtn.addEventListener('click', submitScore);
-    refreshBtn.addEventListener('click', renderLeaderboard);
-
-    // ---- Init ----
-    newGame();
-    renderLeaderboard();
-
-  })();
-</script>
+<footer class="site-footer">
+  <div class="foot-box">
+    <div class="foot-top">
+      <div><div class="foot-logo">A<em>K</em></div><p>Étudiant en cybersécurité et développement web. Merci de votre visite.</p></div>
+      <div class="foot-col"><h4>Général</h4>
+        <a href="index.html">Accueil</a>
+        <a href="projets.html">Projets</a>
+        <a href="contact.html">Contact</a></div>
+      <div class="foot-col"><h4>Ailleurs</h4>
+        <a href="https://github.com/amex-32" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/amex-32/portfolio" target="_blank" rel="noopener">Code source du site</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Alexandre Klotz</span>
+      <div class="socials"><a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></a><a href="https://github.com/amex-32" target="_blank" rel="noopener" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg></a></div>
+    </div>
+  </div>
+</footer>
+<script src="js/site.js"></script>
+<script src="js/game.js"></script>
 </body>
 </html>
