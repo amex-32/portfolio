@@ -377,3 +377,14 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 }
 @media (max-width: 960px) { .top-right { grid-column: 1 / -1; justify-self: end; order: 1; } }
 @media (max-width: 640px) { .topbar { grid-template-columns: 1fr; } .top-right { display: none; } }
+
+/* ---------- Captures d'écran des projets ---------- */
+.poster[data-p="boutique-cyberpunk"] { background: center top / cover url(img/boutique-cyberpunk-1.jpg); }
+.poster[data-p="pokedex-interactive"] { background: center top / cover url(img/pokedex-interactive-1.jpg); }
+.poster[data-p="forum-musical"] { background: center top / cover url(img/forum-musical-1.jpg); }
+.poster[data-p="pixelworld"] { background: center / cover url(img/pixelworld-1.jpg); }
+.poster[data-p]::before, .poster[data-p] .glyph { display: none; }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.shots a { display: block; overflow: hidden; border: 1px solid var(--edge); border-radius: 18px; box-shadow: var(--soft); }
+.shots img { display: block; width: 100%; height: auto; transition: transform .4s; }
+.shots a:hover img { transform: scale(1.03); }

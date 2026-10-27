@@ -148,7 +148,7 @@ def games_panels(lang):
 
 # ---------------------------------------------------------------- briques
 def poster(p):
-    return f'<div class="poster" style="--h:{p["hue"]}"><span class="glyph">{p["glyph"]}</span></div><div class="shade"></div>'
+    return f'<div class="poster" data-p="{p["slug"]}" style="--h:{p["hue"]}"><span class="glyph">{p["glyph"]}</span></div><div class="shade"></div>'
 
 
 def proj_card(lang, p, me):
@@ -325,11 +325,14 @@ def build_detail(lang, p):
     tree = esc("\n".join(TREES[p["slug"]]))
     facts = (f'<dl class="facts"><div><dt>{t["f_type"]}</dt><dd>{t["kinds"][p["kind"]]}</dd></div><div><dt>{t["f_context"]}</dt><dd>{t["context"]}</dd></div>'
              f'<div><dt>{t["f_lang"]}</dt><dd>{p["lang"]}</dd></div><div><dt>{t["f_repo"]}</dt><dd><a href="{p["code"]}" target="_blank" rel="noopener">GitHub ↗</a></dd></div></dl>')
+    shots = sorted((ROOT / "img").glob(f'{p["slug"]}-*.jpg'))
+    gallery = card(f'<div class="card-h"><h3>{t["preview_h"]}</h3></div><div class="shots">' + "".join(
+        f'<a href="{rel(me, "img/" + f.name)}" target="_blank" rel="noopener"><img src="{rel(me, "img/" + f.name)}" alt="{d["title"]}" loading="lazy"></a>' for f in shots) + '</div>') if shots else ""
     side = (f'<aside class="side"><div class="term fadein"><div class="term-bar"><span></span><span></span><span></span><em>{p["slug"]} ~ {t["repo_tree"].lower()}</em></div><pre class="tree">{tree}</pre></div>'
             + card(facts) + '</aside>')
     others = sorted((q for q in PROJECTS if q["slug"] != p["slug"]), key=lambda q: q["kind"] != p["kind"])
     sim = card(f'<div class="card-h"><h3>{t["similar_small"]}</h3></div><div class="proj-grid">{"".join(proj_card(lang, q, me) for q in others[:3])}</div>')
-    return chrome(lang, "detail", p["slug"], me, f'{d["title"]} — Alexandre K.', d["short"], f'{banner}<div class="detail-grid">{main}{side}</div>{sim}')
+    return chrome(lang, "detail", p["slug"], me, f'{d["title"]} — Alexandre K.', d["short"], f'{banner}<div class="detail-grid">{main}{side}</div>{gallery}{sim}')
 
 
 def build_game(lang):
