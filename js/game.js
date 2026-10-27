@@ -1,4 +1,4 @@
-// Traductions : la page porte la langue dans <html lang>.
+// Traductions : la langue est portée par <html lang>.
 var TR_EN = {"2048 atteint ! Continuez…": "2048 reached! Keep going…", "Game over !": "Game over!", "Classement local (API indisponible)": "Local leaderboard (API unavailable)", "Entrez un pseudo avant de soumettre.": "Enter a nickname before submitting.", "Score soumis au classement global !": "Score submitted to the global leaderboard!", "Score sauvegardé localement (API non disponible).": "Score saved locally (API unavailable).", "Chargement…": "Loading…", "Aucun score": "No score yet", "Classement global": "Global leaderboard", "Soumettre score": "Submit score", "Votre score est 0 — jouez d'abord !": "Your score is 0, play first!"};
 function T(s){ return document.documentElement.lang === 'en' && TR_EN[s] || s; }
 function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c];}); }
@@ -193,6 +193,7 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
 
     // ---- Input ----
     document.addEventListener('keydown', e=>{
+      if(!document.getElementById('g-2048').classList.contains('on')) return;
       if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return;
       e.preventDefault();
       applyMove(e.key.replace('Arrow','').toLowerCase());

@@ -9,9 +9,9 @@ python3 tools/build.py
 python3 -m http.server   # puis http://localhost:8000
 ```
 
-- `tools/build.py` : textes FR/EN, projets et gabarits des pages
-- `style.css`, `js/site.js` : styles et interactions communes (thème, filtres, en-tête)
-- `src/game.html`, `src/game.js` : mini-jeu 2048 ; `js/game.js` est généré
+- `tools/build.py` : gabarits des pages ; `tools/content.py` : textes FR/EN, projets, icônes ; `tools/test.js` : test de la logique des jeux
+- `style.css`, `js/site.js` : styles et interactions (palette ⌘K, carrousel, thème, accent)
+- `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Snake, Memory, Code Breaker
 - `src/trees.json` : arborescences affichées sur les pages projet
 - `api/leaderboard.js` : fonction serverless du classement du jeu (voir `docs/`)
 
