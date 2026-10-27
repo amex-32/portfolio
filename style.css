@@ -468,3 +468,20 @@ a.proj { text-decoration: none; color: inherit; }
 .form .trap { position: absolute; left: -9999px; }
 .form button { justify-self: start; }
 .form-msg { min-height: 1.4em; font-size: 14px; color: var(--text2); }
+
+/* ---------- À propos : activité GitHub, matériel ---------- */
+.heat { display: flex; gap: 8px; align-items: flex-start; }
+.heat-days { display: grid; grid-template-rows: 16px repeat(7, 13px); gap: 3px; font: 11px/13px var(--mono); color: var(--text2); text-align: right; }
+.heat-scroll { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 6px; flex: 1; }
+.wk { display: grid; grid-template-rows: 16px repeat(7, 13px); gap: 3px; }
+.wk b { font: 500 11px/16px var(--mono); color: var(--text2); white-space: nowrap; overflow: visible; width: 13px; }
+.sq { display: block; width: 13px; height: 13px; border-radius: 3px; background: transparent; }
+.sq.l0 { background: rgba(120, 140, 170, .22); }
+.sq.l1 { background: #9be9a8; } .sq.l2 { background: #40c463; } .sq.l3 { background: #30a14e; } .sq.l4 { background: #216e39; }
+.heat-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; font: 12px var(--mono); color: var(--text2); }
+.legend { display: inline-flex; align-items: center; gap: 4px; }
+.tiles { display: flex; flex-wrap: wrap; gap: 18px; }
+.tile { display: grid; justify-items: center; gap: 4px; width: 140px; text-align: center; }
+.tile small { font: 12px var(--mono); color: var(--text2); }
+.tile-ico { width: 84px; height: 84px; display: grid; place-items: center; color: var(--text); background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 6px; }
+.tile-ico.mono { font: 700 26px var(--display); color: #fff; background: var(--c); border: none; }
