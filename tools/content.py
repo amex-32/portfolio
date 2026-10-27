@@ -217,7 +217,7 @@ PROJECTS = [
         },
     },
     {
-        "slug": "forum-musical", "hue": 268, "glyph": "JWT", "kind": "web", "lang": "JavaScript", "code": "https://github.com/amex-32/forum-team-xxl",
+        "slug": "forum-musical", "demo": "https://forum-team-xxl-frontend.vercel.app", "hue": 268, "glyph": "JWT", "kind": "web", "lang": "JavaScript", "code": "https://github.com/amex-32/forum-team-xxl",
         "tech": ["Node.js", "Express", "MySQL", "JWT", "HTML/JS"],
         "fr": {
             "title": "Forum Musical",
