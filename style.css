@@ -87,8 +87,9 @@ a { color: inherit; }
 .bell i { position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: #3ddc84; border: 2px solid var(--shell); }
 .profile { display: flex; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; background: var(--card); border: 1px solid var(--edge); border-radius: 999px; text-decoration: none; }
 .avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font: 700 14px var(--display); color: var(--on-accent); background: linear-gradient(135deg, var(--accent), #9b8cff); }
-.profile b { display: block; font: 600 13px/1.2 var(--sans); }
-.profile small { font: 11px var(--mono); color: var(--text2); }
+.profile div { line-height: 1.1; }
+.profile b { display: block; font: 600 13px/1.1 var(--sans); }
+.profile small { display: block; margin-top: 2px; font: 11px/1.1 var(--mono); color: var(--text2); }
 .drop { position: absolute; top: 56px; right: 0; width: 320px; padding: 14px; z-index: 130; display: none; background: var(--shell); border: 1px solid var(--edge); border-radius: 22px; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); box-shadow: var(--shadow); }
 .drop.open { display: block; }
 .drop h4 { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text2); margin-bottom: 8px; }
