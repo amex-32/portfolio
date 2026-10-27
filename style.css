@@ -283,12 +283,6 @@ h2 { font: 700 clamp(24px, 3.4vw, 34px)/1.15 var(--display); margin-bottom: 8px;
 .pad button:active { transform: scale(.94); }
 
 /* ---------- À propos, contact ---------- */
-.heat { display: flex; gap: 8px; align-items: flex-start; }
-.heat-days { display: grid; grid-template-rows: 16px repeat(7, 11px); gap: 3px; font: 10px/11px var(--mono); color: var(--text2); text-align: right; }
-.heat-scroll { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 6px; flex: 1; }
-.wk { display: grid; grid-template-rows: 16px repeat(7, 11px); gap: 3px; }
-.wk b { font: 500 11px/16px var(--mono); color: var(--text2); white-space: nowrap; width: 11px; }
-.sq { display: block; width: 11px; height: 11px; border-radius: 3px; background: transparent; }
 .sq.l0 { background: var(--line); } .sq.l1 { background: #9be9a8; } .sq.l2 { background: #40c463; } .sq.l3 { background: #30a14e; } .sq.l4 { background: #216e39; }
 .heat-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; font: 12px var(--mono); color: var(--text2); }
 .legend { display: inline-flex; align-items: center; gap: 4px; }
@@ -407,3 +401,12 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 @media (max-width: 640px) { .lb { padding: 56px 12px; } .lb .prev { left: 6px; } .lb .next { right: 6px; } }
 
 .demo-note { font: 12px var(--mono); color: rgba(255, 255, 255, .7); margin: 0; }
+
+/* ---------- Graphe GitHub sans défilement ---------- */
+.heat { display: grid; grid-auto-flow: column; grid-template-rows: 16px repeat(7, auto); grid-template-columns: auto repeat(var(--weeks), minmax(0, 1fr)); gap: 3px; }
+.heat > b { font: 500 11px/16px var(--mono); color: var(--text2); white-space: nowrap; overflow: visible; }
+.heat > span { display: flex; align-items: center; justify-content: flex-end; padding-right: 4px; font: 10px var(--mono); color: var(--text2); }
+.sq { display: block; width: 100%; aspect-ratio: 1; min-width: 0; border-radius: 3px; background: transparent; }
+.legend .sq { width: 11px; }
+.about-grid { grid-template-columns: 340px minmax(0, 1fr); }
+@media (max-width: 1100px) { .about-grid { grid-template-columns: 1fr; } }

@@ -65,22 +65,21 @@ def github_activity():
 
 
 def heatmap(lang, data):
+    """Grille unique : 1 colonne de libellés + 1 colonne par semaine, qui s'adapte à la largeur (pas de défilement)."""
     t = UI[lang]
     days = data["contributions"]
     first = datetime.date.fromisoformat(days[0]["date"])
     cells = [None] * ((first.weekday() + 1) % 7) + days  # semaines du dimanche au samedi
-    cols = ""
-    for i in range(0, len(cells), 7):
-        w = cells[i:i + 7]
+    weeks = [cells[i:i + 7] for i in range(0, len(cells), 7)]
+    out = "<b></b>" + "".join(f"<span>{d}</span>" for d in t["days"])
+    for w in weeks:
         month = next((int(c["date"][5:7]) - 1 for c in w if c and c["date"].endswith("-01")), None)
-        label = t["months"][month] if month is not None else ""
-        sq = "".join(
+        out += f'<b>{t["months"][month] if month is not None else ""}</b>'
+        out += "".join(
             '<i class="sq"></i>' if c is None else
-            f'<i class="sq l{c["level"]}" title="{c["date"]} : {c["count"]}"></i>' for c in w)
-        cols += f'<div class="wk"><b>{label}</b>{sq}</div>'
-    dl = "".join(f"<span>{d}</span>" for d in t["days"])
+            f'<i class="sq l{c["level"]}" title="{c["date"]} : {c["count"]}"></i>' for c in w + [None] * (7 - len(w)))
     legend = "".join(f'<i class="sq l{n}"></i>' for n in range(5))
-    return (f'<div class="heat"><div class="heat-days"><b></b>{dl}</div><div class="heat-scroll">{cols}</div></div>'
+    return (f'<div class="heat" style="--weeks:{len(weeks)}">{out}</div>'
             f'<div class="heat-foot"><span>{data["total"]["lastYear"]} {t["gh_total"]}</span>'
             f'<span class="legend">{t["gh_less"]} {legend} {t["gh_more"]}</span></div>')
 
