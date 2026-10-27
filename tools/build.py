@@ -249,6 +249,14 @@ def cv_cards(lang, detailed):
     return out
 
 
+def skills_card(lang):
+    t = UI[lang]
+    rows = "".join(
+        f'<div class="row"><div class="ic">{ico(SKILL_ICONS[i])}</div><div><b>{h}</b><small>{" · ".join(items)}</small></div></div>'
+        for i, (h, items) in enumerate(t["skills"]))
+    return card(f'<div class="card-h"><h3>{t["stack_card"]}</h3></div><div class="rows">{rows}</div>')
+
+
 def card(inner, cls="", extra=""):
     return f'<section class="card fadein {cls}"{extra}>{inner}</section>'
 
@@ -274,7 +282,7 @@ def build_home(lang):
       <div class="term" aria-hidden="true"><div class="term-bar"><span></span><span></span><span></span><em>amex@kali: ~</em></div><pre>{lines}</pre></div>
     </div>'''
     slides = "".join(
-        f'''<div class="slide pj" aria-hidden="true">{poster(p)}<div>
+        f'''<div class="slide pj" aria-hidden="true">{poster(p)}<div class="inner">
       <span class="pill">{t["featured"]} · {t["kinds"][p["kind"]]}</span><h2>{p[lang]["title"]}</h2>
       <div class="tags">{"".join(f"<span>{x}</span>" for x in p["tech"][:3])}</div><p>{p[lang]["short"]}</p>
       <div class="btn-row"><a class="btn btn-primary" href="{r("detail", p["slug"])}">{ico("play", 16)} {t["see"]}</a><a class="btn" href="{p["code"]}" target="_blank" rel="noopener">{ico("code", 16)} {t["code"]}</a></div></div></div>'''
@@ -286,10 +294,7 @@ def build_home(lang):
     who = card(f'''<div class="who"><div class="avatar">AK</div><h3>Alexandre K.</h3><p>{t["who_tag"]}</p>
       <div class="btn-row"><a class="btn small" href="{GITHUB}" target="_blank" rel="noopener">{ICON_GH} GitHub</a><a class="btn small" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>
       <div class="status"><span class="dot"></span>{t["status"]}</div></div>''')
-    rows = "".join(
-        f'<div class="row"><div class="ic">{ico(SKILL_ICONS[i])}</div><div><b>{h}</b><small>{" · ".join(items)}</small></div></div>'
-        for i, (h, items) in enumerate(t["skills"]))
-    skills = card(f'<div class="card-h"><h3>{t["stack_card"]}</h3></div><div class="rows">{rows}</div>')
+    skills = skills_card(lang)
     cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
     discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
     contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label"><b>04</b> / {t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
@@ -313,7 +318,7 @@ def build_detail(lang, p):
     t, d, me = UI[lang], p[lang], out_path(lang, "detail", p["slug"])
     r = lambda pg, s=None: rel(me, out_path(lang, pg, s))
     tags = "".join(f"<span>{x}</span>" for x in p["tech"][:4])
-    banner = (f'<section class="card banner fadein">{poster(p)}<div>'
+    banner = (f'<section class="card banner fadein">{poster(p)}<div class="inner">'
               f'<div class="crumbs"><a href="{r("home")}">{t["crumb_home"]}</a><span>/</span><a href="{r("list")}">{t["crumb_projects"]}</a><span>/</span><span>{d["title"]}</span></div>'
               f'<h1>{d["title"]} <em>{t["detail_word"]}</em></h1><div class="tags">{tags}</div>'
               f'<div class="btn-row"><a class="btn btn-primary" href="{p["code"]}" target="_blank" rel="noopener">{ICON_GH} {t["view_code"]}</a><a class="btn" href="{r("list")}">{t["all_projects"]}</a></div></div></section>')
@@ -352,9 +357,8 @@ def build_about(lang, data):
         for n, ic, url, c in SOFTWARE)
     gh = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
     setup = card(f'<div class="block"><h3>{t["hw_h"]}</h3><div class="tiles">{hw}</div></div><div class="block"><h3>{t["sw_h"]}</h3><div class="tiles">{sw}</div></div>')
-    cv = cv_cards(lang, True)
-    body = (head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="detail-grid">{cv[0]}{cv[1]}</div>'
-            + f'<div class="detail-grid">{cv[2]}{cv[3]}</div>' + gh + setup)
+    left = f'<div class="stack">{skills_card(lang)}{"".join(cv_cards(lang, True))}</div>'
+    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{gh}{setup}</div></div>'
     return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
 
 

@@ -136,6 +136,29 @@
     setTimeout(function () { clearInterval(t); c.remove(); }, 9000);
   }
 
+  // ---------- visionneuse d'images (aperçus des projets) ----------
+  var shots = $$('.shots a');
+  if (shots.length) {
+    var lb = document.createElement('div'), img = document.createElement('img'), count = document.createElement('span'), at = 0;
+    lb.className = 'lb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
+    count.className = 'count';
+    lb.innerHTML = '<button class="round x" type="button" aria-label="Fermer">✕</button><button class="round prev" type="button" aria-label="Précédent">‹</button><button class="round next" type="button" aria-label="Suivant">›</button>';
+    lb.appendChild(img); lb.appendChild(count); document.body.appendChild(lb);
+    var go = function (n) { at = (n + shots.length) % shots.length; img.src = shots[at].href; img.alt = $('img', shots[at]).alt; count.textContent = (at + 1) + ' / ' + shots.length; };
+    var shut = function () { lb.classList.remove('open'); };
+    shots.forEach(function (a, i) { a.addEventListener('click', function (e) { e.preventDefault(); go(i); lb.classList.add('open'); }); });
+    $('.x', lb).addEventListener('click', shut);
+    $('.prev', lb).addEventListener('click', function () { go(at - 1); });
+    $('.next', lb).addEventListener('click', function () { go(at + 1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) shut(); });
+    document.addEventListener('keydown', function (e) {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') shut(); else if (e.key === 'ArrowLeft') go(at - 1); else if (e.key === 'ArrowRight') go(at + 1);
+    });
+    var x0; lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) { var d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 40) go(at + (d < 0 ? 1 : -1)); });
+  }
+
   // ---------- formulaire de contact ----------
   var f = document.getElementById('contact-form');
   if (f) {
