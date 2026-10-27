@@ -63,7 +63,7 @@ UI = {
         "f_lang": "Langage",
         "f_repo": "Dépôt",
         "context": "Projet de formation",
-        "view_code": "Voir le code",
+        "view_code": "Voir le code", "view_demo": "Démo en ligne", "demo_note": "Hébergement gratuit : le premier chargement peut prendre une minute.",
         "similar_small": "Projets similaires",
         "similar_h": "Ça peut <em>t'intéresser</em>",
         "contact_label": "Contact",
@@ -142,7 +142,7 @@ UI = {
         "f_lang": "Language",
         "f_repo": "Repository",
         "context": "School project",
-        "view_code": "View the code",
+        "view_code": "View the code", "view_demo": "Live demo", "demo_note": "Free hosting: the first load can take a minute.",
         "similar_small": "Similar projects",
         "similar_h": "You may also <em>like</em>",
         "contact_label": "Contact",
@@ -199,7 +199,7 @@ PROJECTS = [
         },
     },
     {
-        "slug": "pokedex-interactive", "hue": 38, "glyph": "GO", "kind": "api", "lang": "Go", "code": "https://github.com/amex-32/choubigroup-groupie-tracker",
+        "slug": "pokedex-interactive", "demo": "https://choubigroup-groupie-tracker-psi.vercel.app", "hue": 38, "glyph": "GO", "kind": "api", "lang": "Go", "code": "https://github.com/amex-32/choubigroup-groupie-tracker",
         "tech": ["Go", "net/http", "html/template", "Tyradex API", "HTML/CSS"],
         "fr": {
             "title": "Pokédex Interactif",
@@ -235,7 +235,7 @@ PROJECTS = [
         },
     },
     {
-        "slug": "pixelworld", "hue": 160, "glyph": "WS", "kind": "web", "lang": "JavaScript", "code": "https://github.com/amex-32/pixelworld",
+        "slug": "pixelworld", "demo": "https://pixelworld-em8r.onrender.com", "hue": 160, "glyph": "WS", "kind": "web", "lang": "JavaScript", "code": "https://github.com/amex-32/pixelworld",
         "tech": ["Node.js", "Express", "Socket.IO", "Canvas", "JavaScript"],
         "fr": {
             "title": "PixelWorld",

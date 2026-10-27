@@ -405,3 +405,5 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 .lb .prev { left: 18px; top: 50%; transform: translateY(-50%); } .lb .next { right: 18px; top: 50%; transform: translateY(-50%); } .lb .x { right: 18px; top: 16px; }
 .lb .count { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); padding: 4px 14px; font: 12px var(--mono); color: #fff; background: rgba(255, 255, 255, .14); border-radius: 999px; }
 @media (max-width: 640px) { .lb { padding: 56px 12px; } .lb .prev { left: 6px; } .lb .next { right: 6px; } }
+
+.demo-note { font: 12px var(--mono); color: rgba(255, 255, 255, .7); margin: 0; }

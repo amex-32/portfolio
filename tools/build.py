@@ -318,10 +318,12 @@ def build_detail(lang, p):
     t, d, me = UI[lang], p[lang], out_path(lang, "detail", p["slug"])
     r = lambda pg, s=None: rel(me, out_path(lang, pg, s))
     tags = "".join(f"<span>{x}</span>" for x in p["tech"][:4])
+    demo_btn = f'<a class="btn btn-primary" href="{p["demo"]}" target="_blank" rel="noopener">{ico("play", 16)} {t["view_demo"]}</a>' if p.get("demo") else ""
+    demo_note = f'<p class="demo-note">{t["demo_note"]}</p>' if p.get("demo") else ""
     banner = (f'<section class="card banner fadein">{poster(p)}<div class="inner">'
               f'<div class="crumbs"><a href="{r("home")}">{t["crumb_home"]}</a><span>/</span><a href="{r("list")}">{t["crumb_projects"]}</a><span>/</span><span>{d["title"]}</span></div>'
               f'<h1>{d["title"]} <em>{t["detail_word"]}</em></h1><div class="tags">{tags}</div>'
-              f'<div class="btn-row"><a class="btn btn-primary" href="{p["code"]}" target="_blank" rel="noopener">{ICON_GH} {t["view_code"]}</a><a class="btn" href="{r("list")}">{t["all_projects"]}</a></div></div></section>')
+              f'<div class="btn-row">{demo_btn}<a class="btn {"" if demo_btn else "btn-primary"}" href="{p["code"]}" target="_blank" rel="noopener">{ICON_GH} {t["view_code"]}</a><a class="btn" href="{r("list")}">{t["all_projects"]}</a></div>{demo_note}</div></section>')
     longp = "".join(f"<p>{x}</p>" for x in d["long"])
     chips = "".join(f"<span>{x}</span>" for x in p["tech"])
     feats = "".join(f"<li>{x}</li>" for x in d["features"])
@@ -329,7 +331,8 @@ def build_detail(lang, p):
                 f'<div class="block"><h3>{t["features"]}</h3><ul class="feat">{feats}</ul></div>')
     tree = esc("\n".join(TREES[p["slug"]]))
     facts = (f'<dl class="facts"><div><dt>{t["f_type"]}</dt><dd>{t["kinds"][p["kind"]]}</dd></div><div><dt>{t["f_context"]}</dt><dd>{t["context"]}</dd></div>'
-             f'<div><dt>{t["f_lang"]}</dt><dd>{p["lang"]}</dd></div><div><dt>{t["f_repo"]}</dt><dd><a href="{p["code"]}" target="_blank" rel="noopener">GitHub ↗</a></dd></div></dl>')
+             f'<div><dt>{t["f_lang"]}</dt><dd>{p["lang"]}</dd></div><div><dt>{t["f_repo"]}</dt><dd><a href="{p["code"]}" target="_blank" rel="noopener">GitHub ↗</a></dd></div>'
+             + (f'<div><dt>Demo</dt><dd><a href="{p["demo"]}" target="_blank" rel="noopener">{t["view_demo"]} ↗</a></dd></div>' if p.get("demo") else "") + '</dl>')
     shots = sorted((ROOT / "img").glob(f'{p["slug"]}-*.jpg'))
     gallery = card(f'<div class="card-h"><h3>{t["preview_h"]}</h3></div><div class="shots">' + "".join(
         f'<a href="{rel(me, "img/" + f.name)}" target="_blank" rel="noopener"><img src="{rel(me, "img/" + f.name)}" alt="{d["title"]}" loading="lazy"></a>' for f in shots) + '</div>') if shots else ""
