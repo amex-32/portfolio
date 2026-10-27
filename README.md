@@ -15,4 +15,4 @@ python3 -m http.server   # puis http://localhost:8000
 - `src/trees.json` : arborescences affichées sur les pages projet
 - `api/leaderboard.js` : fonction serverless du classement du jeu (voir `docs/`)
 
-Pour afficher une adresse e-mail sur la page contact, renseigner `EMAIL` en haut de `tools/build.py` puis relancer le script.
+Pour afficher une adresse e-mail ou activer le formulaire de contact, renseigner `EMAIL` ou `FORM_ENDPOINT` en haut de `tools/build.py` puis relancer le script.

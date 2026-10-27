@@ -69,29 +69,5 @@
   "package.json",
   "README.md",
   "server.js"
- ],
- "puissance4": [
-  "src/",
-  "  controller/",
-  "  pages/",
-  "  router/",
-  "  static/",
-  "  templates/",
-  "  go.mod",
-  "  main.go",
-  "README.md"
- ],
- "spotify-api": [
-  "requêtes/",
-  "  requetes.json",
-  "src/",
-  "  controller/",
-  "  pages/",
-  "  router/",
-  "  static/",
-  "  struct/",
-  "  go.mod",
-  "  main.go",
-  "README.md"
  ]
 }

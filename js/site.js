@@ -42,3 +42,18 @@
     });
   });
 })();
+
+// formulaire de contact : envoi en JSON vers le service configuré
+(function () {
+  var f = document.getElementById('contact-form');
+  if (!f) return;
+  var msg = f.querySelector('.form-msg'), btn = f.querySelector('button');
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    btn.disabled = true; msg.textContent = f.dataset.sending;
+    fetch(f.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(f) })
+      .then(function (r) { if (!r.ok) throw 0; msg.textContent = f.dataset.ok; f.reset(); })
+      .catch(function () { msg.textContent = f.dataset.err; })
+      .then(function () { btn.disabled = false; });
+  });
+})();

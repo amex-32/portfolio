@@ -9,7 +9,8 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-EMAIL = ""  # renseigner pour afficher un contact par e-mail sur la page contact
+EMAIL = ""  # renseigner pour afficher une adresse e-mail sur la page contact
+FORM_ENDPOINT = ""  # URL d'un service de formulaire (ex. https://formspree.io/f/xxxx) ; vide = pas de formulaire
 GITHUB = "https://github.com/amex-32"
 LINKEDIN = "https://www.linkedin.com/in/alexandre-k-801438256/"
 SITE_REPO = "https://github.com/amex-32/portfolio"
@@ -26,18 +27,18 @@ UI = {
         "meta": "Portfolio d'Alexandre Klotz, étudiant en cybersécurité et développement web à Marseille.",
         "welcome": "Bienvenue",
         "h1": "Je suis <mark>Alexandre Klotz</mark>, étudiant en cybersécurité.",
-        "bio": "Je développe des sites web et des outils autour d'APIs, avec un intérêt pour la sécurité : authentification, accès aux données, bonnes pratiques côté serveur. Je cherche un stage ou une alternance.",
+        "bio": "Je me forme à la cybersécurité : reconnaissance et OSINT, administration Linux, pare-feu Stormshield. Je m'entraîne sous Kali Linux et je développe mes applications web en pensant sécurité dès le départ (authentification, droits minimaux, validation des entrées). Je cherche un stage ou une alternance.",
         "cta_projects": "Voir mes projets",
         "cta_contact": "Me contacter",
-        "term": ["$ whoami", "alexandre-klotz", "$ cat formation.txt", "# Bachelor, cybersécurité", "web · réseau · systèmes · sécurité", "$ ls projets/", "boutique-js  pokedex  forum  pixelworld"],
+        "term": [("p", "nmap -sV -p 22,80,443 scanme.nmap.org"), ("c", "# exemple : cible de test officielle de Nmap"), ("", "Nmap scan report for scanme.nmap.org"), ("", "Host is up (0.17s latency)."), ("", ""), ("k", "PORT     STATE  SERVICE  VERSION"), ("", "22/tcp   open   ssh      OpenSSH 6.6.1p1"), ("", "80/tcp   open   http     Apache httpd 2.4.7"), ("", "443/tcp  closed https"), ("", ""), ("p", "")],
         "skills_label": "Compétences",
         "skills_h": "Ce que j'utilise",
         "skills_lead": "Du front au back, avec une approche sécurité dès la conception.",
         "skills": [
-            ("Front-end", ["HTML", "CSS", "JavaScript", "Responsive"]),
-            ("Back-end & données", ["Node.js", "Go", "API REST", "SQL", "Authentification"]),
-            ("Sécurité & outils", ["Git & GitHub", "Stormshield", "OSINT"]),
-            ("Systèmes", ["macOS", "Windows 10 / 11", "Debian", "Kali Linux"]),
+            ("Sécurité", ["OSINT", "Stormshield", "Authentification", "Moindre privilège"]),
+            ("Systèmes", ["Debian", "Kali Linux", "macOS", "Windows 10 / 11"]),
+            ("Back-end & données", ["Node.js", "Go", "API REST", "SQL"]),
+            ("Front-end & outils", ["HTML", "CSS", "JavaScript", "Git & GitHub"]),
         ],
         "proj_label": "Projets",
         "proj_h": "Réalisations",
@@ -50,7 +51,7 @@ UI = {
         "list_title": "Mes <em>projets</em>",
         "list_lead": "Tout ce que j'ai construit pendant ma formation. Filtre par type pour t'y retrouver.",
         "all": "Tous",
-        "kinds": {"web": "Web", "api": "API", "jeu": "Jeu"},
+        "kinds": {"web": "Web", "api": "API"},
         "detail_word": "DÉTAILS",
         "description": "Description",
         "tech": "Technologies",
@@ -82,6 +83,11 @@ UI = {
         "source": "Code source du site",
         "rights": "© 2026 Alexandre Klotz",
         "game_title": "Mini-jeu — 2048",
+        "game_page": "Mini-<em>jeu</em>",
+        "game_lead": "Une pause : le 2048, avec un classement partagé.",
+        "form_h": "Écrire un message",
+        "form_name": "Nom", "form_email": "Votre e-mail", "form_msg": "Message", "form_send": "Envoyer",
+        "form_ok": "Message envoyé, merci !", "form_err": "Échec de l'envoi. Réessayez ou écrivez-moi sur LinkedIn.", "form_sending": "Envoi…",
         "home_name": "Accueil",
     },
     "en": {
@@ -92,18 +98,18 @@ UI = {
         "meta": "Portfolio of Alexandre Klotz, cybersecurity and web development student in Marseille, France.",
         "welcome": "Welcome",
         "h1": "I'm <mark>Alexandre Klotz</mark>, a cybersecurity student.",
-        "bio": "I build websites and tools around APIs, with a focus on security: authentication, data access and server-side good practice. I'm looking for an internship or a work-study position.",
+        "bio": "I'm training in cybersecurity: reconnaissance and OSINT, Linux administration, Stormshield firewalls. I practise on Kali Linux and build my web apps with security in mind from the start (authentication, least privilege, input validation). I'm looking for an internship or a work-study position.",
         "cta_projects": "See my projects",
         "cta_contact": "Get in touch",
-        "term": ["$ whoami", "alexandre-klotz", "$ cat education.txt", "# Bachelor, cybersecurity", "web · network · systems · security", "$ ls projects/", "boutique-js  pokedex  forum  pixelworld"],
+        "term": [("p", "nmap -sV -p 22,80,443 scanme.nmap.org"), ("c", "# example: Nmap's official test target"), ("", "Nmap scan report for scanme.nmap.org"), ("", "Host is up (0.17s latency)."), ("", ""), ("k", "PORT     STATE  SERVICE  VERSION"), ("", "22/tcp   open   ssh      OpenSSH 6.6.1p1"), ("", "80/tcp   open   http     Apache httpd 2.4.7"), ("", "443/tcp  closed https"), ("", ""), ("p", "")],
         "skills_label": "Skills",
         "skills_h": "What I use",
         "skills_lead": "From front to back, with security in mind from the design stage.",
         "skills": [
-            ("Front-end", ["HTML", "CSS", "JavaScript", "Responsive"]),
-            ("Back-end & data", ["Node.js", "Go", "REST API", "SQL", "Authentication"]),
-            ("Security & tools", ["Git & GitHub", "Stormshield", "OSINT"]),
-            ("Systems", ["macOS", "Windows 10 / 11", "Debian", "Kali Linux"]),
+            ("Security", ["OSINT", "Stormshield", "Authentication", "Least privilege"]),
+            ("Systems", ["Debian", "Kali Linux", "macOS", "Windows 10 / 11"]),
+            ("Back-end & data", ["Node.js", "Go", "REST API", "SQL"]),
+            ("Front-end & tools", ["HTML", "CSS", "JavaScript", "Git & GitHub"]),
         ],
         "proj_label": "Projects",
         "proj_h": "Selected work",
@@ -116,7 +122,7 @@ UI = {
         "list_title": "My <em>projects</em>",
         "list_lead": "Everything I built during my studies. Filter by type to find your way around.",
         "all": "All",
-        "kinds": {"web": "Web", "api": "API", "jeu": "Game"},
+        "kinds": {"web": "Web", "api": "API"},
         "detail_word": "DETAILS",
         "description": "Description",
         "tech": "Technologies",
@@ -148,6 +154,11 @@ UI = {
         "source": "Site source code",
         "rights": "© 2026 Alexandre Klotz",
         "game_title": "Mini-game — 2048",
+        "game_page": "Mini-<em>game</em>",
+        "game_lead": "A short break: 2048, with a shared leaderboard.",
+        "form_h": "Send a message",
+        "form_name": "Name", "form_email": "Your e-mail", "form_msg": "Message", "form_send": "Send",
+        "form_ok": "Message sent, thank you!", "form_err": "Sending failed. Try again or write to me on LinkedIn.", "form_sending": "Sending…",
         "home_name": "Home",
     },
 }
@@ -225,42 +236,6 @@ PROJECTS = [
             "features": ["Shared 1000 × 1000 pixel canvas", "Real-time updates over WebSocket, single or batched", "Camera zoom and pan", "Player nicknames and scores", "Moderation: banning a player", "Grid and scores saved to disk", "Specification and ADR in the docs folder"],
         },
     },
-    {
-        "slug": "puissance4", "kind": "jeu", "lang": "Go", "code": "https://github.com/nikita-ynov/PUISSANCE4",
-        "tech": ["Go", "html/template", "HTML/CSS"],
-        "fr": {
-            "title": "Puissance 4",
-            "short": "Le jeu de Puissance 4 à deux joueurs, avec la logique de jeu écrite en Go.",
-            "long": ["Version web du Puissance 4 pour deux joueurs, rouge contre jaune. La logique du jeu (placement des jetons, détection d'un alignement, égalité) est écrite en Go côté serveur, l'interface en HTML et CSS.",
-                     "Projet réalisé en groupe ; le dépôt est hébergé sur le compte d'un des membres de l'équipe."],
-            "features": ["Partie à deux joueurs, rouge contre jaune", "Logique de jeu côté serveur en Go", "Détection de la victoire et de l'égalité", "Messages d'état : tour du joueur, victoire, égalité", "Interface HTML / CSS"],
-        },
-        "en": {
-            "title": "Connect Four",
-            "short": "Two-player Connect Four, with the game logic written in Go.",
-            "long": ["A web version of Connect Four for two players, red against yellow. The game logic (dropping discs, detecting a line of four, draws) is written in Go on the server, and the interface in HTML and CSS.",
-                     "A group project; the repository is hosted on a teammate's account."],
-            "features": ["Two-player game, red against yellow", "Game logic on the server, in Go", "Win and draw detection", "Status messages: whose turn, win, draw", "HTML / CSS interface"],
-        },
-    },
-    {
-        "slug": "spotify-api", "kind": "api", "lang": "Go", "code": "https://github.com/AM3X-svg/tpapispotify",
-        "tech": ["Go", "Spotify Web API", "OAuth (client credentials)", "HTML/CSS"],
-        "fr": {
-            "title": "API Spotify",
-            "short": "Application Go qui interroge l'API Spotify pour afficher les albums de Damso et les morceaux de Laylow.",
-            "long": ["Application web en Go qui consomme l'API Spotify. La page d'accueil présente deux artistes côte à côte ; chacun mène à une page dédiée, les albums pour Damso et les morceaux pour Laylow.",
-                     "L'authentification utilise le flux client credentials de Spotify, et l'interface adopte un style « Liquid Glass » avec un fond animé."],
-            "features": ["Accueil avec deux artistes cliquables", "Page des albums de Damso", "Page des morceaux de Laylow", "Authentification Spotify en client credentials", "Interface « Liquid Glass » avec fond animé", "Affichage adapté aux petits écrans"],
-        },
-        "en": {
-            "title": "Spotify API",
-            "short": "A Go app that queries the Spotify API to show Damso's albums and Laylow's tracks.",
-            "long": ["A web app in Go that consumes the Spotify API. The home page shows two artists side by side; each leads to a dedicated page, albums for Damso and tracks for Laylow.",
-                     "Authentication uses Spotify's client credentials flow, and the interface has a \"Liquid Glass\" look with an animated background."],
-            "features": ["Home page with two clickable artists", "Damso albums page", "Laylow tracks page", "Spotify authentication with client credentials", "\"Liquid Glass\" interface with animated background", "Layout adapted to small screens"],
-        },
-    },
 ]
 
 ICON_GH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.19.7.8.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>'
@@ -279,6 +254,7 @@ def out_path(lang, page, slug=None):
     names = {
         "home": "index.html",
         "list": "projects.html" if lang == "en" else "projets.html",
+        "game": "game.html" if lang == "en" else "jeu.html",
         "contact": "contact.html",
         "detail": f"projects/{slug}.html",
     }
@@ -302,17 +278,15 @@ def esc(s):
 # ---------------------------------------------------------------- briques
 def hud(lang, page, slug, me):
     t = UI[lang]
-    other = "en" if lang == "fr" else "fr"
     items = [("home", "00", t["nav"][0], out_path(lang, "home")),
              ("list", "01", t["nav"][1], out_path(lang, "list")),
-             ("game", "02", t["nav"][2], out_path(lang, "home") + "#jeu"),
+             ("game", "02", t["nav"][2], out_path(lang, "game")),
              ("contact", "03", t["nav"][3], out_path(lang, "contact"))]
-    cur = {"home": "home", "list": "list", "detail": "list", "contact": "contact"}[page]
+    cur = {"home": "home", "list": "list", "detail": "list", "game": "game", "contact": "contact"}[page]
     nav = "".join(
         f'<a href="{rel(me, href)}"{" aria-current=\"page\"" if key == cur else ""}><i>{n}</i>{label}</a>'
         for key, n, label, href in items)
-    num = {"home": "00", "list": "01", "detail": "01", "contact": "03"}[page]
-    other_href = out_path(other, page, slug)
+    num = {"home": "00", "list": "01", "detail": "01", "game": "02", "contact": "03"}[page]
     fr_href, en_href = (rel(me, out_path("fr", page, slug)), rel(me, out_path("en", page, slug)))
     cur_fr = ' aria-current="true"' if lang == "fr" else ""
     cur_en = ' aria-current="true"' if lang == "en" else ""
@@ -346,6 +320,7 @@ def footer(lang, me):
       <div class="foot-col"><h4>{t["f_general"]}</h4>
         <a href="{rel(me, out_path(lang, "home"))}">{t["nav"][0]}</a>
         <a href="{rel(me, out_path(lang, "list"))}">{t["nav"][1]}</a>
+        <a href="{rel(me, out_path(lang, "game"))}">{t["nav"][2]}</a>
         <a href="{rel(me, out_path(lang, "contact"))}">{t["nav"][3]}</a></div>
       <div class="foot-col"><h4>{t["f_elsewhere"]}</h4>
         <a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a>
@@ -379,7 +354,6 @@ def card(lang, p, me):
 
 
 def page(lang, kind, slug, title, desc, body, me):
-    other = "en" if lang == "fr" else "fr"
     root = "../" * me.count("/")
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{rel(me, out_path(l, kind, slug))}">' for l in ("fr", "en"))
     return f'''<!DOCTYPE html>
@@ -408,26 +382,22 @@ def page(lang, kind, slug, title, desc, body, me):
 
 
 def extra_scripts(kind, root):
-    return f'<script src="{root}js/game.js"></script>' if kind == "home" else ""
+    return f'<script src="{root}js/game.js"></script>' if kind == "game" else ""
 
 
 # ---------------------------------------------------------------- pages
 def build_home(lang):
     t, me = UI[lang], out_path(lang, "home")
-    term = t["term"]
-    delays = [.3, .9, 1.5, 2.1, 2.1, 2.7, 3.3]
     lines = ""
-    for txt, dl in zip(term, delays):
-        if txt.startswith("$"):
-            txt = f'<span class="p">$</span>{esc(txt[1:])}'
-        elif txt.startswith("#"):
-            txt = f'<span class="c">{esc(txt)}</span>'
-        elif txt == term[-1]:
-            txt = f'<span class="k">{esc(txt)}</span>'
+    for n, (cls, txt) in enumerate(t["term"]):
+        if cls == "p":
+            txt = f'<span class="p">$</span> {esc(txt)}'
+        elif cls:
+            txt = f'<span class="{cls}">{esc(txt)}</span>'
         else:
             txt = esc(txt)
-        lines += f'<span class="line" style="animation-delay:{dl}s">{txt}</span>\n'
-    lines += '<span class="line" style="animation-delay:3.9s"><span class="p">$</span> <span class="cursor"></span></span>'
+        tail = '<span class="cursor"></span>' if n == len(t["term"]) - 1 else ""
+        lines += f'<span class="line" style="animation-delay:{.3 + n * .35:.2f}s">{txt}{tail}</span>\n'
 
     hero = win("Profil.exe", f'''
       <div class="hero-grid">
@@ -453,21 +423,12 @@ def build_home(lang):
       <h2>{t["skills_h"]}</h2><p class="lead">{t["skills_lead"]}</p>
       <div class="skills">{boxes}</div>''', "competences")
 
-    cards = "".join(card(lang, p, me) for p in PROJECTS)
-    projects = win(t["proj_label"], f'''
-      <span class="label"><b>02</b> / {t["proj_label"]}</span>
-      <h2>{t["proj_h"]}</h2><p class="lead">{t["proj_lead"]}</p>
-      <div class="proj-grid">{cards}</div>
-      <div class="btn-row" style="margin-top:22px"><a class="btn" href="{rel(me, out_path(lang, "list"))}">{t["all_projects"]} →</a></div>''', "projets")
-
-    game = game_block(lang)
-
     contact = win(t["contact_label"], f'''
-      <span class="label"><b>04</b> / {t["contact_label"]}</span>
+      <span class="label"><b>02</b> / {t["contact_label"]}</span>
       <h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>
       <div class="btn-row"><a class="btn btn-primary" href="{rel(me, out_path(lang, "contact"))}">{t["cta_contact"]}</a>
       <a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>''', "contact")
-    return page(lang, "home", None, t["title"], t["meta"], "\n".join([hero, skills, projects, game, contact]), me)
+    return page(lang, "home", None, t["title"], t["meta"], "\n".join([hero, skills, contact]), me)
 
 
 GAME_EN = {
@@ -517,6 +478,15 @@ def build_game_js():
             f"var TR_EN = {json.dumps(en, ensure_ascii=False)};\n"
             "function T(s){ return document.documentElement.lang === 'en' && TR_EN[s] || s; }\n")
     (ROOT / "js/game.js").write_text(head + js)
+
+
+def build_game(lang):
+    t, me = UI[lang], out_path(lang, "game")
+    body = f'''<div class="crumbs"><a href="{rel(me, out_path(lang, "home"))}">{t["crumb_home"]}</a><span>/</span><span>{t["nav"][2]}</span></div>
+<h1 class="page-title">{t["game_page"]}</h1>
+<p class="lead">{t["game_lead"]}</p>
+{game_block(lang)}'''
+    return page(lang, "game", None, f'{t["game_title"]} — Alexandre Klotz', t["game_lead"], body, me)
 
 
 def build_list(lang):
@@ -571,6 +541,17 @@ def build_detail(lang, p):
 def build_contact(lang):
     t, me = UI[lang], out_path(lang, "contact")
     mail = (f'<a class="channel" href="mailto:{EMAIL}"><div class="contact-icon ci-mail">{ICON_MAIL}</div><div><b>E-mail</b><small>{EMAIL}</small></div><span class="go">→</span></a>' if EMAIL else "")
+    form = ""
+    if FORM_ENDPOINT:
+        form = f'''<div class="block"><h3>{t["form_h"]}</h3>
+      <form id="contact-form" class="form" action="{FORM_ENDPOINT}" method="post" data-ok="{t["form_ok"]}" data-err="{t["form_err"]}" data-sending="{t["form_sending"]}">
+        <label>{t["form_name"]}<input name="name" required maxlength="80" autocomplete="name"></label>
+        <label>{t["form_email"]}<input name="email" type="email" required maxlength="120" autocomplete="email"></label>
+        <label>{t["form_msg"]}<textarea name="message" required rows="6" maxlength="3000"></textarea></label>
+        <input name="_gotcha" tabindex="-1" autocomplete="off" class="trap" aria-hidden="true">
+        <button class="btn btn-primary" type="submit">{t["form_send"]}</button>
+        <p class="form-msg" role="status"></p>
+      </form></div>'''
     looking = "".join(f"<li>{x}</li>" for x in t["looking"])
     profile = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in t["profile"])
     body = f'''<div class="crumbs"><a href="{rel(me, out_path(lang, "home"))}">{t["crumb_home"]}</a><span>/</span><span>{t["contact_label"]}</span></div>
@@ -583,6 +564,7 @@ def build_contact(lang):
       <a class="channel" href="{GITHUB}" target="_blank" rel="noopener"><div class="contact-icon ci-gh">{ICON_GH}</div><div><b>GitHub</b><small>github.com/amex-32</small></div><span class="go">↗</span></a>
       {mail}
     </div>
+    {form}
     <div class="block"><h3>{t["looking_h"]}</h3><ul class="feat">{looking}</ul></div>
   </div>
   <aside class="side">
@@ -603,12 +585,13 @@ def write(rel_path, html):
 
 
 if __name__ == "__main__":
-    for old in (ROOT / "projects").glob("*.html"):
+    for old in [*(ROOT / "projects").glob("*.html"), *(ROOT / "en/projects").glob("*.html")]:
         old.unlink()
     build_game_js()
     for lang in ("fr", "en"):
         write(out_path(lang, "home"), build_home(lang))
         write(out_path(lang, "list"), build_list(lang))
+        write(out_path(lang, "game"), build_game(lang))
         write(out_path(lang, "contact"), build_contact(lang))
         for p in PROJECTS:
             write(out_path(lang, "detail", p["slug"]), build_detail(lang, p))
