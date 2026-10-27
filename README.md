@@ -24,3 +24,5 @@ La fonction `api/scores.js` tourne sur Vercel et se connecte à une base MySQL (
 En local : `npm install`, puis `DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js` (ajouter `DB_SSL=0` pour un MySQL local sans TLS). Tests : `node tools/test.js && node tools/test-api.js`.
 
 Les scores sont envoyés par le navigateur : ils sont bornés et validés côté serveur, mais restent falsifiables.
+
+Le déploiement Vercel se fait à chaque `git push` sur `main`.
