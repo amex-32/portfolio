@@ -181,7 +181,7 @@ UI = {
 
 PROJECTS = [
     {
-        "slug": "boutique-cyberpunk", "hue": 320, "glyph": "JS", "kind": "web", "lang": "JavaScript", "code": "https://github.com/amex-32/boutique-js",
+        "slug": "boutique-cyberpunk", "demo": "https://boutique-js.onrender.com", "hue": 320, "glyph": "JS", "kind": "web", "lang": "JavaScript", "code": "https://github.com/amex-32/boutique-js",
         "tech": ["JavaScript", "Node.js", "Express", "MySQL", "HTML/CSS"],
         "fr": {
             "title": "Boutique Cyberpunk",
