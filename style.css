@@ -465,3 +465,11 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 .tile small { font: 12px var(--mono); color: var(--text2); }
 .tile-ico { width: 84px; height: 84px; display: grid; place-items: center; color: var(--text); background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 6px; }
 .tile-ico.mono { font: 700 26px var(--display); color: #fff; background: var(--c); border: none; }
+
+/* ---------- Têtes de page centrées ---------- */
+main > .crumbs, .filters, .meta-line { justify-content: center; }
+main > .page-title, main > .lead, main > .meta-line, .win-body > .label, .win-body > h2, .win-body > .lead { text-align: center; }
+main > .lead, .win-body > .lead { margin-inline: auto; }
+.page-head { flex-direction: column; justify-content: center; }
+.win-body > .btn-row { justify-content: center; }
+.skills { justify-items: stretch; }
