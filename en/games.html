@@ -30,7 +30,7 @@
   </header>
   <main class="page">
 <div class="head-c"><div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Games</span></div><h1 class="page-title">Game <em>room</em></h1><p class="lead">Four mini-games for a break. Best scores are kept in your browser.</p></div><section class="card fadein "><div class="seg" role="tablist"><button type="button" role="tab" data-g="g-2048" aria-selected="false">2048</button><button type="button" role="tab" data-g="g-snake" aria-selected="false">Snake</button><button type="button" role="tab" data-g="g-memory" aria-selected="false">Memory</button><button type="button" role="tab" data-g="g-code" aria-selected="false">Code Breaker</button></div>
-<div class="gp" id="g-2048">
+<div class="gp" id="g-2048"><div class="cols"><div>
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
         <button id="g-new" class="xp-btn">New game</button>
         <div style="font-weight:700;color:var(--text2)">Score: <span id="g-score">0</span></div>
@@ -47,37 +47,18 @@
           </div>
           <p style="font-size:11px;color:var(--text2);margin-top:6px">Arrow keys or swipe on mobile</p>
         </div>
-        <div style="flex:1;min-width:190px">
-          <div style="font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px">
-            Global leaderboard
-            <button id="g-refresh" class="xp-btn" style="padding:2px 8px;font-size:11px">↻</button>
-          </div>
-          <div id="lb-list"><div style="color:var(--text2);font-size:12px;padding:6px">Loading…</div></div>
-          <div id="lb-status"></div>
 
-          <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
-            <input id="g-pseudo" placeholder="Your nickname" maxlength="30"
-                   style="padding:5px 8px;border-radius:4px;border:1px solid rgba(0,100,200,.3);font-size:12px;font-family:inherit;background:rgba(255,255,255,.7)"/>
-            <div style="display:flex;gap:6px">
-              <button id="g-submit" class="xp-btn">Submit score</button>
-            </div>
-          </div>
-          <p style="color:var(--text2);margin-top:8px;font-size:11px;line-height:1.5">
-            One score per nickname, only the best is kept.<br>
-            Leaderboard shared between all visitors.
-          </p>
-        </div>
       </div>
-    </div>
-<div class="gp" id="g-snake"><div class="play">
+    </div><aside class="sb" data-game="2048"></aside></div></div>
+<div class="gp" id="g-snake"><div class="cols"><div class="play">
   <div class="gbar"><span>Score <b id="sn-score">0</b></span><span>Best <b id="sn-best">0</b></span><span class="msg" id="sn-msg"></span><button class="xp-btn" id="sn-btn" type="button"></button></div>
-  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div></div>
-<div class="gp" id="g-memory"><div class="play">
+  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="snake"></aside></div></div>
+<div class="gp" id="g-memory"><div class="cols"><div class="play">
   <div class="gbar"><span>Moves <b id="mem-moves">0</b></span><span>Time <b id="mem-time">0s</b></span><span>Best <b id="mem-best">–</b></span><span class="msg" id="mem-msg"></span><button class="xp-btn" id="mem-btn" type="button"></button></div>
-  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div></div>
-<div class="gp" id="g-code"><div class="play"><div class="cb">
+  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="memory"></aside></div></div>
+<div class="gp" id="g-code"><div class="cols"><div class="play"><div class="cb">
   <div class="gbar"><span>Tries left <b id="cb-left">8</b></span><span class="msg" id="cb-msg"></span><button class="xp-btn" id="cb-btn" type="button"></button></div>
-  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div></div></section>
+  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div></section>
   </main>
 </div>
 <div class="foot">
@@ -88,6 +69,6 @@
 <div class="toast" role="status"></div>
 <script type="application/json" id="cmd-data">{"pages": [{"t": "Home", "u": "index.html", "i": "00"}, {"t": "Projects", "u": "projects.html", "i": "01"}, {"t": "Games", "u": "games.html", "i": "02"}, {"t": "About", "u": "about.html", "i": "03"}, {"t": "Contact", "u": "contact.html", "i": "04"}], "projects": [{"t": "Cyberpunk Shop", "u": "projects/boutique-cyberpunk.html", "k": "Web"}, {"t": "Interactive Pokédex", "u": "projects/pokedex-interactive.html", "k": "API"}, {"t": "Music Forum", "u": "projects/forum-musical.html", "k": "Web"}, {"t": "PixelWorld", "u": "projects/pixelworld.html", "k": "Web"}], "links": [{"t": "GitHub", "u": "https://github.com/amex-32"}, {"t": "LinkedIn", "u": "https://www.linkedin.com/in/alexandre-k-801438256/"}, {"t": "Site source code", "u": "https://github.com/amex-32/portfolio"}], "langUrl": "../jeux.html", "l": {"pages": "Pages", "projects": "Projects", "actions": "Actions", "links": "Links", "theme": "Switch theme", "lang": "Switch to French", "accent": "Accent colour", "accents": {"blue": "Blue", "violet": "Violet", "green": "Green", "orange": "Orange"}, "empty": "No results"}}</script>
 <script src="../js/site.js"></script>
-<script src="../js/game.js"></script><script src="../js/games.js"></script>
+<script src="../js/game.js"></script><script src="../js/games.js"></script><script src="../js/scores.js"></script>
 </body>
 </html>

@@ -35,6 +35,7 @@ if (typeof document !== 'undefined') (function () {
     cbHint: 'Find the 4-digit code, all digits different. ● right place, ○ wrong place.', cbLose: 'You lost, the code was ', cbWin: 'Code cracked in ',
     memHint: 'Find all the pairs.', ok: 'Enter', del: 'Delete'
   };
+  var announce = function (game, score) { window.dispatchEvent(new CustomEvent('ak-score', { detail: { game: game, score: score } })); };
   var best = function (k) { try { return +localStorage.getItem(k) || 0; } catch (e) { return 0; } };
   var keep = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
   var active = function () { var p = $('.gp.on'); return p && p.id; };
@@ -79,6 +80,7 @@ if (typeof document !== 'undefined') (function () {
     function end() {
       run = false; over = true; msg.textContent = TX.over; btn.textContent = TX.again;
       if (score > best('ak-snake')) { keep('ak-snake', score); bestEl.textContent = score; }
+      if (score > 0) announce('snake', score);
       draw();
     }
     function reset() {
@@ -136,6 +138,7 @@ if (typeof document !== 'undefined') (function () {
         if (!left) {
           clearInterval(ti); msg.textContent = TX.win;
           if (!best('ak-mem') || moves < best('ak-mem')) { keep('ak-mem', moves); bestEl.textContent = moves; }
+          announce('memory', moves);
           if (window.toast) window.toast(TX.win + ' ' + moves + ' ' + TX.moves.toLowerCase());
         }
       }, 650);
@@ -162,7 +165,7 @@ if (typeof document !== 'undefined') (function () {
     function submit() {
       if (done || cur.length < 4) return;
       var f = feedback(secret, cur); tries.push({ g: cur, hit: f.hit, near: f.near });
-      if (f.hit === 4) { done = true; msg.textContent = TX.cbWin + tries.length + '/' + MAX; if (window.toast) window.toast(msg.textContent); }
+      if (f.hit === 4) { done = true; announce('code', tries.length); msg.textContent = TX.cbWin + tries.length + '/' + MAX; if (window.toast) window.toast(msg.textContent); }
       else if (tries.length === MAX) { done = true; msg.textContent = TX.cbLose + secret; }
       cur = ''; paint();
     }

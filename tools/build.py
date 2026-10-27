@@ -133,16 +133,16 @@ def games_panels(lang):
             inner = inner.replace(fr, en)
     t = GT[lang]
     return f'''
-<div class="gp" id="g-2048">{inner}</div>
-<div class="gp" id="g-snake"><div class="play">
+<div class="gp" id="g-2048"><div class="cols"><div>{inner}</div><aside class="sb" data-game="2048"></aside></div></div>
+<div class="gp" id="g-snake"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["score"]} <b id="sn-score">0</b></span><span>{t["best"]} <b id="sn-best">0</b></span><span class="msg" id="sn-msg"></span><button class="xp-btn" id="sn-btn" type="button"></button></div>
-  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div></div>
-<div class="gp" id="g-memory"><div class="play">
+  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="snake"></aside></div></div>
+<div class="gp" id="g-memory"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["moves"]} <b id="mem-moves">0</b></span><span>{t["time"]} <b id="mem-time">0s</b></span><span>{t["best"]} <b id="mem-best">–</b></span><span class="msg" id="mem-msg"></span><button class="xp-btn" id="mem-btn" type="button"></button></div>
-  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div></div>
-<div class="gp" id="g-code"><div class="play"><div class="cb">
+  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="memory"></aside></div></div>
+<div class="gp" id="g-code"><div class="cols"><div class="play"><div class="cb">
   <div class="gbar"><span>{t["left"]} <b id="cb-left">8</b></span><span class="msg" id="cb-msg"></span><button class="xp-btn" id="cb-btn" type="button"></button></div>
-  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div></div>'''
+  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div>'''
 
 
 # ---------------------------------------------------------------- briques
@@ -348,7 +348,7 @@ def build_game(lang):
                    for g, n in zip(["g-2048", "g-snake", "g-memory", "g-code"], t["games_tabs"]))
     body = head_c(lang, me, t["nav"][2], t["games_title"], t["games_lead"]) + card(f'<div class="seg" role="tablist">{tabs}</div>{games_panels(lang)}')
     return chrome(lang, "game", None, me, f'{t["nav"][2]} — Alexandre K.', t["games_lead"], body,
-                  '<script src="ROOT/js/game.js"></script><script src="ROOT/js/games.js"></script>')
+                  '<script src="ROOT/js/game.js"></script><script src="ROOT/js/games.js"></script><script src="ROOT/js/scores.js"></script>')
 
 
 def build_about(lang, data):

@@ -13,12 +13,7 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
     const scoreEl   = document.getElementById('g-score');
     const bestEl    = document.getElementById('g-best');
     const msgEl     = document.getElementById('g-msg');
-    const lbEl      = document.getElementById('lb-list');
-    const lbStatus  = document.getElementById('lb-status');
     const newBtn    = document.getElementById('g-new');
-    const submitBtn = document.getElementById('g-submit');
-    const refreshBtn= document.getElementById('g-refresh');
-    const pseudoIn  = document.getElementById('g-pseudo');
 
     // ---- State ----
     const SIZE = 4;
@@ -158,6 +153,7 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
       scoreEl.textContent = score;
       if(score>best){ best=score; localStorage.setItem('ak2048best',best); }
       bestEl.textContent = best;
+      if(score>0) window.dispatchEvent(new CustomEvent('ak-score',{detail:{game:'2048',score}}));
     }
 
     // ---- Game flow ----
@@ -226,88 +222,7 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
     // Make board position:relative for absolute tile placement
     boardEl.style.position = 'relative';
 
-    // ===========================
-    //   LEADERBOARD
-    // ===========================
-    async function fetchLeaderboard(){
-      // 1. Try global API
-      try{
-        const r = await fetch('/api/leaderboard?all=1', {cache:'no-store'});
-        if(r.ok){
-          const j = await r.json();
-          const rows = j.rows || j;
-          if(Array.isArray(rows)){
-            setLbStatus(T('Classement global'));
-            return {rows, global:true};
-          }
-        }
-      }catch(e){ /* réseau indispo */ }
-
-      // 2. Fallback localStorage
-      setLbStatus(T('Classement local (API indisponible)'));
-      const rows = JSON.parse(localStorage.getItem('ak2048lb')||'[]');
-      return {rows, global:false};
-    }
-
-    async function renderLeaderboard(){
-      lbEl.innerHTML = '<div style="color:var(--text2);font-size:12px;padding:6px">'+T('Chargement…')+'</div>';
-      const {rows} = await fetchLeaderboard();
-      const sorted = rows.slice().sort((a,b)=>b.score-a.score);
-      if(!sorted.length){ lbEl.innerHTML='<div style="color:var(--text2);font-size:12px;padding:6px">'+T('Aucun score')+'</div>'; return; }
-      lbEl.innerHTML = sorted.map((e,i)=>`
-      <div class="lb-row">
-        <div><span class="lb-rank">${i+1}.</span> <strong class="${i===0?'lb-gold':''}">${esc(e.user||e.username||'—')}</strong></div>
-        <div style="font-weight:700">${e.score.toLocaleString('fr-FR')}</div>
-      </div>
-    `).join('');
-    }
-
-    function setLbStatus(msg){ lbStatus.textContent=msg; }
-
-    async function submitScore(){
-      const user = pseudoIn.value.trim();
-      if(!user){ alert(T('Entrez un pseudo avant de soumettre.')); pseudoIn.focus(); return; }
-      if(score===0){ alert(T('Votre score est 0 — jouez d\'abord !')); return; }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Envoi…';
-
-      let success = false;
-
-      // 1. Try global API
-      try{
-        const r = await fetch('/api/leaderboard',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({user,score})
-        });
-        if(r.ok){ const j=await r.json(); success=j.success; }
-      }catch(e){}
-
-      // 2. Always also save locally as backup
-      const local = JSON.parse(localStorage.getItem('ak2048lb')||'[]');
-      const existIdx = local.findIndex(e=>e.user===user);
-      if(existIdx>=0){ if(score>local[existIdx].score){ local[existIdx].score=score; local[existIdx].date=new Date().toISOString(); } }
-      else { local.push({user,score,date:new Date().toISOString()}); }
-      local.sort((a,b)=>b.score-a.score); if(local.length>100) local.length=100;
-      localStorage.setItem('ak2048lb',JSON.stringify(local));
-
-      submitBtn.disabled = false;
-      submitBtn.textContent = T('Soumettre score');
-
-      if(success){
-        alert(T('Score soumis au classement global !'));
-      } else {
-        alert(T('Score sauvegardé localement (API non disponible).'));
-      }
-      await renderLeaderboard();
-    }
-
-    submitBtn.addEventListener('click', submitScore);
-    refreshBtn.addEventListener('click', renderLeaderboard);
-
     // ---- Init ----
     newGame();
-    renderLeaderboard();
 
   })();
