@@ -170,7 +170,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     dock = "".join(f'<a href="{r(k)}" data-tip="{label}" aria-label="{label}"{here if k == cur else ""}>{ico(ic)}</a>' for k, label, ic in nav)
     dock += (f'<button type="button" data-act="palette" data-tip="⌘K" aria-label="{t["pal_ph"]}">{ico("cmd")}</button>'
              f'<button type="button" data-act="theme" data-tip="{t["pal_theme"]}" aria-label="{t["pal_theme"]}">{ico("moon")}</button>')
-    path = "~/klotz" + (PATH[page] if page != "detail" else f"/projets/{slug}")
+    path = "~/amex" + (PATH[page] if page != "detail" else f"/projets/{slug}")
     on = ' aria-current="true"'
     notifs = "".join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in t["notifs"])
     cmd = {
@@ -210,7 +210,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     <nav class="tabs" aria-label="Navigation">{tabs}</nav>
     <div class="top-right">
       <button class="round bell" type="button" data-act="bell" aria-label="{t["notif_h"]}">{ico("bell", 19)}<i></i></button>
-      <a class="profile" href="{r("about")}"><span class="avatar">AK</span><div><b>Alexandre Klotz</b><small>{t["handle"]}</small></div></a>
+      <a class="profile" href="{r("about")}"><span class="avatar">AK</span><div><b>Alexandre K.</b><small>{t["handle"]}</small></div></a>
       <div class="drop" id="notifs"><h4>{t["notif_h"]}</h4><ul>{notifs}</ul></div>
     </div>
   </header>
@@ -230,6 +230,23 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
 </body>
 </html>
 '''
+
+
+def cv_cards(lang, detailed):
+    """Éléments du CV : parcours cyber, formation, langues (+ autres projets en version détaillée)."""
+    c = CV[lang]
+    chips = lambda xs: '<div class="tags">' + "".join(f"<span>{x}</span>" for x in xs) + '</div>'
+    hl = "".join(
+        f'<div class="hl"><b>{n}</b><small>{sub}</small>' + (f'<p>{d}</p>' if detailed else "") + chips(tg if detailed else tg[:4]) + '</div>'
+        for n, sub, d, tg in c["highlights"])
+    edu = "".join(f'<div class="hl"><b>{n}</b><small>{s}</small></div>' for n, s in c["edu"])
+    langs = "".join(f'<div class="lg"><b>{n}</b><span>{lv}</span></div>' for n, lv in c["langs"])
+    out = [card(f'<div class="card-h"><h3>{c["hl_h"]}</h3></div>{hl}'), card(f'<div class="card-h"><h3>{c["edu_h"]}</h3></div>{edu}'),
+           card(f'<div class="card-h"><h3>{c["lang_h"]}</h3></div><div class="langs">{langs}</div>')]
+    if detailed:
+        more = "".join(f'<div class="hl"><b>{n}</b><small>{sub}</small><p>{d}</p>{chips(tg)}</div>' for n, sub, d, tg in c["more"])
+        out.append(card(f'<div class="card-h"><h3>{c["more_h"]}</h3></div>{more}'))
+    return out
 
 
 def card(inner, cls="", extra=""):
@@ -254,7 +271,7 @@ def build_home(lang):
     intro = f'''<div class="slide intro on">
       <div><span class="label"><b>00</b> / {t["welcome"]}</span><h1>{t["h1"]}</h1><p>{t["bio"]}</p>
         <div class="btn-row"><a class="btn btn-primary" href="{r("list")}">{t["cta_projects"]}</a><a class="btn" href="{r("contact")}">{t["cta_contact"]}</a></div></div>
-      <div class="term" aria-hidden="true"><div class="term-bar"><span></span><span></span><span></span><em>alexandre@marseille: ~</em></div><pre>{lines}</pre></div>
+      <div class="term" aria-hidden="true"><div class="term-bar"><span></span><span></span><span></span><em>amex@kali: ~</em></div><pre>{lines}</pre></div>
     </div>'''
     slides = "".join(
         f'''<div class="slide pj" aria-hidden="true">{poster(p)}<div>
@@ -266,7 +283,7 @@ def build_home(lang):
     nav = (f'<div class="hero-nav"><button class="round" type="button" data-act="prev" aria-label="{t["back"]}">{ico("left", 18)}</button>'
            f'<button class="round" type="button" data-act="next" aria-label="{t["forward"]}">{ico("right", 18)}</button></div>')
     hero = card(f'{intro}{slides}<div class="dots">{dots}</div>{nav}', "hero")
-    who = card(f'''<div class="who"><div class="avatar">AK</div><h3>Alexandre Klotz</h3><p>{t["who_tag"]}</p>
+    who = card(f'''<div class="who"><div class="avatar">AK</div><h3>Alexandre K.</h3><p>{t["who_tag"]}</p>
       <div class="btn-row"><a class="btn small" href="{GITHUB}" target="_blank" rel="noopener">{ICON_GH} GitHub</a><a class="btn small" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>
       <div class="status"><span class="dot"></span>{t["status"]}</div></div>''')
     rows = "".join(
@@ -277,7 +294,7 @@ def build_home(lang):
     discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
     contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label"><b>04</b> / {t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
                    f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
-    body = f'<div class="home"><div class="stack aside">{who}{skills}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'
+    body = f'<div class="home"><div class="stack aside">{who}{skills}{"".join(cv_cards(lang, False))}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'
     return chrome(lang, "home", None, me, t["title"], t["meta"], body)
 
 
@@ -289,7 +306,7 @@ def build_list(lang):
     cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
     body = (head_c(lang, me, t["crumb_projects"], t["list_title"], t["list_lead"], f'<div class="filters" role="group">{btns}</div>')
             + f'<div class="proj-grid fadein">{cards}</div>')
-    return chrome(lang, "list", None, me, f'{t["crumb_projects"]} — Alexandre Klotz', t["list_lead"], body)
+    return chrome(lang, "list", None, me, f'{t["crumb_projects"]} — Alexandre K.', t["list_lead"], body)
 
 
 def build_detail(lang, p):
@@ -312,7 +329,7 @@ def build_detail(lang, p):
             + card(facts) + '</aside>')
     others = sorted((q for q in PROJECTS if q["slug"] != p["slug"]), key=lambda q: q["kind"] != p["kind"])
     sim = card(f'<div class="card-h"><h3>{t["similar_small"]}</h3></div><div class="proj-grid">{"".join(proj_card(lang, q, me) for q in others[:3])}</div>')
-    return chrome(lang, "detail", p["slug"], me, f'{d["title"]} — Alexandre Klotz', d["short"], f'{banner}<div class="detail-grid">{main}{side}</div>{sim}')
+    return chrome(lang, "detail", p["slug"], me, f'{d["title"]} — Alexandre K.', d["short"], f'{banner}<div class="detail-grid">{main}{side}</div>{sim}')
 
 
 def build_game(lang):
@@ -320,7 +337,7 @@ def build_game(lang):
     tabs = "".join(f'<button type="button" role="tab" data-g="{g}" aria-selected="false">{n}</button>'
                    for g, n in zip(["g-2048", "g-snake", "g-memory", "g-code"], t["games_tabs"]))
     body = head_c(lang, me, t["nav"][2], t["games_title"], t["games_lead"]) + card(f'<div class="seg" role="tablist">{tabs}</div>{games_panels(lang)}')
-    return chrome(lang, "game", None, me, f'{t["nav"][2]} — Alexandre Klotz', t["games_lead"], body,
+    return chrome(lang, "game", None, me, f'{t["nav"][2]} — Alexandre K.', t["games_lead"], body,
                   '<script src="ROOT/js/game.js"></script><script src="ROOT/js/games.js"></script>')
 
 
@@ -332,8 +349,10 @@ def build_about(lang, data):
         for n, ic, url, c in SOFTWARE)
     gh = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
     setup = card(f'<div class="block"><h3>{t["hw_h"]}</h3><div class="tiles">{hw}</div></div><div class="block"><h3>{t["sw_h"]}</h3><div class="tiles">{sw}</div></div>')
-    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + gh + setup
-    return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre Klotz', t["about_lead"], body)
+    cv = cv_cards(lang, True)
+    body = (head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="detail-grid">{cv[0]}{cv[1]}</div>'
+            + f'<div class="detail-grid">{cv[2]}{cv[3]}</div>' + gh + setup)
+    return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
 
 
 def build_contact(lang):
@@ -360,7 +379,7 @@ def build_contact(lang):
                f'<p style="margin-top:14px"><span class="dot"></span> {t["status"]}</p></div>')
     right = f'<aside class="side">{cta}{card(f"<dl class=facts>{profile}</dl>")}</aside>'
     body = head_c(lang, me, t["contact_label"], t["contact_h"], t["contact_lead"]) + f'<div class="contact-wrap">{left}{right}</div>'
-    return chrome(lang, "contact", None, me, f'{t["contact_label"]} — Alexandre Klotz', t["contact_lead"], body)
+    return chrome(lang, "contact", None, me, f'{t["contact_label"]} — Alexandre K.', t["contact_lead"], body)
 
 
 def write(path, html):

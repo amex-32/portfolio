@@ -1,6 +1,6 @@
 # Portfolio
 
-Portfolio d'Alexandre Klotz, en français (racine) et en anglais (`en/`).
+Portfolio d'Alexandre K., en français (racine) et en anglais (`en/`).
 
 Site statique en HTML, CSS et JavaScript, sans dépendance. Les pages sont générées par un petit script Python :
 
