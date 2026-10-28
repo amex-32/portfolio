@@ -1,0 +1,6 @@
+# Fichiers de travail : ni servis ni déployés (le site est déjà généré, la seule fonction serveur est dans api/).
+tools/
+src/
+.github/
+.idea/
+README.md

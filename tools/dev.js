@@ -1,15 +1,16 @@
-// Serveur local : fichiers statiques + /api/scores. Usage : DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js [port]
+// Serveur local : fichiers statiques + /api/scores et /api/ctf. Usage : DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js [port]
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const handler = require('../api/scores.js');
+const API = { '/api/scores': require('../api/scores.js'), '/api/ctf': require('../api/ctf.js') };
 
 const ROOT = path.join(__dirname, '..');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.json': 'application/json', '.svg': 'image/svg+xml' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.json': 'application/json', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml' };
 
 http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
-  if (url.pathname === '/api/scores') {
+  const handler = API[url.pathname];
+  if (handler) {
     req.query = Object.fromEntries(url.searchParams);
     res.status = (c) => { res.statusCode = c; return res; };
     res.json = (o) => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(o)); };

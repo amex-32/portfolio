@@ -16,8 +16,12 @@ function shuffle(a, rnd) {
 }
 function secretCode(rnd) { return shuffle('0123456789'.split(''), rnd).slice(0, 4).join(''); }
 function nextHead(h, d, n) { return { x: (h.x + d.x + n) % n, y: (h.y + d.y + n) % n }; }
+// Chiffre de César sur A-Z (le reste est laissé tel quel) ; k négatif pour déchiffrer.
+function caesar(s, k) {
+  return s.replace(/[A-Z]/g, function (c) { return String.fromCharCode((c.charCodeAt(0) - 65 + k % 26 + 26) % 26 + 65); });
+}
 
-if (typeof module !== 'undefined') module.exports = { feedback: feedback, shuffle: shuffle, secretCode: secretCode, nextHead: nextHead };
+if (typeof module !== 'undefined') module.exports = { feedback: feedback, shuffle: shuffle, secretCode: secretCode, nextHead: nextHead, caesar: caesar };
 
 if (typeof document !== 'undefined') (function () {
   'use strict';
@@ -28,12 +32,16 @@ if (typeof document !== 'undefined') (function () {
     start: 'Jouer', again: 'Rejouer', score: 'Score', best: 'Meilleur', moves: 'Coups', time: 'Temps', tries: 'Essais',
     over: 'Perdu !', paused: 'Pause', win: 'Gagné !', hint: 'Flèches, ZQSD ou glisser. Espace pour pause.',
     cbHint: 'Trouve le code à 4 chiffres, tous différents. ● bien placé, ○ mal placé.', cbLose: 'Perdu, le code était ', cbWin: 'Code craqué en ',
-    memHint: 'Retrouve toutes les paires.', ok: 'Entrer', del: 'Effacer'
+    memHint: 'Retrouve toutes les paires.', ok: 'Entrer', del: 'Effacer', ciWrong: 'Raté, −5 s', ciEnd: 'Temps écoulé : ',
+    words: ['PARE FEU', 'MOT DE PASSE', 'CHIFFREMENT', 'HAMECONNAGE', 'PORT OUVERT', 'INJECTION SQL', 'PAQUET RESEAU', 'CLE PUBLIQUE',
+      'SAUVEGARDE', 'AUTHENTIFICATION', 'JOURNAL SYSTEME', 'VULNERABILITE', 'RECONNAISSANCE', 'PORTE DEROBEE', 'RANCONGICIEL', 'DROITS MINIMAUX']
   } : {
     start: 'Play', again: 'Play again', score: 'Score', best: 'Best', moves: 'Moves', time: 'Time', tries: 'Tries',
     over: 'Game over!', paused: 'Paused', win: 'You win!', hint: 'Arrows, WASD or swipe. Space to pause.',
     cbHint: 'Find the 4-digit code, all digits different. ● right place, ○ wrong place.', cbLose: 'You lost, the code was ', cbWin: 'Code cracked in ',
-    memHint: 'Find all the pairs.', ok: 'Enter', del: 'Delete'
+    memHint: 'Find all the pairs.', ok: 'Enter', del: 'Delete', ciWrong: 'Wrong, −5 s', ciEnd: 'Time is up: ',
+    words: ['FIREWALL', 'PASSWORD', 'ENCRYPTION', 'PHISHING', 'OPEN PORT', 'SQL INJECTION', 'NETWORK PACKET', 'PUBLIC KEY',
+      'BACKUP', 'AUTHENTICATION', 'SYSTEM LOG', 'VULNERABILITY', 'RECONNAISSANCE', 'BACKDOOR', 'RANSOMWARE', 'LEAST PRIVILEGE']
   };
   var announce = function (game, score) { window.dispatchEvent(new CustomEvent('ak-score', { detail: { game: game, score: score } })); };
   var best = function (k) { try { return +localStorage.getItem(k) || 0; } catch (e) { return 0; } };
@@ -48,6 +56,7 @@ if (typeof document !== 'undefined') (function () {
     $$('.gp').forEach(function (p) { p.classList.toggle('on', p.id === id); });
     if (history.replaceState) history.replaceState(null, '', '#' + id.replace('g-', ''));
     if (id !== 'g-snake') snake.pause();
+    if (id !== 'g-cipher' && cipherGame) cipherGame.stop();
   }
   tabs.forEach(function (b) { b.addEventListener('click', function () { select(b.dataset.g); }); });
 
@@ -184,7 +193,52 @@ if (typeof document !== 'undefined') (function () {
     start();
   })();
 
-  // ---------- onglet initial (#snake, #memory, #code) ----------
-  var h = location.hash.replace('#', ''), map = { snake: 'g-snake', memory: 'g-memory', code: 'g-code', '2048': 'g-2048' };
+  // ---------- César : retrouver le décalage ----------
+  var cipherGame = (function () {
+    var cEl = $('#ci-cipher'), pEl = $('#ci-plain'), shEl = $('#ci-shift'), scEl = $('#ci-score'), tEl = $('#ci-time'), bestEl = $('#ci-best'), msg = $('#ci-msg'), btn = $('#ci-btn');
+    var word, k, s, score, end, ti, run = false, last;
+    bestEl.textContent = best('ak-cipher');
+    function paint() { shEl.textContent = s; pEl.textContent = run ? caesar(cEl.textContent, -s) : '· · ·'; }
+    function next() {
+      do { word = TX.words[Math.floor(Math.random() * TX.words.length)]; } while (word === last);
+      last = word; k = 1 + Math.floor(Math.random() * 25); s = 0;
+      cEl.textContent = caesar(word, k); paint();
+    }
+    function tick() {
+      var left = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+      tEl.textContent = left + 's';
+      if (!left) stop();
+    }
+    function stop() {
+      run = false; clearInterval(ti); msg.textContent = TX.ciEnd + score; btn.textContent = TX.again;
+      if (score > best('ak-cipher')) { keep('ak-cipher', score); bestEl.textContent = score; }
+      if (score > 0) announce('cipher', score);
+      paint();
+    }
+    function start() {
+      score = 0; scEl.textContent = 0; msg.textContent = ''; run = true; end = Date.now() + 60000;
+      clearInterval(ti); ti = setInterval(tick, 250); tick(); btn.textContent = TX.again; next();
+    }
+    function turn(d) { if (run) { s = (s + d + 26) % 26; paint(); } }
+    function submit() {
+      if (!run) return;
+      if (s === k) { score++; scEl.textContent = score; msg.textContent = ''; next(); }
+      else { end -= 5000; msg.textContent = TX.ciWrong; tick(); }
+    }
+    $('#ci-down').addEventListener('click', function () { turn(-1); });
+    $('#ci-up').addEventListener('click', function () { turn(1); });
+    $('#ci-ok').addEventListener('click', submit);
+    btn.addEventListener('click', start); btn.textContent = TX.start;
+    document.addEventListener('keydown', function (e) {
+      if (active() !== 'g-cipher' || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); turn(e.key === 'ArrowLeft' ? -1 : 1); }
+      else if (e.key === 'Enter') { e.preventDefault(); run ? submit() : start(); }
+    });
+    s = 0; paint();
+    return { stop: function () { if (run) stop(); } }; // quitter l'onglet termine la manche
+  })();
+
+  // ---------- onglet initial (#snake, #memory, #code, #cipher, #ctf) ----------
+  var h = location.hash.replace('#', ''), map = { snake: 'g-snake', memory: 'g-memory', code: 'g-code', '2048': 'g-2048', cipher: 'g-cipher', ctf: 'g-ctf' };
   select(map[h] || 'g-2048');
 })();

@@ -1,0 +1,5 @@
+Contact: https://alexandre-k.vercel.app/contact.html
+Contact: https://www.linkedin.com/in/alexandre-k-801438256/
+Expires: 2027-12-31T23:59:59Z
+Preferred-Languages: fr, en
+Canonical: https://alexandre-k.vercel.app/.well-known/security.txt

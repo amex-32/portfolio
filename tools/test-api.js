@@ -22,5 +22,15 @@ ko({ game: 'code', pseudo: 'abc', score: 9 });
 ko({ game: 'code', pseudo: 'abc', score: 0 });
 ko(null);
 ko({});
-assert.deepStrictEqual(Object.keys(GAMES).sort(), ['2048', 'code', 'memory', 'snake']);
+ok({ game: 'cipher', pseudo: 'abc', score: 60 });
+ko({ game: 'cipher', pseudo: 'abc', score: 61 });
+assert.deepStrictEqual(Object.keys(GAMES).sort(), ['2048', 'cipher', 'code', 'memory', 'snake']);
 console.log('api : ok');
+
+// CTF : chaque flag de tools/ctf.json est reconnu à sa place, le reste est refusé.
+const { flagIndex, HASHES } = require('../api/ctf.js');
+const { flags } = require('./ctf.json');
+assert.strictEqual(HASHES.length, flags.length);
+flags.forEach((f, i) => assert.strictEqual(flagIndex(f), i, f));
+for (const bad of ['FLAG{nope}', 'flag{v13w_s0urc3_1s_y0ur_fr13nd}', flags[0] + ' ', '', null, 42, { a: 1 }, 'FLAG{' + 'a'.repeat(61) + '}']) assert.strictEqual(flagIndex(bad), -1, String(bad));
+console.log('ctf : ok');

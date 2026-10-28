@@ -3,9 +3,11 @@
 
 Textes, projets et icônes : tools/content.py. Jeu 2048 : src/game.html et src/game.js.
 """
+import base64
 import datetime
 import json
 import os
+import posixpath
 import re
 import sys
 import urllib.request
@@ -21,8 +23,11 @@ _P.update({
     "layout": '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>',
 })
 
-PAGE_NUM = {"home": "00", "list": "01", "detail": "01", "game": "02", "about": "03", "contact": "04"}
-PATH = {"home": "", "list": "/projets", "game": "/jeux", "about": "/a-propos", "contact": "/contact"}
+PAGE_NUM = {"home": "00", "list": "01", "detail": "01", "game": "02", "about": "03", "contact": "04", "writeups": "05"}
+PATH = {"home": "", "list": "/projets", "game": "/jeux", "about": "/a-propos", "contact": "/contact", "writeups": "/write-ups", "notfound": "/404"}
+# noms acceptés par les commandes cd / cat du terminal
+TERM_NAMES = {"home": ["accueil", "home"], "list": ["projets", "projects"], "game": ["jeux", "games"],
+              "writeups": ["write-ups", "writeups"], "about": ["a-propos", "about"], "contact": ["contact"]}
 SKILL_ICONS = ["shield", "terminal", "server", "layout"]
 
 
@@ -35,13 +40,20 @@ def out_path(lang, page, slug=None):
         "game": "games.html" if lang == "en" else "jeux.html",
         "about": "about.html" if lang == "en" else "a-propos.html",
         "contact": "contact.html",
+        "writeups": "write-ups.html",
+        "notfound": "404.html",
         "detail": f"projects/{slug}.html",
     }
     return pre + names[page]
 
 
+def abs_url(path):
+    return SITE_URL + "/" + (path[:-len("index.html")] if path.endswith("index.html") else path)
+
+
 def rel(src, dst):
-    return os.path.relpath(dst, os.path.dirname(src) or ".")
+    # posixpath : des liens en "/" même quand le site est généré sous Windows
+    return posixpath.relpath(dst, posixpath.dirname(src) or ".")
 
 
 def esc(s):
@@ -131,7 +143,7 @@ def games_panels(lang):
     if lang == "en":
         for fr, en in GAME_EN.items():
             inner = inner.replace(fr, en)
-    t = GT[lang]
+    t, u = GT[lang], UI[lang]
     return f'''
 <div class="gp" id="g-2048"><div class="cols"><div>{inner}</div><aside class="sb" data-game="2048"></aside></div></div>
 <div class="gp" id="g-snake"><div class="cols"><div class="play">
@@ -142,7 +154,14 @@ def games_panels(lang):
   <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="memory"></aside></div></div>
 <div class="gp" id="g-code"><div class="cols"><div class="play"><div class="cb">
   <div class="gbar"><span>{t["left"]} <b id="cb-left">8</b></span><span class="msg" id="cb-msg"></span><button class="xp-btn" id="cb-btn" type="button"></button></div>
-  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div>'''
+  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
+<div class="gp" id="g-cipher"><div class="cols"><div class="play"><div class="ci">
+  <div class="gbar"><span>{t["score"]} <b id="ci-score">0</b></span><span>{t["time"]} <b id="ci-time">60s</b></span><span>{t["best"]} <b id="ci-best">0</b></span><span class="msg" id="ci-msg"></span><button class="xp-btn" id="ci-btn" type="button"></button></div>
+  <p class="ci-text" id="ci-cipher">· · ·</p><p class="ci-text ci-plain" id="ci-plain" aria-live="polite">· · ·</p>
+  <div class="ci-ctl"><button class="round" id="ci-down" type="button" aria-label="−1">◀</button><span>{u["ci_shift"]} <b id="ci-shift">0</b></span><button class="round" id="ci-up" type="button" aria-label="+1">▶</button><button class="xp-btn" id="ci-ok" type="button">{u["ci_ok"]}</button></div>
+  <p class="lead" style="margin:0;font-size:13px">{u["ci_help"]}</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
+<div class="gp" id="g-ctf"><div class="cols"><div class="play ctf"><h3>{u["ctf_h"]}</h3><p>{u["ctf_p"]}</p>
+  <ol>{"".join(f"<li>{esc(h)}</li>" for h in u["ctf_hints"])}</ol><button class="btn btn-primary" type="button" data-act="term">{u["ctf_open"]}</button></div><aside class="sb" data-ctf></aside></div></div>'''
 
 
 # ---------------------------------------------------------------- briques
@@ -161,8 +180,10 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     t, other = UI[lang], ("en" if lang == "fr" else "fr")
     root = "../" * me.count("/")
     r = lambda p, s=None: rel(me, out_path(lang, p, s))
+    # la page 404 n'existe qu'à la racine : ses liens de langue mènent aux accueils
+    lp = "home" if page == "notfound" else page
     nav = [("home", t["nav"][0], "home"), ("list", t["nav"][1], "folder"), ("game", t["nav"][2], "game"),
-           ("about", t["nav"][3], "user"), ("contact", t["nav"][4], "mail")]
+           ("writeups", t["nav"][5], "shield"), ("about", t["nav"][3], "user"), ("contact", t["nav"][4], "mail")]
     cur = "list" if page == "detail" else page
     here = ' aria-current="page"'
     tabs = "".join(f'<a href="{r(k)}"{here if k == cur else ""}>{label}</a>' for k, label, _ in nav)
@@ -172,17 +193,34 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     path = "~/amex" + (PATH[page] if page != "detail" else f"/projets/{slug}")
     on = ' aria-current="true"'
     notifs = "".join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in t["notifs"])
+    descs = {"home": t["meta"], "list": t["list_lead"], "game": t["games_lead"], "writeups": t["wu_lead"], "about": t["about_lead"], "contact": t["contact_lead"]}
     cmd = {
-        "pages": [{"t": label, "u": r(k), "i": PAGE_NUM[k]} for k, label, _ in nav],
-        "projects": [{"t": p[lang]["title"], "u": r("detail", p["slug"]), "k": t["kinds"][p["kind"]]} for p in PROJECTS],
+        "pages": [{"t": label, "u": r(k), "i": PAGE_NUM[k], "k": TERM_NAMES[k], "d": descs[k]} for k, label, _ in nav],
+        "projects": [{"t": p[lang]["title"], "u": r("detail", p["slug"]), "k": t["kinds"][p["kind"]], "s": p["slug"], "d": p[lang]["short"]} for p in PROJECTS],
         "links": [{"t": "GitHub", "u": GITHUB}, {"t": "LinkedIn", "u": LINKEDIN}, {"t": t["source"], "u": SITE_REPO}],
-        "langUrl": rel(me, out_path(other, page, slug)),
+        "langUrl": rel(me, out_path(other, lp, slug)),
         "l": {"pages": t["pal_pages"], "projects": t["pal_projects"], "actions": t["pal_actions"], "links": t["pal_links"],
-              "theme": t["pal_theme"], "lang": t["pal_lang"], "accent": t["pal_accent"], "accents": t["accent_names"], "empty": t["pal_empty"]},
+              "theme": t["pal_theme"], "lang": t["pal_lang"], "accent": t["pal_accent"], "accents": t["accent_names"], "empty": t["pal_empty"],
+              "term": t["pal_term"]},
     }
-    alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{rel(me, out_path(l, page, slug))}">' for l in ("fr", "en"))
+    alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, lp, slug))}">' for l in ("fr", "en"))
     boot = ("<script>try{var d=document.documentElement,t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
             "d.dataset.theme=t;var a=localStorage.getItem('accent');if(a)d.dataset.accent=a}catch(e){}</script>")
+    plain = lambda s: esc(re.sub(r"<[^>]+>", "", s)).replace('"', "&quot;")
+    if page == "notfound":
+        # servie à n'importe quelle adresse : <base> pour que les liens relatifs partent de la racine
+        seo = '<base href="/"><meta name="robots" content="noindex">'
+    else:
+        url = abs_url(me)
+        seo = (f'<link rel="canonical" href="{url}">{alts}'
+               f'<meta property="og:type" content="website"><meta property="og:site_name" content="Alexandre K.">'
+               f'<meta property="og:title" content="{plain(title)}"><meta property="og:description" content="{plain(desc)}">'
+               f'<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE_URL}/og.png">'
+               f'<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+               f'<meta property="og:locale" content="{t["og_locale"]}"><meta name="twitter:card" content="summary_large_image">')
+    icons = (f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml"><link rel="icon" href="{root}favicon.ico" sizes="32x32">'
+             f'<link rel="apple-touch-icon" href="{root}apple-touch-icon.png">')
+    flag = f"\n  <!-- {CTF_FLAGS[0]} : 1/5, le code source ne ment jamais. -->" if page == "home" else ""
     return f'''<!DOCTYPE html>
 <html lang="{lang}" data-konami="{t["konami"]}">
 <head>
@@ -190,17 +228,18 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content="{desc}">
-  {alts}
+  {seo}
+  {icons}
   {FONTS}
   <link rel="stylesheet" href="{root}style.css">
-  {boot}
+  {boot}{flag}
 </head>
 <body>
 <div class="urlbar">
   <button class="round" type="button" data-act="back" aria-label="{t["back"]}">{ico("left", 18)}</button>
   <button class="round" type="button" data-act="forward" aria-label="{t["forward"]}">{ico("right", 18)}</button>
   <div class="path"><b>{path}</b></div>
-  <div class="lang" role="group" aria-label="Langue / Language"><a href="{rel(me, out_path("fr", page, slug))}" hreflang="fr" lang="fr"{on if lang == "fr" else ""}>FR</a><a href="{rel(me, out_path("en", page, slug))}" hreflang="en" lang="en"{on if lang == "en" else ""}>EN</a></div>
+  <div class="lang" role="group" aria-label="Langue / Language"><a href="{rel(me, out_path("fr", lp, slug))}" hreflang="fr" lang="fr"{on if lang == "fr" else ""}>FR</a><a href="{rel(me, out_path("en", lp, slug))}" hreflang="en" lang="en"{on if lang == "en" else ""}>EN</a></div>
 </div>
 <div class="dock" role="navigation" aria-label="Dock">{dock}</div>
 <div class="shell">
@@ -222,10 +261,12 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <div style="margin-top:8px">{t["rights"]} · {t["kb_hint"]}</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="{t["search_ph"]}"><div class="pal"><input type="text" placeholder="{t["pal_ph"]}" aria-label="{t["search_ph"]}" autocomplete="off"><ul></ul><footer>{t["pal_hint"]}</footer></div></div>
+<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><span></span><span></span><span></span><em>amex@portfolio: ~</em><button class="tty-x" type="button" aria-label="{t["back"]}">✕</button></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
 <div class="toast" role="status"></div>
-<script type="application/json" id="cmd-data">{json.dumps(cmd, ensure_ascii=False)}</script>
+<script type="application/json" id="cmd-data">{json.dumps(cmd, ensure_ascii=False).replace("</", "<\\/")}</script>
 <script src="{root}js/site.js"></script>
 {extra_js.replace("ROOT/", root)}
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
 '''
@@ -345,7 +386,7 @@ def build_detail(lang, p):
 def build_game(lang):
     t, me = UI[lang], out_path(lang, "game")
     tabs = "".join(f'<button type="button" role="tab" data-g="{g}" aria-selected="false">{n}</button>'
-                   for g, n in zip(["g-2048", "g-snake", "g-memory", "g-code"], t["games_tabs"]))
+                   for g, n in zip(["g-2048", "g-snake", "g-memory", "g-code", "g-cipher", "g-ctf"], t["games_tabs"]))
     body = head_c(lang, me, t["nav"][2], t["games_title"], t["games_lead"]) + card(f'<div class="seg" role="tablist">{tabs}</div>{games_panels(lang)}')
     return chrome(lang, "game", None, me, f'{t["nav"][2]} — Alexandre K.', t["games_lead"], body,
                   '<script src="ROOT/js/game.js"></script><script src="ROOT/js/games.js"></script><script src="ROOT/js/scores.js"></script>')
@@ -391,10 +432,52 @@ def build_contact(lang):
     return chrome(lang, "contact", None, me, f'{t["contact_label"]} — Alexandre K.', t["contact_lead"], body)
 
 
+def build_writeups(lang):
+    t, me = UI[lang], out_path(lang, "writeups")
+    arts = ""
+    for w in WRITEUPS:
+        d = w[lang]
+        secs = "".join(f'<div class="block"><h3>{h}</h3>{"".join(f"<p>{x}</p>" for x in ps)}</div>' for h, ps in d["sections"])
+        tags = "".join(f"<span>{x}</span>" for x in w["tags"])
+        arts += card(f'<article class="wu" id="{w["slug"]}"><div class="card-h"><h2>{d["title"]}</h2><small>{w["date"]}</small></div>'
+                     f'<p class="lead">{d["summary"]}</p><div class="tags">{tags}</div>{secs}</article>')
+    body = head_c(lang, me, t["nav"][5], t["wu_title"], t["wu_lead"]) + arts
+    return chrome(lang, "writeups", None, me, f'Write-ups — Alexandre K.', t["wu_lead"], body)
+
+
+def build_404():
+    t, me = UI["fr"], out_path("fr", "notfound")
+    en = UI["en"]
+    body = card(f'<div class="head-c nf"><span class="label"><b>404</b> / not found</span><h1 class="page-title">{t["nf_title"]}</h1>'
+                f'<p class="lead">{t["nf_lead"]}</p><p class="lead" lang="en">{en["nf_lead"]}</p>'
+                f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
+                f'<a class="btn" href="en/index.html" lang="en">{en["nf_home"]}</a></div></div>')
+    return chrome("fr", "notfound", None, me, "404 — Alexandre K.", t["nf_lead"], body)
+
+
+def seo_files(pages):
+    """robots.txt, sitemap.xml et security.txt (RFC 9116)."""
+    b64 = base64.b64encode(CTF_FLAGS[2].encode()).decode()
+    robots = f"User-agent: *\nAllow: /\n\n# Rien à cacher ici... ou presque : {b64}\n\nSitemap: {SITE_URL}/sitemap.xml\n"
+    urls = ""
+    for page, slug in pages:
+        alts = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, page, slug))}"/>' for l in ("fr", "en"))
+        urls += "".join(f"<url><loc>{abs_url(out_path(l, page, slug))}</loc>{alts}</url>\n" for l in ("fr", "en"))
+    sitemap = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+               f'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n{urls}</urlset>\n')
+    # Expires fixé à la fin de l'année suivante : le fichier ne change qu'une fois par an (pas de commit quotidien)
+    expires = f"{datetime.date.today().year + 1}-12-31T23:59:59Z"
+    security = (f"Contact: {SITE_URL}/contact.html\nContact: {LINKEDIN}\nExpires: {expires}\n"
+                f"Preferred-Languages: fr, en\nCanonical: {SITE_URL}/.well-known/security.txt\n")
+    write("robots.txt", robots)
+    write("sitemap.xml", sitemap)
+    write(".well-known/security.txt", security)
+
+
 def write(path, html):
     f = ROOT / path
     f.parent.mkdir(parents=True, exist_ok=True)
-    f.write_text(html)
+    f.write_text(html, encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":
@@ -408,6 +491,9 @@ if __name__ == "__main__":
         write(out_path(lang, "game"), build_game(lang))
         write(out_path(lang, "about"), build_about(lang, activity))
         write(out_path(lang, "contact"), build_contact(lang))
+        write(out_path(lang, "writeups"), build_writeups(lang))
         for p in PROJECTS:
             write(out_path(lang, "detail", p["slug"]), build_detail(lang, p))
+    write(out_path("fr", "notfound"), build_404())
+    seo_files([(k, None) for k in ("home", "list", "game", "writeups", "about", "contact")] + [("detail", p["slug"]) for p in PROJECTS])
     print("ok")

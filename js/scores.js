@@ -11,7 +11,7 @@
     play: 'Play a game to save a score.', yours: 'Your score', saved: 'Saved. Your best: ', error: 'Leaderboard unavailable.',
     rule: '2 to 16 characters: letters, digits, _ or -.', pts: 'pts', moves: 'moves', tries: 'tries', low: 'Lower is better.'
   };
-  var UNIT = { '2048': TX.pts, snake: TX.pts, memory: TX.moves, code: TX.tries };
+  var UNIT = { '2048': TX.pts, snake: TX.pts, memory: TX.moves, code: TX.tries, cipher: TX.pts };
   var LOW = ['memory', 'code'];
   var candidate = {}; // meilleur score de la session, par jeu
   var boards = {};
@@ -73,4 +73,27 @@
     if (boards[d.game]) boards[d.game].paint();
   });
   Array.prototype.forEach.call(document.querySelectorAll('.sb[data-game]'), build);
+
+  // Classement du mini-CTF : lecture seule, les flags se soumettent dans le terminal (js/site.js).
+  var ctf = document.querySelector('.sb[data-ctf]');
+  if (ctf) {
+    var list = el('ol', 'sb-list');
+    ctf.appendChild(el('h3', '', TX.title)); ctf.appendChild(list);
+    var loadCtf = function () {
+      list.textContent = ''; list.appendChild(el('li', 'sb-empty', TX.loading));
+      fetch('/api/ctf', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+        list.textContent = '';
+        if (!d.rows.length) { list.appendChild(el('li', 'sb-empty', TX.none)); return; }
+        d.rows.forEach(function (row, i) {
+          var li = el('li');
+          li.appendChild(el('span', 'sb-rank', String(i + 1)));
+          li.appendChild(el('b', row.found === d.total ? 'gold' : '', row.pseudo));
+          li.appendChild(el('span', 'sb-score', row.found + ' / ' + d.total));
+          list.appendChild(li);
+        });
+      }).catch(function () { list.textContent = ''; list.appendChild(el('li', 'sb-empty', TX.error)); });
+    };
+    window.addEventListener('ak-flag', loadCtf);
+    loadCtf();
+  }
 })();

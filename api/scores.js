@@ -10,6 +10,7 @@ const GAMES = {
   snake: { db: 'game_snake', best: 'high', min: 1, max: 321 },
   memory: { db: 'game_memory', best: 'low', min: 8, max: 99 },
   code: { db: 'game_code', best: 'low', min: 1, max: 8 },
+  cipher: { db: 'game_cipher', best: 'high', min: 1, max: 60 },
 };
 const PSEUDO = /^[A-Za-z0-9_-]{2,16}$/;
 
@@ -91,3 +92,6 @@ async function handler(req, res) {
 module.exports = handler;
 module.exports.validate = validate;
 module.exports.GAMES = GAMES;
+module.exports.PSEUDO = PSEUDO;
+module.exports.connect = connect;
+module.exports.tooFast = tooFast;

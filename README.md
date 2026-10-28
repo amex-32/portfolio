@@ -7,21 +7,27 @@ Site en ligne : https://alexandre-k.vercel.app
 Site statique en HTML, CSS et JavaScript, sans dépendance. Les pages sont générées par un petit script Python :
 
 ```bash
-python3 tools/build.py
+python3 tools/build.py   # sous Windows : PYTHONUTF8=1 python tools/build.py
 python3 -m http.server   # puis http://localhost:8000
 ```
 
-- `tools/build.py` : gabarits des pages ; `tools/content.py` : textes FR/EN, projets, icônes ; `tools/test.js` : test de la logique des jeux
-- `style.css`, `js/site.js` : styles et interactions (palette ⌘K, carrousel, thème, accent)
-- `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Snake, Memory, Code Breaker
+- `tools/build.py` : gabarits des pages, plus `404.html`, `robots.txt`, `sitemap.xml` et `.well-known/security.txt` ; `tools/content.py` : textes FR/EN, projets, write-ups, icônes
+- `style.css`, `js/site.js` : styles et interactions (palette ⌘K, terminal `²` ou `` ` ``, carrousel, thème, accent)
+- `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Snake, Memory, Code Breaker, César
 - `src/trees.json` : arborescences affichées sur les pages projet
-- `api/scores.js` : classements des 4 jeux, une base MySQL par jeu (`game_2048`, `game_snake`, `game_memory`, `game_code`) ; `js/scores.js` : l'interface
+- `api/scores.js` : classements des 5 jeux, une base MySQL par jeu (`game_2048`, `game_snake`, `game_memory`, `game_code`, `game_cipher`) ; `js/scores.js` : l'interface
+- `tools/images.py` : génère `og.png` (aperçu des liens partagés), `favicon.ico` et `apple-touch-icon.png` (Pillow) ; `favicon.svg` est écrit à la main
+- `vercel.json` : en-têtes de sécurité (CSP, anti-clickjacking…) ; `.vercelignore` : les fichiers de travail (`tools/`, `src/`…) ne sont pas déployés
 
-Pour afficher une adresse e-mail ou activer le formulaire de contact, renseigner `EMAIL` ou `FORM_ENDPOINT` en haut de `tools/build.py` puis relancer le script.
+Pour afficher une adresse e-mail ou activer le formulaire de contact, renseigner `EMAIL` ou `FORM_ENDPOINT` en haut de `tools/content.py` puis relancer le script.
+
+## Mini-CTF
+
+Cinq flags sont cachés dans le site ; ils se soumettent dans le terminal (`pseudo …` puis `flag FLAG{…}`). Les flags en clair sont dans `tools/ctf.json` (non déployé) ; `api/ctf.js` ne garde que leurs empreintes SHA-256 et enregistre les flags trouvés dans la base `game_ctf`. Pour changer un flag : `tools/ctf.json`, l'empreinte dans `api/ctf.js`, et sa cachette (`vercel.json` ou `js/site.js` pour les flags 2, 4 et 5). `node tools/test.js` vérifie que chaque flag est à sa place et n'apparaît nulle part ailleurs.
 
 ## Classements des jeux
 
-La fonction `api/scores.js` tourne sur Vercel et se connecte à une base MySQL (TiDB Cloud). Elle crée les bases et tables au premier appel. Variables d'environnement à définir dans Vercel : `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`.
+Les fonctions `api/scores.js` et `api/ctf.js` tournent sur Vercel et se connecte à une base MySQL (TiDB Cloud). Elles créent les bases et tables au premier appel. Variables d'environnement à définir dans Vercel : `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`.
 
 En local : `npm install`, puis `DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js` (ajouter `DB_SSL=0` pour un MySQL local sans TLS). Tests : `node tools/test.js && node tools/test-api.js`.
 

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Rien à cacher ici... ou presque : RkxBR3tyMGIwdHNfdHh0X2wzNGtzfQ==
+
+Sitemap: https://alexandre-k.vercel.app/sitemap.xml

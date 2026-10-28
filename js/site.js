@@ -8,9 +8,9 @@
 
   // ---------- toast ----------
   var toastEl = $('.toast'), toastT;
-  function toast(msg) {
+  function toast(msg, ms) {
     toastEl.textContent = msg; toastEl.classList.add('on');
-    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, 2600);
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, ms || 2600);
   }
   window.toast = toast;
 
@@ -82,6 +82,7 @@
     all.push({ g: data.l.actions, t: data.l.theme, h: '◐', run: toggleTheme });
     all.push({ g: data.l.actions, t: data.l.lang, h: 'FR / EN', run: function () { location.href = data.langUrl; } });
     accents.forEach(function (a) { all.push({ g: data.l.actions, t: data.l.accent + ' — ' + data.l.accents[a], h: '●', run: function () { setAccent(a); } }); });
+    all.push({ g: data.l.actions, t: data.l.term, h: '>_', run: function () { openTty(); } });
     data.links.forEach(function (p) { all.push({ g: data.l.links, t: p.t, h: '↗', run: function () { window.open(p.u, '_blank', 'noopener'); } }); });
     var render = function () {
       var q = input.value.trim().toLowerCase(), last = '', html = '';
@@ -117,8 +118,117 @@
   document.addEventListener('keydown', function (e) {
     var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     pos = k === seq[pos] ? pos + 1 : (k === seq[0] ? 1 : 0);
-    if (pos === seq.length) { pos = 0; matrix(); toast(document.documentElement.dataset.konami || 'Konami!'); }
+    if (pos === seq.length) { pos = 0; matrix(); toast((document.documentElement.dataset.konami || 'Konami!') + ' ' + '}4b_nw0dnw0dpupu{GALF'.split('').reverse().join(''), 8000); }
   });
+
+  // ---------- mini-CTF : un flag pour qui ouvre la console ----------
+  console.log('%c amex@portfolio ', 'background:#7cc4ff;color:#0d1726;font-weight:700;border-radius:4px',
+    root.lang === 'en' ? 'Curious? Good. Flag 4/5, in ROT13:' : 'Curieux ? Tant mieux. Flag 4/5, en ROT13 :', 'SYNT{e0g13_1a_gu3_p0af0y3}');
+
+  // ---------- terminal : navigation au clavier et soumission des flags ----------
+  var tty = $('.tty-bg'), openTty = function () {};
+  if (tty && data) {
+    var out = $('.tty-out', tty), cli = $('input', tty), hist = [], hi = 0, PSEUDO = /^[A-Za-z0-9_-]{2,16}$/;
+    var en = root.lang === 'en';
+    var TT = en ? {
+      hello: 'Type help to see the commands.', unknown: 'command not found: ', nofile: 'no such page: ',
+      help: ['help            this list', 'ls [projects]   list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
+        'whoami          who am I', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag', 'top             CTF leaderboard', 'theme · clear · exit'],
+      whoami: 'Alexandre K., cybersecurity student (Ynov, Sophia Antipolis). Looking for an internship or work-study.',
+      ctf: ['5 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
+        '3. Robots know things (and so does base64).', '4. The browser console, in ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', 'Then: pseudo <name>, and flag FLAG{…}'],
+      pseudoIs: 'nickname: ', noPseudo: 'choose a nickname first: pseudo <name>', badPseudo: '2 to 16 characters: letters, digits, _ or -.',
+      usageFlag: 'usage: flag FLAG{…}', bad: 'wrong flag, keep looking.', slow: 'too fast, try again in a few seconds.', err: 'leaderboard unavailable.',
+      got: 'correct flag! ', already: 'already found. ', found: ' flags found', all: 'All flags found. Well done!', none: 'no one yet.', sudo: 'amex is not in the sudoers file. This incident will be reported.'
+    } : {
+      hello: 'Tape help pour voir les commandes.', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
+      help: ['help            cette liste', 'ls [projets]    lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
+        'whoami          qui suis-je', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag', 'top             classement du CTF', 'theme · clear · exit'],
+      whoami: 'Alexandre K., étudiant en cybersécurité (Ynov, Sophia Antipolis). Je cherche un stage ou une alternance.',
+      ctf: ['5 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
+        '3. Les robots savent des choses (et le base64 aussi).', '4. La console du navigateur, en ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', 'Ensuite : pseudo <nom>, puis flag FLAG{…}'],
+      pseudoIs: 'pseudo : ', noPseudo: 'choisis d\'abord un pseudo : pseudo <nom>', badPseudo: '2 à 16 caractères : lettres, chiffres, _ ou -.',
+      usageFlag: 'usage : flag FLAG{…}', bad: 'flag incorrect, continue de chercher.', slow: 'trop rapide, réessaie dans quelques secondes.', err: 'classement indisponible.',
+      got: 'flag correct ! ', already: 'déjà trouvé. ', found: ' flags trouvés', all: 'Tous les flags sont trouvés. Bravo !', none: 'personne pour l\'instant.', sudo: 'amex n\'est pas dans le fichier sudoers. Cet incident sera signalé.'
+    };
+    var print = function (s, cls) {
+      [].concat(s).forEach(function (line) { var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = line; out.appendChild(d); });
+      out.scrollTop = out.scrollHeight;
+    };
+    var name = function (p) { return en ? p.k[p.k.length - 1] : p.k[0]; };
+    var find = function (x) {
+      x = (x || '').toLowerCase().replace(/\/+$/, '');
+      if (x === '' || x === '~' || x === '..' || x === '/') return data.pages[0];
+      return data.pages.filter(function (p) { return p.k.indexOf(x) > -1; })[0] || data.projects.filter(function (p) { return p.s === x; })[0];
+    };
+    var pseudo = function (v) { try { if (v != null) localStorage.setItem('ak-pseudo', v); return localStorage.getItem('ak-pseudo') || ''; } catch (e) { return v || ''; } };
+    var flag = function (f) {
+      var who = pseudo();
+      if (!f) return print(TT.usageFlag, 'err');
+      if (!PSEUDO.test(who)) return print(TT.noPseudo, 'err');
+      fetch('/api/ctf', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pseudo: who, flag: f }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { s: r.status, d: d }; }); })
+        .then(function (x) {
+          if (x.s === 200) {
+            print((x.d.already ? TT.already : TT.got) + x.d.found + ' / ' + x.d.total + TT.found, 'ok');
+            if (x.d.found === x.d.total) print(TT.all, 'ok');
+            window.dispatchEvent(new CustomEvent('ak-flag'));
+          } else print(x.s === 400 ? TT.bad : x.s === 429 ? TT.slow : TT.err, 'err');
+        })
+        .catch(function () { print(TT.err, 'err'); });
+    };
+    var top = function () {
+      fetch('/api/ctf', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+        if (!d.rows.length) return print(TT.none);
+        print(d.rows.map(function (r, i) { return (i + 1 + '.   ').slice(0, 4) + (r.pseudo + '                ').slice(0, 17) + r.found + ' / ' + d.total; }));
+      }).catch(function () { print(TT.err, 'err'); });
+    };
+    var CMDS = {
+      help: function () { print(TT.help); },
+      ls: function (a) {
+        var p = find(a);
+        if (a && p === data.pages[1]) return print(data.projects.map(function (q) { return q.s; }).join('  '));
+        if (a && !p) return print(TT.nofile + a, 'err');
+        print(data.pages.map(function (q) { return name(q) + '/'; }).join('  '));
+      },
+      cd: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); location.href = p.u; },
+      cat: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); print(p.d); },
+      whoami: function () { print(TT.whoami); },
+      ctf: function () { print(TT.ctf); },
+      pseudo: function (a) { if (!a) return print(TT.pseudoIs + (pseudo() || '–')); if (!PSEUDO.test(a)) return print(TT.badPseudo, 'err'); pseudo(a); print(TT.pseudoIs + a, 'ok'); },
+      flag: flag, top: top,
+      theme: function () { toggleTheme(); },
+      clear: function () { out.textContent = ''; },
+      exit: function () { closeTty(); },
+      sudo: function () { print(TT.sudo, 'err'); }
+    };
+    var exec = function (line) {
+      print('$ ' + line, 'cmd');
+      var parts = line.trim().split(/\s+/), c = parts[0].toLowerCase();
+      if (!c) return;
+      if (Object.prototype.hasOwnProperty.call(CMDS, c)) CMDS[c](parts.slice(1).join(' '));
+      else print(TT.unknown + parts[0], 'err');
+    };
+    openTty = function () {
+      if (bg) bg.classList.remove('open');
+      tty.classList.add('open');
+      if (!out.childNodes.length) print(TT.hello);
+      cli.focus();
+    };
+    var closeTty = function () { tty.classList.remove('open'); cli.blur(); };
+    cli.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { var v = cli.value; cli.value = ''; if (v.trim()) { hist.push(v); hi = hist.length; } exec(v); }
+      else if (e.key === 'ArrowUp' && hi > 0) { cli.value = hist[--hi]; e.preventDefault(); }
+      else if (e.key === 'ArrowDown') { hi = Math.min(hist.length, hi + 1); cli.value = hist[hi] || ''; e.preventDefault(); }
+      else if (e.key === 'Escape') closeTty();
+    });
+    $('.tty-x', tty).addEventListener('click', closeTty);
+    tty.addEventListener('click', function (e) { if (e.target === tty) closeTty(); });
+    $$('[data-act="term"]').forEach(function (b) { b.addEventListener('click', openTty); });
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === '²' || e.key === '`') && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); tty.classList.contains('open') ? closeTty() : openTty(); }
+    });
+  }
   function matrix() {
     if (reduce || $('#matrix')) return;
     var c = document.createElement('canvas'), g = c.getContext('2d');

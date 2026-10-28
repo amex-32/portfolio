@@ -1,0 +1,10 @@
+{
+  "_": "Flags du mini-CTF, dans l'ordre des indices. Le site les place (build.py, vercel.json, js/site.js) ; api/ctf.js ne garde que leurs empreintes SHA-256. Vérifié par tools/test.js.",
+  "flags": [
+    "FLAG{v13w_s0urc3_1s_y0ur_fr13nd}",
+    "FLAG{h34d3rs_t3ll_t4l3s}",
+    "FLAG{r0b0ts_txt_l34ks}",
+    "FLAG{r0t13_1n_th3_c0ns0l3}",
+    "FLAG{upupd0wnd0wn_b4}"
+  ]
+}

@@ -14,13 +14,15 @@ GITHUB = "https://github.com/amex-32"
 LINKEDIN = "https://www.linkedin.com/in/alexandre-k-801438256/"
 GITHUB_USER = "amex-32"
 SITE_REPO = "https://github.com/amex-32/portfolio"
+SITE_URL = "https://alexandre-k.vercel.app"
+CTF_FLAGS = json.loads((ROOT / "tools/ctf.json").read_text())["flags"]
 
 TREES = json.loads((ROOT / "src/trees.json").read_text())
 
 # ---------------------------------------------------------------- textes
 UI = {
     "fr": {
-        "nav": ["Accueil", "Projets", "Jeux", "À propos", "Contact"],
+        "nav": ["Accueil", "Projets", "Jeux", "À propos", "Contact", "Write-ups"],
         "avail": "Disponible",
         "status": "Disponible pour stage / alternance · Alpes-Maritimes",
         "title": "Alexandre K. — Portfolio",
@@ -99,7 +101,7 @@ UI = {
         "home_name": "Accueil",
     },
     "en": {
-        "nav": ["Home", "Projects", "Games", "About", "Contact"],
+        "nav": ["Home", "Projects", "Games", "About", "Contact", "Write-ups"],
         "avail": "Available",
         "status": "Available for an internship / work-study · Alpes-Maritimes, France",
         "title": "Alexandre K. — Portfolio",
@@ -316,17 +318,30 @@ UI2 = {
         "pal_hint": "↑↓ naviguer · ↵ ouvrir · échap fermer",
         "accent_names": {"blue": "Bleu", "violet": "Violet", "green": "Vert", "orange": "Orange"},
         "notif_h": "Notifications",
-        "notifs": [("Disponible", "Pour un stage ou une alternance, dans les Alpes-Maritimes"), ("Nouveau", "4 mini-jeux dans l'onglet Jeux"), ("Contact", "Le formulaire de contact est actif")],
+        "notifs": [("Disponible", "Pour un stage ou une alternance, dans les Alpes-Maritimes"), ("Nouveau", "5 flags sont cachés sur le site : à toi de les trouver"), ("Contact", "Le formulaire de contact est actif")],
         "handle": "@amex-32", "who_tag": "Étudiant en cybersécurité",
         "featured": "À la une", "see": "Voir le projet", "intro_slide": "Profil",
         "profile_card": "Profil", "stack_card": "Compétences",
         "discover": "À découvrir", "see_all": "Voir tout",
         "back": "Retour", "forward": "Suivant",
         "games_title": "Salle de <em>jeux</em>",
-        "games_lead": "Quatre mini-jeux pour faire une pause. Les meilleurs scores sont gardés dans ton navigateur.",
-        "games_tabs": ["2048", "Snake", "Memory", "Code Breaker"],
+        "games_lead": "Cinq mini-jeux pour faire une pause, et un CTF caché dans le site. Chaque jeu a son classement, partagé entre tous les visiteurs.",
+        "games_tabs": ["2048", "Snake", "Memory", "Code Breaker", "César", "CTF"],
         "konami": "Konami code ! Mode Matrix activé.",
-        "kb_hint": "Astuce : ⌘K ou Ctrl+K ouvre la recherche.",
+        "kb_hint": "Astuce : ⌘K ou Ctrl+K ouvre la recherche, ² ou ` ouvre le terminal.",
+        "pal_term": "Ouvrir le terminal",
+        "og_locale": "fr_FR",
+        "wu_title": "<em>Write-ups</em>",
+        "wu_lead": "Mes démarches de sécurité, expliquées étape par étape.",
+        "nf_title": "Erreur <em>404</em>",
+        "nf_lead": "Cette page n'existe pas, ou plus. Vérifie l'adresse ou repars de l'accueil.",
+        "nf_home": "Retour à l'accueil",
+        "ci_help": "Fais tourner l'alphabet avec ◀ ▶ (ou les flèches) jusqu'à lire un mot, puis valide. 60 secondes, −5 s par erreur.",
+        "ci_shift": "Décalage", "ci_ok": "Valider",
+        "ctf_h": "Mini-CTF",
+        "ctf_p": "Cinq flags au format FLAG{…} sont cachés dans ce site. Trouve-les, puis soumets-les dans le terminal : tape <code>pseudo ton_pseudo</code>, puis <code>flag FLAG{…}</code>.",
+        "ctf_hints": ["Le code source de l'accueil a un secret.", "Les en-têtes HTTP parlent plus qu'on ne croit.", "Les robots savent des choses (et le base64 aussi).", "La console du navigateur, en ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A"],
+        "ctf_open": "Ouvrir le terminal",
     },
     "en": {
         "search_ph": "Search…", "pal_ph": "A page, a project, an action…", "pal_empty": "No results",
@@ -335,17 +350,30 @@ UI2 = {
         "pal_hint": "↑↓ navigate · ↵ open · esc close",
         "accent_names": {"blue": "Blue", "violet": "Violet", "green": "Green", "orange": "Orange"},
         "notif_h": "Notifications",
-        "notifs": [("Available", "For an internship or work-study, in the Alpes-Maritimes"), ("New", "4 mini-games in the Games tab"), ("Contact", "The contact form is live")],
+        "notifs": [("Available", "For an internship or work-study, in the Alpes-Maritimes"), ("New", "5 flags are hidden on this site: go find them"), ("Contact", "The contact form is live")],
         "handle": "@amex-32", "who_tag": "Cybersecurity student",
         "featured": "Featured", "see": "View project", "intro_slide": "Profile",
         "profile_card": "Profile", "stack_card": "Skills",
         "discover": "Discover", "see_all": "See all",
         "back": "Back", "forward": "Forward",
         "games_title": "Game <em>room</em>",
-        "games_lead": "Four mini-games for a break. Best scores are kept in your browser.",
-        "games_tabs": ["2048", "Snake", "Memory", "Code Breaker"],
+        "games_lead": "Five mini-games for a break, and a CTF hidden in the site. Each game has its own leaderboard, shared between all visitors.",
+        "games_tabs": ["2048", "Snake", "Memory", "Code Breaker", "Caesar", "CTF"],
         "konami": "Konami code! Matrix mode on.",
-        "kb_hint": "Tip: ⌘K or Ctrl+K opens search.",
+        "kb_hint": "Tip: ⌘K or Ctrl+K opens search, ` opens the terminal.",
+        "pal_term": "Open the terminal",
+        "og_locale": "en_US",
+        "wu_title": "<em>Write-ups</em>",
+        "wu_lead": "My security work, explained step by step.",
+        "nf_title": "Error <em>404</em>",
+        "nf_lead": "This page doesn't exist, or no longer does. Check the address or start again from the home page.",
+        "nf_home": "Back to home",
+        "ci_help": "Rotate the alphabet with ◀ ▶ (or the arrow keys) until you can read a word, then submit. 60 seconds, −5 s per mistake.",
+        "ci_shift": "Shift", "ci_ok": "Submit",
+        "ctf_h": "Mini-CTF",
+        "ctf_p": "Five flags in the FLAG{…} format are hidden in this site. Find them, then submit them in the terminal: type <code>pseudo your_name</code>, then <code>flag FLAG{…}</code>.",
+        "ctf_hints": ["The home page source code has a secret.", "HTTP headers say more than you think.", "Robots know things (and so does base64).", "The browser console, in ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A"],
+        "ctf_open": "Open the terminal",
     },
 }
 for _l in UI:
@@ -387,3 +415,66 @@ CV = {
                   "Built the landing page that redirects to the app stores and a few small features of the app.", ["Landing page", "Team"])],
     },
 }
+
+
+# ---------------------------------------------------------------- write-ups
+# Chaque section : (titre, [paragraphes]) ; les paragraphes peuvent contenir du HTML simple (<code>, <b>).
+WRITEUPS = [
+    {
+        "slug": "securiser-ce-portfolio", "date": "2026-10", "tags": ["CSP", "HTTP headers", "API", "SQL"],
+        "fr": {
+            "title": "Sécuriser ce portfolio",
+            "summary": "Comment j'ai audité puis durci ce site : surface d'attaque, en-têtes HTTP, CSP stricte, validation côté serveur et fuites de fichiers.",
+            "sections": [
+                ("Contexte", [
+                    "Ce site est statique (HTML, CSS, JavaScript générés par un script Python) et hébergé sur Vercel. Une seule partie tourne côté serveur : les fonctions <code>/api/scores</code> et <code>/api/ctf</code>, qui enregistrent les classements dans une base MySQL.",
+                    "Objectif : réduire au maximum ce qu'un attaquant peut exploiter, sans casser le site."]),
+                ("1. Cartographier la surface d'attaque", [
+                    "J'ai listé tout ce qui reçoit des données de l'extérieur : les deux API (paramètres de requête et corps JSON), le formulaire de contact (envoyé à un service tiers) et ce que le navigateur charge (scripts, polices, images).",
+                    "J'ai aussi regardé ce que le serveur renvoie sans qu'on le lui demande : les en-têtes HTTP et les fichiers accessibles publiquement."]),
+                ("2. Constats", [
+                    "<b>En-têtes absents :</b> à part HSTS, aucun en-tête de sécurité. Rien n'empêchait d'afficher le site dans une iframe (clickjacking), ni d'exécuter un script injecté.",
+                    "<b>Fichiers sources exposés :</b> les scripts de génération et les fichiers de travail étaient servis comme des pages, alors que le dépôt est privé. Une fuite d'information classique.",
+                    "<b>Côté API, c'était déjà sain :</b> requêtes SQL paramétrées, noms de bases tirés d'une liste fixe, pseudo validé par une expression régulière stricte, scores bornés, limite de débit par IP. Les données affichées sont insérées avec <code>textContent</code>, jamais interprétées comme du HTML."]),
+                ("3. Correctifs", [
+                    "<b>Content-Security-Policy stricte :</b> les scripts ne peuvent venir que du site lui-même. Le seul script inline (choix du thème avant l'affichage) est autorisé par son empreinte SHA-256, sans <code>unsafe-inline</code>. Plugins interdits, <code>base-uri</code> et <code>form-action</code> verrouillés.",
+                    "<b>Autres en-têtes :</b> <code>frame-ancestors 'none'</code> et <code>X-Frame-Options: DENY</code> contre le clickjacking, <code>nosniff</code>, une <code>Referrer-Policy</code> qui ne transmet que l'origine aux autres sites, et une <code>Permissions-Policy</code> qui coupe caméra, micro, géolocalisation et paiement.",
+                    "<b>Fichiers internes :</b> exclus du déploiement, ils ne sont plus servis du tout.",
+                    "<b>Non-régression :</b> un test vérifie à chaque modification que l'empreinte de chaque script inline figure bien dans la CSP. Sans ça, changer une ligne du script casserait le thème sans prévenir."]),
+                ("4. Ce qui reste", [
+                    "Les scores des jeux sont calculés dans le navigateur : ils restent falsifiables à l'intérieur des bornes. Les empêcher vraiment demanderait de rejouer la partie côté serveur, ce qui est disproportionné pour un portfolio.",
+                    "La limite de débit est propre à chaque instance serverless. Elle suffit contre le spam simple ; au-delà, il faudrait une règle dans le pare-feu de l'hébergeur."]),
+                ("5. Vérifier", [
+                    "<code>curl -I</code> sur la page d'accueil affiche tous les en-têtes. En parcourant le site, la console du navigateur ne doit montrer aucune violation de CSP.",
+                    "Et pour t'entraîner : cinq flags sont cachés dans ce site. L'onglet CTF de la page Jeux donne les indices."]),
+            ],
+        },
+        "en": {
+            "title": "Securing this portfolio",
+            "summary": "How I audited and hardened this site: attack surface, HTTP headers, a strict CSP, server-side validation and leaked files.",
+            "sections": [
+                ("Context", [
+                    "This site is static (HTML, CSS and JavaScript generated by a Python script) and hosted on Vercel. Only one part runs on a server: the <code>/api/scores</code> and <code>/api/ctf</code> functions, which store the leaderboards in a MySQL database.",
+                    "Goal: shrink what an attacker can exploit as much as possible, without breaking the site."]),
+                ("1. Mapping the attack surface", [
+                    "I listed everything that receives outside data: the two APIs (query parameters and JSON body), the contact form (sent to a third-party service) and what the browser loads (scripts, fonts, images).",
+                    "I also looked at what the server returns unasked: the HTTP headers and the publicly reachable files."]),
+                ("2. Findings", [
+                    "<b>Missing headers:</b> apart from HSTS, no security headers at all. Nothing stopped the site from being framed (clickjacking) or an injected script from running.",
+                    "<b>Exposed source files:</b> the build scripts and working files were served like pages, even though the repository is private. A classic information leak.",
+                    "<b>The API was already sound:</b> parameterised SQL queries, database names taken from a fixed list, nicknames checked by a strict regular expression, bounded scores, per-IP rate limiting. Displayed data is inserted with <code>textContent</code>, never parsed as HTML."]),
+                ("3. Fixes", [
+                    "<b>Strict Content-Security-Policy:</b> scripts can only come from the site itself. The single inline script (picking the theme before first paint) is allowed by its SHA-256 hash, without <code>unsafe-inline</code>. Plugins are blocked, <code>base-uri</code> and <code>form-action</code> are locked down.",
+                    "<b>Other headers:</b> <code>frame-ancestors 'none'</code> and <code>X-Frame-Options: DENY</code> against clickjacking, <code>nosniff</code>, a <code>Referrer-Policy</code> that only sends the origin to other sites, and a <code>Permissions-Policy</code> that turns off camera, microphone, geolocation and payment.",
+                    "<b>Internal files:</b> excluded from the deployment, they are no longer served at all.",
+                    "<b>Regression test:</b> on every change, a test checks that the hash of each inline script is in the CSP. Without it, editing one line of that script would silently break the theme."]),
+                ("4. What remains", [
+                    "Game scores are computed in the browser, so they can still be faked within the bounds. Truly preventing it would mean replaying the game on the server, which is overkill for a portfolio.",
+                    "Rate limiting is per serverless instance. It is enough against simple spam; beyond that, it would take a rule in the host's firewall."]),
+                ("5. Checking", [
+                    "<code>curl -I</code> on the home page shows every header. While browsing the site, the browser console should show no CSP violation.",
+                    "And to practise: five flags are hidden in this site. The CTF tab on the Games page gives the hints."]),
+            ],
+        },
+    },
+]
