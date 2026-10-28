@@ -2,6 +2,8 @@
 
 Portfolio d'Alexandre K., en français (racine) et en anglais (`en/`).
 
+Site en ligne : https://alexandre-k.vercel.app
+
 Site statique en HTML, CSS et JavaScript, sans dépendance. Les pages sont générées par un petit script Python :
 
 ```bash
