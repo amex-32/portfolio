@@ -1,5 +1,5 @@
-// Mini-CTF : 5 flags cachés dans le site, un classement par nombre de flags trouvés.
-// GET  /api/ctf                -> { rows: [{ pseudo, found }], total: 5 }
+// Mini-CTF : 6 flags cachés dans le site, un classement par nombre de flags trouvés.
+// GET  /api/ctf                -> { rows: [{ pseudo, found }], total: 6 }
 // POST /api/ctf {pseudo, flag} -> { ok: true, found, total, already } ou 400 { error }
 const crypto = require('crypto');
 const { PSEUDO, connect, tooFast } = require('./scores.js');
@@ -11,9 +11,10 @@ const HASHES = [
   '5c77c0213b21e33c09e0a6531529c553f6b8f00c72d6bbccc37c84e5ac2c48ad',
   '3ad342f577045fad64b087b49001cb0a8aa286917cf90752d8ea37d76a043cfb',
   'ea6d89dc5568005eed6e926c51d2b754f541d4d9c6584cee69f9dfd95a69891e',
+  '3b0802725c9b1cfd982b0d39195b283f06ae64d525eb47bdfc56d554e4430150',
 ];
 
-// Numéro du flag (0 à 4), -1 s'il est faux ou mal formé.
+// Numéro du flag (0 à 5), -1 s'il est faux ou mal formé.
 function flagIndex(flag) {
   if (typeof flag !== 'string' || !/^FLAG\{[A-Za-z0-9_]{1,60}\}$/.test(flag)) return -1;
   return HASHES.indexOf(crypto.createHash('sha256').update(flag).digest('hex'));

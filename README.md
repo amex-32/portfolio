@@ -18,12 +18,14 @@ python3 -m http.server   # puis http://localhost:8000
 - `api/scores.js` : classements des 5 jeux, une base MySQL par jeu (`game_2048`, `game_snake`, `game_memory`, `game_code`, `game_cipher`) ; `js/scores.js` : l'interface
 - `tools/images.py` : génère `og.png` (aperçu des liens partagés), `favicon.ico` et `apple-touch-icon.png` (Pillow) ; `favicon.svg` est écrit à la main
 - `vercel.json` : en-têtes de sécurité (CSP, anti-clickjacking…) ; `.vercelignore` : les fichiers de travail (`tools/`, `src/`…) ne sont pas déployés
+- `js/player.js` : lecteur de musique en haut à droite, qui garde le morceau et la position d'une page à l'autre ; morceaux dans `audio/`, liste dans `TRACKS` (`tools/content.py`). Ils sont masterisés à -14 LUFS (ffmpeg : passe-haut 30 Hz, compression 2:1, loudnorm, limiteur -1,5 dB, MP3 192 kbps).
+- `js/gallery.js` : galerie (`galerie.html`, vues éparpillée, grille, albums) ; images dans `img/gallery/` (`<slug>.webp` jusqu'à 1800 px et `<slug>-thumb.webp` à 640 px), liste dans `GALLERY` (`tools/content.py`)
 
 Pour afficher une adresse e-mail ou activer le formulaire de contact, renseigner `EMAIL` ou `FORM_ENDPOINT` en haut de `tools/content.py` puis relancer le script.
 
 ## Mini-CTF
 
-Cinq flags sont cachés dans le site ; ils se soumettent dans le terminal (`pseudo …` puis `flag FLAG{…}`). Les flags en clair sont dans `tools/ctf.json` (non déployé) ; `api/ctf.js` ne garde que leurs empreintes SHA-256 et enregistre les flags trouvés dans la base `game_ctf`. Pour changer un flag : `tools/ctf.json`, l'empreinte dans `api/ctf.js`, et sa cachette (`vercel.json` ou `js/site.js` pour les flags 2, 4 et 5). `node tools/test.js` vérifie que chaque flag est à sa place et n'apparaît nulle part ailleurs.
+Six flags sont cachés dans le site ; ils se soumettent dans le terminal (`pseudo …` puis `flag FLAG{…}`). Les flags en clair sont dans `tools/ctf.json` (non déployé) ; `api/ctf.js` ne garde que leurs empreintes SHA-256 et enregistre les flags trouvés dans la base `game_ctf`. Pour changer un flag : `tools/ctf.json`, l'empreinte dans `api/ctf.js`, et sa cachette (`vercel.json` ou `js/site.js` pour les flags 2, 4 et 5 ; commentaire JPEG de `img/gallery/clive-mugshot.jpg` pour le 6). `node tools/test.js` vérifie que chaque flag est à sa place et n'apparaît nulle part ailleurs.
 
 ## Classements des jeux
 

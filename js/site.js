@@ -123,7 +123,7 @@
 
   // ---------- mini-CTF : un flag pour qui ouvre la console ----------
   console.log('%c amex@portfolio ', 'background:#7cc4ff;color:#0d1726;font-weight:700;border-radius:4px',
-    root.lang === 'en' ? 'Curious? Good. Flag 4/5, in ROT13:' : 'Curieux ? Tant mieux. Flag 4/5, en ROT13 :', 'SYNT{e0g13_1a_gu3_p0af0y3}');
+    root.lang === 'en' ? 'Curious? Good. Flag 4/6, in ROT13:' : 'Curieux ? Tant mieux. Flag 4/6, en ROT13 :', 'SYNT{e0g13_1a_gu3_p0af0y3}');
 
   // ---------- terminal : navigation au clavier et soumission des flags ----------
   var tty = $('.tty-bg'), openTty = function () {};
@@ -133,20 +133,26 @@
     var TT = en ? {
       hello: 'Type help to see the commands.', unknown: 'command not found: ', nofile: 'no such page: ',
       help: ['help            this list', 'ls [projects]   list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
-        'whoami          who am I', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag', 'top             CTF leaderboard', 'theme · clear · exit'],
+        'whoami          who am I', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
+        'music           my tracks', 'play [n] · pause · next', 'theme · clear · exit'],
       whoami: 'Alexandre K., cybersecurity student (Ynov, Sophia Antipolis). Looking for an internship or work-study.',
-      ctf: ['5 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
-        '3. Robots know things (and so does base64).', '4. The browser console, in ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', 'Then: pseudo <name>, and flag FLAG{…}'],
+      ctf: ['6 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
+        '3. Robots know things (and so does base64).', '4. The browser console, in ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. One artwork in the gallery says more than it shows (metadata).',
+        'Then: pseudo <name>, and flag FLAG{…}'],
+      nowPlaying: 'now playing: ', paused: 'paused.', noTrack: 'no such track: ', pseudoFlag: 'nickname and flag are two commands: pseudo <name>, then flag FLAG{…}',
       pseudoIs: 'nickname: ', noPseudo: 'choose a nickname first: pseudo <name>', badPseudo: '2 to 16 characters: letters, digits, _ or -.',
       usageFlag: 'usage: flag FLAG{…}', bad: 'wrong flag, keep looking.', slow: 'too fast, try again in a few seconds.', err: 'leaderboard unavailable.',
       got: 'correct flag! ', already: 'already found. ', found: ' flags found', all: 'All flags found. Well done!', none: 'no one yet.', sudo: 'amex is not in the sudoers file. This incident will be reported.'
     } : {
       hello: 'Tape help pour voir les commandes.', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
       help: ['help            cette liste', 'ls [projets]    lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
-        'whoami          qui suis-je', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag', 'top             classement du CTF', 'theme · clear · exit'],
+        'whoami          qui suis-je', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
+        'music           mes morceaux', 'play [n] · pause · next', 'theme · clear · exit'],
       whoami: 'Alexandre K., étudiant en cybersécurité (Ynov, Sophia Antipolis). Je cherche un stage ou une alternance.',
-      ctf: ['5 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
-        '3. Les robots savent des choses (et le base64 aussi).', '4. La console du navigateur, en ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', 'Ensuite : pseudo <nom>, puis flag FLAG{…}'],
+      ctf: ['6 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
+        '3. Les robots savent des choses (et le base64 aussi).', '4. La console du navigateur, en ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. Une œuvre de la galerie en dit plus qu\'elle n\'en montre (métadonnées).',
+        'Ensuite : pseudo <nom>, puis flag FLAG{…}'],
+      nowPlaying: 'en lecture : ', paused: 'en pause.', noTrack: 'morceau introuvable : ', pseudoFlag: 'pseudo et flag sont deux commandes : pseudo <nom>, puis flag FLAG{…}',
       pseudoIs: 'pseudo : ', noPseudo: 'choisis d\'abord un pseudo : pseudo <nom>', badPseudo: '2 à 16 caractères : lettres, chiffres, _ ou -.',
       usageFlag: 'usage : flag FLAG{…}', bad: 'flag incorrect, continue de chercher.', slow: 'trop rapide, réessaie dans quelques secondes.', err: 'classement indisponible.',
       got: 'flag correct ! ', already: 'déjà trouvé. ', found: ' flags trouvés', all: 'Tous les flags sont trouvés. Bravo !', none: 'personne pour l\'instant.', sudo: 'amex n\'est pas dans le fichier sudoers. Cet incident sera signalé.'
@@ -195,8 +201,24 @@
       cat: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); print(p.d); },
       whoami: function () { print(TT.whoami); },
       ctf: function () { print(TT.ctf); },
-      pseudo: function (a) { if (!a) return print(TT.pseudoIs + (pseudo() || '–')); if (!PSEUDO.test(a)) return print(TT.badPseudo, 'err'); pseudo(a); print(TT.pseudoIs + a, 'ok'); },
+      pseudo: function (a) {
+        if (!a) return print(TT.pseudoIs + (pseudo() || '–'));
+        if (/FLAG\{/i.test(a)) return print(TT.pseudoFlag, 'err');
+        if (!PSEUDO.test(a)) return print(TT.badPseudo, 'err');
+        pseudo(a); print(TT.pseudoIs + a, 'ok');
+      },
       flag: flag, top: top,
+      music: function () {
+        var p = window.akPlayer; if (!p) return print(TT.err, 'err');
+        print(p.tracks.map(function (t, k) { return (k === p.current() && p.playing() ? '▶ ' : '  ') + (k + 1) + '. ' + t.t; }));
+      },
+      play: function (a) {
+        var p = window.akPlayer, k = a ? parseInt(a, 10) - 1 : null; if (!p) return print(TT.err, 'err');
+        if (k != null && !(k >= 0 && k < p.tracks.length)) return print(TT.noTrack + a, 'err');
+        p.play(k); print(TT.nowPlaying + p.tracks[k == null ? p.current() : k].t, 'ok');
+      },
+      pause: function () { if (window.akPlayer) { window.akPlayer.pause(); print(TT.paused); } },
+      next: function () { var p = window.akPlayer; if (p) { p.next(); print(TT.nowPlaying + p.tracks[p.current()].t, 'ok'); } },
       theme: function () { toggleTheme(); },
       clear: function () { out.textContent = ''; },
       exit: function () { closeTty(); },
@@ -206,6 +228,7 @@
       print('$ ' + line, 'cmd');
       var parts = line.trim().split(/\s+/), c = parts[0].toLowerCase();
       if (!c) return;
+      if (/^flag\{/.test(c)) return flag(parts[0]); // un flag collé seul
       if (Object.prototype.hasOwnProperty.call(CMDS, c)) CMDS[c](parts.slice(1).join(' '));
       else print(TT.unknown + parts[0], 'err');
     };

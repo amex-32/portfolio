@@ -44,6 +44,8 @@ assert(JSON.parse(read('vercel.json')).headers[0].headers.some((h) => h.key === 
 assert(read('robots.txt').includes(Buffer.from(flags[2]).toString('base64')), 'flag 3 : base64 dans robots.txt');
 assert(read('js/site.js').includes(rot13(flags[3])), 'flag 4 : ROT13 dans la console');
 assert(read('js/site.js').includes(flags[4].split('').reverse().join('')), 'flag 5 : code Konami');
+assert(fs.readFileSync(path.join(root, 'img/gallery/clive-mugshot.jpg')).includes(flags[5]), 'flag 6 : commentaire JPEG du mugshot');
+assert.strictEqual(flags.length, 6);
 const ignored = read('.vercelignore').split('\n').map((l) => l.trim().replace(/\/$/, '')).filter((l) => l && !l.startsWith('#'));
 const deployed = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((e) => {
   const rel = path.posix.join(dir, e.name);
@@ -57,3 +59,20 @@ for (const f of deployed('')) {
   for (const flag of flags) assert(!text.includes(flag) || (allowed[flag] || []).includes(f), `${f} : contient ${flag} en clair`);
 }
 console.log('ctf : ok');
+
+// Liens internes : chaque fichier visé par une page (src, href, data-full, morceaux du lecteur) existe et sera déployé.
+const served = new Set(deployed(''));
+let links = 0;
+for (const f of deployed('').filter((x) => x.endsWith('.html'))) {
+  const html = read(f), base = /<base href="\/">/.test(html) ? '' : path.posix.dirname(f);
+  const urls = [...html.replace(/<base [^>]*>/, '').matchAll(/(?:src|href|data-full)="([^"]+)"/g)].map((m) => m[1]);
+  const tracks = html.match(/<script type="application\/json" id="tracks">([^<]*)<\/script>/);
+  if (tracks) urls.push(...JSON.parse(tracks[1]).map((t) => t.u));
+  for (const u of urls) {
+    if (/^(https?:|mailto:|#|\/_vercel\/)/.test(u)) continue;
+    const target = path.posix.normalize(path.posix.join(base, u.split('#')[0]));
+    assert(served.has(target), `${f} : lien cassé vers ${u}`);
+    links++;
+  }
+}
+console.log(`liens : ok (${links})`);

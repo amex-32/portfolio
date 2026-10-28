@@ -21,13 +21,16 @@ _P.update({
     "terminal": '<path d="m4 17 6-6-6-6M12 19h8"/>',
     "server": '<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/>',
     "layout": '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>',
+    "pause": '<path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor"/>',
+    "prev": '<path d="M18 6v12L9 12zM6 6v12" fill="currentColor"/>',
+    "next": '<path d="M6 6v12l9-6zM18 6v12" fill="currentColor"/>',
 })
 
-PAGE_NUM = {"home": "00", "list": "01", "detail": "01", "game": "02", "about": "03", "contact": "04", "writeups": "05"}
-PATH = {"home": "", "list": "/projets", "game": "/jeux", "about": "/a-propos", "contact": "/contact", "writeups": "/write-ups", "notfound": "/404"}
+PAGE_NUM = {"home": "00", "list": "01", "detail": "01", "game": "02", "about": "03", "gallery": "03", "contact": "04", "writeups": "05"}
+PATH = {"home": "", "list": "/projets", "game": "/jeux", "about": "/a-propos", "gallery": "/a-propos/galerie", "contact": "/contact", "writeups": "/write-ups", "notfound": "/404"}
 # noms acceptés par les commandes cd / cat du terminal
 TERM_NAMES = {"home": ["accueil", "home"], "list": ["projets", "projects"], "game": ["jeux", "games"],
-              "writeups": ["write-ups", "writeups"], "about": ["a-propos", "about"], "contact": ["contact"]}
+              "writeups": ["write-ups", "writeups"], "about": ["a-propos", "about"], "gallery": ["galerie", "gallery"], "contact": ["contact"]}
 SKILL_ICONS = ["shield", "terminal", "server", "layout"]
 
 
@@ -41,6 +44,7 @@ def out_path(lang, page, slug=None):
         "about": "about.html" if lang == "en" else "a-propos.html",
         "contact": "contact.html",
         "writeups": "write-ups.html",
+        "gallery": "gallery.html" if lang == "en" else "galerie.html",
         "notfound": "404.html",
         "detail": f"projects/{slug}.html",
     }
@@ -184,7 +188,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     lp = "home" if page == "notfound" else page
     nav = [("home", t["nav"][0], "home"), ("list", t["nav"][1], "folder"), ("game", t["nav"][2], "game"),
            ("writeups", t["nav"][5], "shield"), ("about", t["nav"][3], "user"), ("contact", t["nav"][4], "mail")]
-    cur = "list" if page == "detail" else page
+    cur = {"detail": "list", "gallery": "about"}.get(page, page)
     here = ' aria-current="page"'
     tabs = "".join(f'<a href="{r(k)}"{here if k == cur else ""}>{label}</a>' for k, label, _ in nav)
     dock = "".join(f'<a href="{r(k)}" data-tip="{label}" aria-label="{label}"{here if k == cur else ""}>{ico(ic)}</a>' for k, label, ic in nav)
@@ -193,9 +197,12 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     path = "~/amex" + (PATH[page] if page != "detail" else f"/projets/{slug}")
     on = ' aria-current="true"'
     notifs = "".join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in t["notifs"])
-    descs = {"home": t["meta"], "list": t["list_lead"], "game": t["games_lead"], "writeups": t["wu_lead"], "about": t["about_lead"], "contact": t["contact_lead"]}
+    descs = {"home": t["meta"], "list": t["list_lead"], "game": t["games_lead"], "writeups": t["wu_lead"], "about": t["about_lead"],
+             "gallery": t["gal_lead"], "contact": t["contact_lead"]}
+    # la galerie n'est pas dans la navigation (sous-page d'À propos) mais la palette et le terminal la connaissent
+    pages = nav[:5] + [("gallery", re.sub(r"<[^>]+>", "", t["gal_title"]), "")] + nav[5:]
     cmd = {
-        "pages": [{"t": label, "u": r(k), "i": PAGE_NUM[k], "k": TERM_NAMES[k], "d": descs[k]} for k, label, _ in nav],
+        "pages": [{"t": label, "u": r(k), "i": PAGE_NUM[k], "k": TERM_NAMES[k], "d": descs[k]} for k, label, _ in pages],
         "projects": [{"t": p[lang]["title"], "u": r("detail", p["slug"]), "k": t["kinds"][p["kind"]], "s": p["slug"], "d": p[lang]["short"]} for p in PROJECTS],
         "links": [{"t": "GitHub", "u": GITHUB}, {"t": "LinkedIn", "u": LINKEDIN}, {"t": t["source"], "u": SITE_REPO}],
         "langUrl": rel(me, out_path(other, lp, slug)),
@@ -220,7 +227,9 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
                f'<meta property="og:locale" content="{t["og_locale"]}"><meta name="twitter:card" content="summary_large_image">')
     icons = (f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml"><link rel="icon" href="{root}favicon.ico" sizes="32x32">'
              f'<link rel="apple-touch-icon" href="{root}apple-touch-icon.png">')
-    flag = f"\n  <!-- {CTF_FLAGS[0]} : 1/5, le code source ne ment jamais. -->" if page == "home" else ""
+    flag = f"\n  <!-- {CTF_FLAGS[0]} : 1/6, le code source ne ment jamais. -->" if page == "home" else ""
+    pl_items = "".join(f'<li><button type="button" data-i="{i}">{esc(name)}</button></li>' for i, (_, name) in enumerate(TRACKS))
+    tracks = json.dumps([{"t": name, "u": f"{root}audio/{s}.mp3"} for s, name in TRACKS], ensure_ascii=False).replace("</", "<\\/")
     return f'''<!DOCTYPE html>
 <html lang="{lang}" data-konami="{t["konami"]}">
 <head>
@@ -263,6 +272,16 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="{t["search_ph"]}"><div class="pal"><input type="text" placeholder="{t["pal_ph"]}" aria-label="{t["search_ph"]}" autocomplete="off"><ul></ul><footer>{t["pal_hint"]}</footer></div></div>
 <div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><span></span><span></span><span></span><em>amex@portfolio: ~</em><button class="tty-x" type="button" aria-label="{t["back"]}">✕</button></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
 <div class="toast" role="status"></div>
+<div class="player" role="region" aria-label="{t["pl_label"]}">
+  <div class="pl-pill"><button class="pl-toggle" type="button" aria-expanded="false" aria-label="{t["pl_list"]}"><i></i><i></i><i></i><i></i></button><span class="pl-now"></span>
+    <button class="round pl-play" type="button" aria-label="{t["pl_play"]}" data-play="{t["pl_play"]}" data-pause="{t["pl_pause"]}">{ico("play", 16)}{ico("pause", 16)}</button></div>
+  <div class="pl-panel"><b class="pl-title"></b><small>amex · FL Studio</small>
+    <input class="pl-seek" type="range" min="0" max="1000" value="0" aria-label="{t["pl_seek"]}"><div class="pl-time"><span>0:00</span><span>0:00</span></div>
+    <div class="pl-ctl"><button class="round pl-prev" type="button" aria-label="{t["pl_prev"]}">{ico("prev", 16)}</button><button class="round pl-play" type="button" aria-label="{t["pl_play"]}" data-play="{t["pl_play"]}" data-pause="{t["pl_pause"]}">{ico("play", 16)}{ico("pause", 16)}</button><button class="round pl-next" type="button" aria-label="{t["pl_next"]}">{ico("next", 16)}</button></div>
+    <ol class="pl-list" aria-label="{t["pl_list"]}">{pl_items}</ol></div>
+</div>
+<script type="application/json" id="tracks">{tracks}</script>
+<script src="{root}js/player.js"></script>
 <script type="application/json" id="cmd-data">{json.dumps(cmd, ensure_ascii=False).replace("</", "<\\/")}</script>
 <script src="{root}js/site.js"></script>
 {extra_js.replace("ROOT/", root)}
@@ -401,8 +420,42 @@ def build_about(lang, data):
     gh = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
     setup = card(f'<div class="block"><h3>{t["hw_h"]}</h3><div class="tiles">{hw}</div></div><div class="block"><h3>{t["sw_h"]}</h3><div class="tiles">{sw}</div></div>')
     left = f'<div class="stack">{skills_card(lang)}{"".join(cv_cards(lang, True))}</div>'
-    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{gh}{setup}</div></div>'
+    tags = lambda xs: '<div class="tags">' + "".join(f"<span>{x}</span>" for x in xs) + '</div>'
+    peek = "".join(f'<img src="{rel(me, "img/gallery/" + s + "-thumb.webp")}" alt="" loading="lazy">' for s in ("clive-neon", "flame-radio", "knight"))
+    ext = card(f'''<div class="head-c" style="padding-top:0"><span class="label">{t["ext_h"]}</span><h2>{t["ext_lead"]}</h2></div>
+      <div class="ext"><div class="block"><h3>{t["ext_music_h"]}</h3><p>{t["ext_music"]}</p>{tags(["FL Studio", "Breakcore", "Jungle", "UK garage", "Trap"])}
+        <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" type="button" data-act="music">{ico("play", 16)} {t["ext_listen"]}</button></div></div>
+      <div class="block"><h3>{t["ext_art_h"]}</h3><p>{t["ext_art"]}</p>{tags(["Procreate", "Photoshop", "Blender"])}
+        <a class="ext-peek" href="{rel(me, out_path(lang, "gallery"))}">{peek}<span class="btn">{t["ext_gallery"]} {ico("right", 16)}</span></a></div></div>''', "ext-card")
+    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{ext}{gh}{setup}</div></div>'
     return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
+
+
+def build_gallery(lang):
+    t, me = UI[lang], out_path(lang, "gallery")
+    img = lambda f: rel(me, "img/gallery/" + f)
+    when = lambda d: f'{t["months"][int(d[5:7]) - 1]} {d[:4]}' if d else ""
+    series = list(dict.fromkeys(w["series"] for w in GALLERY))
+    count = {s: sum(w["series"] == s for w in GALLERY) for s in series}
+    items = "".join(
+        f'<button class="gal-item" type="button" data-i="{i}" data-s="{w["series"]}" data-full="{img(w["slug"] + "." + w.get("ext", "webp"))}">'
+        f'<img src="{img(w["slug"] + "-thumb.webp")}" alt="{esc(w[lang])}" loading="lazy" decoding="async"><span><b>{esc(w[lang])}</b><small>{when(w["date"])}</small></span></button>'
+        for i, w in enumerate(GALLERY))
+    albums = "".join(
+        f'<button class="gal-album" type="button" data-s="{s}"><span class="gal-mosaic">'
+        + "".join(f'<img src="{img(w["slug"] + "-thumb.webp")}" alt="" loading="lazy">' for w in [w for w in GALLERY if w["series"] == s][:4])
+        + f'</span><b>{t["series"][s]}</b><small>{count[s]} {t["gal_works"]}</small></button>' for s in series)
+    time = "".join(f'<button type="button" role="tab" data-s="{s}" aria-selected="false">{t["series"][s]} <small>{count[s]}</small></button>' for s in series)
+    views = "".join(f'<button type="button" data-view="{v}" aria-pressed="false">{label}</button>' for v, label in t["gal_views"].items())
+    crumbs = f'<a href="{rel(me, out_path(lang, "about"))}">{t["nav"][3]}</a></span><span>/</span><span>{re.sub(r"<[^>]+>", "", t["gal_title"])}'
+    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<div class="gal-bg" aria-hidden="true"></div>
+      <aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
+        <h4>{t["gal_view_h"]}</h4><div class="gal-views" role="group" aria-label="{t["gal_view_h"]}">{views}</div></aside>
+      <div class="gal-main"><div class="gal-head"><h2 class="gal-name"></h2><small class="gal-count" data-unit="{t["gal_works"]}"></small></div>
+        <div class="gal-stage" data-view="scatter">{items}</div><div class="gal-albums">{albums}</div></div>
+      <nav class="gal-time" role="tablist" aria-label="{t["gal_series_h"]}">{time}</nav>''', "gal")
+    return chrome(lang, "gallery", None, me, f'{re.sub(r"<[^>]+>", "", t["gal_title"])} — Alexandre K.', t["gal_lead"], body,
+                  '<script src="ROOT/js/gallery.js"></script>')
 
 
 def build_contact(lang):
@@ -492,8 +545,9 @@ if __name__ == "__main__":
         write(out_path(lang, "about"), build_about(lang, activity))
         write(out_path(lang, "contact"), build_contact(lang))
         write(out_path(lang, "writeups"), build_writeups(lang))
+        write(out_path(lang, "gallery"), build_gallery(lang))
         for p in PROJECTS:
             write(out_path(lang, "detail", p["slug"]), build_detail(lang, p))
     write(out_path("fr", "notfound"), build_404())
-    seo_files([(k, None) for k in ("home", "list", "game", "writeups", "about", "contact")] + [("detail", p["slug"]) for p in PROJECTS])
+    seo_files([(k, None) for k in ("home", "list", "game", "writeups", "about", "gallery", "contact")] + [("detail", p["slug"]) for p in PROJECTS])
     print("ok")

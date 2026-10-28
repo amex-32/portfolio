@@ -86,7 +86,7 @@ UI = {
         "rights": "© 2026 Alexandre K.",
         "game_title": "Mini-jeu — 2048",
         "about_title": "À <em>propos</em>",
-        "about_lead": "Mon activité sur GitHub et les outils que j'utilise au quotidien.",
+        "about_lead": "Mon parcours, mon activité sur GitHub, mes outils, et ce que je fais en dehors du code.",
         "gh_small": "Aperçu développeur", "gh_h": "Activité <em>GitHub</em>",
         "gh_total": "contributions sur l'année écoulée", "gh_less": "Moins", "gh_more": "Plus",
         "hw_h": "Matériel", "sw_h": "Logiciels et outils",
@@ -165,7 +165,7 @@ UI = {
         "rights": "© 2026 Alexandre K.",
         "game_title": "Mini-game — 2048",
         "about_title": "About <em>me</em>",
-        "about_lead": "My GitHub activity and the tools I use every day.",
+        "about_lead": "My background, my GitHub activity, my tools, and what I do away from the code.",
         "gh_small": "Developer insights", "gh_h": "GitHub <em>activity</em>",
         "gh_total": "contributions in the last year", "gh_less": "Less", "gh_more": "More",
         "hw_h": "Hardware", "sw_h": "Software & tools",
@@ -318,7 +318,7 @@ UI2 = {
         "pal_hint": "↑↓ naviguer · ↵ ouvrir · échap fermer",
         "accent_names": {"blue": "Bleu", "violet": "Violet", "green": "Vert", "orange": "Orange"},
         "notif_h": "Notifications",
-        "notifs": [("Disponible", "Pour un stage ou une alternance, dans les Alpes-Maritimes"), ("Nouveau", "5 flags sont cachés sur le site : à toi de les trouver"), ("Contact", "Le formulaire de contact est actif")],
+        "notifs": [("Disponible", "Pour un stage ou une alternance, dans les Alpes-Maritimes"), ("Nouveau", "6 flags sont cachés sur le site : à toi de les trouver"), ("Contact", "Le formulaire de contact est actif")],
         "handle": "@amex-32", "who_tag": "Étudiant en cybersécurité",
         "featured": "À la une", "see": "Voir le projet", "intro_slide": "Profil",
         "profile_card": "Profil", "stack_card": "Compétences",
@@ -339,9 +339,23 @@ UI2 = {
         "ci_help": "Fais tourner l'alphabet avec ◀ ▶ (ou les flèches) jusqu'à lire un mot, puis valide. 60 secondes, −5 s par erreur.",
         "ci_shift": "Décalage", "ci_ok": "Valider",
         "ctf_h": "Mini-CTF",
-        "ctf_p": "Cinq flags au format FLAG{…} sont cachés dans ce site. Trouve-les, puis soumets-les dans le terminal : tape <code>pseudo ton_pseudo</code>, puis <code>flag FLAG{…}</code>.",
-        "ctf_hints": ["Le code source de l'accueil a un secret.", "Les en-têtes HTTP parlent plus qu'on ne croit.", "Les robots savent des choses (et le base64 aussi).", "La console du navigateur, en ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A"],
+        "ctf_p": "Six flags au format FLAG{…} sont cachés dans ce site. Trouve-les, puis soumets-les dans le terminal : tape <code>pseudo ton_pseudo</code>, puis <code>flag FLAG{…}</code>.",
+        "ctf_hints": ["Le code source de l'accueil a un secret.", "Les en-têtes HTTP parlent plus qu'on ne croit.", "Les robots savent des choses (et le base64 aussi).", "La console du navigateur, en ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A", "Une œuvre de la galerie en dit plus qu'elle n'en montre (métadonnées)."],
         "ctf_open": "Ouvrir le terminal",
+        "ext_h": "En dehors du code",
+        "ext_lead": "Quand je ne suis pas devant un terminal, je fais de la musique et je dessine.",
+        "ext_music_h": "Musique",
+        "ext_music": "Je produis des instrus sur FL Studio : breakcore, jungle, UK garage, trap, un peu de jazz. Quelques morceaux sont en écoute dans le lecteur en haut à droite.",
+        "ext_art_h": "Dessin et visuels",
+        "ext_art": "Je dessine sur iPad avec Procreate, souvent Clive, un personnage à tête de lune qui revient d'un dessin à l'autre. Je monte aussi des pochettes sous Photoshop et je fais un peu de 3D avec Blender.",
+        "ext_listen": "Écouter", "ext_gallery": "Voir la galerie",
+        "gal_title": "Ma <em>galerie</em>",
+        "gal_lead": "Dessins, pochettes et rendus 3D. Clique sur une œuvre pour l'agrandir.",
+        "gal_works": "œuvres", "gal_series_h": "Séries", "gal_view_h": "Affichage", "gal_all": "Tout",
+        "gal_views": {"scatter": "Éparpillé", "grid": "Grille", "albums": "Albums"},
+        "series": {"clive": "Clive", "covers": "Pochettes et affiches", "illus": "Illustrations", "3d": "3D"},
+        "pl_label": "Lecteur de musique", "pl_play": "Lecture", "pl_pause": "Pause", "pl_prev": "Morceau précédent", "pl_next": "Morceau suivant",
+        "pl_list": "Liste des morceaux", "pl_seek": "Position dans le morceau",
     },
     "en": {
         "search_ph": "Search…", "pal_ph": "A page, a project, an action…", "pal_empty": "No results",
@@ -350,7 +364,7 @@ UI2 = {
         "pal_hint": "↑↓ navigate · ↵ open · esc close",
         "accent_names": {"blue": "Blue", "violet": "Violet", "green": "Green", "orange": "Orange"},
         "notif_h": "Notifications",
-        "notifs": [("Available", "For an internship or work-study, in the Alpes-Maritimes"), ("New", "5 flags are hidden on this site: go find them"), ("Contact", "The contact form is live")],
+        "notifs": [("Available", "For an internship or work-study, in the Alpes-Maritimes"), ("New", "6 flags are hidden on this site: go find them"), ("Contact", "The contact form is live")],
         "handle": "@amex-32", "who_tag": "Cybersecurity student",
         "featured": "Featured", "see": "View project", "intro_slide": "Profile",
         "profile_card": "Profile", "stack_card": "Skills",
@@ -371,9 +385,23 @@ UI2 = {
         "ci_help": "Rotate the alphabet with ◀ ▶ (or the arrow keys) until you can read a word, then submit. 60 seconds, −5 s per mistake.",
         "ci_shift": "Shift", "ci_ok": "Submit",
         "ctf_h": "Mini-CTF",
-        "ctf_p": "Five flags in the FLAG{…} format are hidden in this site. Find them, then submit them in the terminal: type <code>pseudo your_name</code>, then <code>flag FLAG{…}</code>.",
-        "ctf_hints": ["The home page source code has a secret.", "HTTP headers say more than you think.", "Robots know things (and so does base64).", "The browser console, in ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A"],
+        "ctf_p": "Six flags in the FLAG{…} format are hidden in this site. Find them, then submit them in the terminal: type <code>pseudo your_name</code>, then <code>flag FLAG{…}</code>.",
+        "ctf_hints": ["The home page source code has a secret.", "HTTP headers say more than you think.", "Robots know things (and so does base64).", "The browser console, in ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A", "One artwork in the gallery says more than it shows (metadata)."],
         "ctf_open": "Open the terminal",
+        "ext_h": "Away from the code",
+        "ext_lead": "When I'm not in front of a terminal, I make music and I draw.",
+        "ext_music_h": "Music",
+        "ext_music": "I produce beats in FL Studio: breakcore, jungle, UK garage, trap, a bit of jazz. A few tracks are playing in the player at the top right.",
+        "ext_art_h": "Drawing and visuals",
+        "ext_art": "I draw on iPad with Procreate, often Clive, a moon-headed character who keeps coming back from one drawing to the next. I also design covers in Photoshop and do a bit of 3D in Blender.",
+        "ext_listen": "Listen", "ext_gallery": "See the gallery",
+        "gal_title": "My <em>gallery</em>",
+        "gal_lead": "Drawings, covers and 3D renders. Click an artwork to enlarge it.",
+        "gal_works": "artworks", "gal_series_h": "Series", "gal_view_h": "View", "gal_all": "All",
+        "gal_views": {"scatter": "Scattered", "grid": "Grid", "albums": "Albums"},
+        "series": {"clive": "Clive", "covers": "Covers and posters", "illus": "Illustrations", "3d": "3D"},
+        "pl_label": "Music player", "pl_play": "Play", "pl_pause": "Pause", "pl_prev": "Previous track", "pl_next": "Next track",
+        "pl_list": "Track list", "pl_seek": "Position in the track",
     },
 }
 for _l in UI:
@@ -417,6 +445,39 @@ CV = {
 }
 
 
+# ---------------------------------------------------------------- musique et galerie
+# Morceaux du lecteur : (fichier dans audio/ sans .mp3, titre)
+# Masterisés par un script ffmpeg ponctuel : passe-haut 30 Hz, compression 2:1, -14 LUFS, limiteur -1,5 dB, MP3 192 kbps.
+TRACKS = [("jolagreen-type-beat", "Jolagreen Type Beat"), ("post-punk", "Post Punk"), ("trap-star", "Trap Star Type Shit"), ("hip-hop", "Hip Hop"),
+          ("piano", "Piano"), ("project-48", "Project 48"), ("marseille", "Marseille 01.06.2026"), ("batman", "Batman"),
+          ("damn-son", "Damn Son Where'd You Find This"), ("listen-prout", "Listen Prout"), ("spiderman-ost", "Spider-Man OST")]
+
+# Œuvres de la galerie, dans img/gallery/ : <slug>.webp (ou .jpg) et <slug>-thumb.webp. Date au format AAAA-MM, "" si inconnue.
+GALLERY = [
+    {"slug": "clive", "series": "clive", "date": "2025-02", "fr": "Clive", "en": "Clive"},
+    {"slug": "clive-what-have-i-done", "series": "clive", "date": "2025-02", "fr": "What Have I Done???", "en": "What Have I Done???"},
+    {"slug": "clive-again", "series": "clive", "date": "2025-02", "fr": "Again???", "en": "Again???"},
+    {"slug": "clive-tag", "series": "clive", "date": "2025-02", "fr": "Clive, en grand", "en": "Clive, big"},
+    {"slug": "clive-mugshot", "series": "clive", "date": "2025-02", "fr": "Photo d'identité judiciaire", "en": "Mugshot", "ext": "jpg"},
+    {"slug": "clive-neon", "series": "clive", "date": "2025-02", "fr": "Néons", "en": "Neon"},
+    {"slug": "clive-comic", "series": "clive", "date": "2025-02", "fr": "Case de BD", "en": "Comic panel"},
+    {"slug": "flame-radio", "series": "covers", "date": "2025-09", "fr": "Flame Radio Vol. 07", "en": "Flame Radio Vol. 07"},
+    {"slug": "flame-radio-inverse", "series": "covers", "date": "2025-09", "fr": "Flame Radio Vol. 07, inversé", "en": "Flame Radio Vol. 07, inverted"},
+    {"slug": "kvrt-cooking", "series": "covers", "date": "2025-10", "fr": "KVRT C00K1N3", "en": "KVRT C00K1N3"},
+    {"slug": "knight", "series": "covers", "date": "", "fr": "Knight", "en": "Knight"},
+    {"slug": "mf-doom", "series": "covers", "date": "2024-11", "fr": "MF DOOM", "en": "MF DOOM"},
+    {"slug": "ceruledge", "series": "illus", "date": "2025-09", "fr": "Ceruledge", "en": "Ceruledge"},
+    {"slug": "cat-clouds", "series": "illus", "date": "2025-10", "fr": "Dans les nuages", "en": "In the clouds"},
+    {"slug": "cat-red-sky", "series": "illus", "date": "2025-10", "fr": "Ciel rouge", "en": "Red sky"},
+    {"slug": "hooded-cat", "series": "illus", "date": "2025-02", "fr": "Chat à capuche", "en": "Hooded cat"},
+    {"slug": "studio-3d", "series": "3d", "date": "2025-07", "fr": "Studio de nuit", "en": "Studio at night"},
+    {"slug": "building-3d", "series": "3d", "date": "2024-11", "fr": "Outside home", "en": "Outside home"},
+    {"slug": "fisheye-3d", "series": "3d", "date": "2024-11", "fr": "Fisheye", "en": "Fisheye"},
+    {"slug": "corridor-3d", "series": "3d", "date": "2024-11", "fr": "Couloir", "en": "Corridor"},
+    {"slug": "logo-3d", "series": "3d", "date": "2024-11", "fr": "Logo en 3D", "en": "3D logo"},
+]
+
+
 # ---------------------------------------------------------------- write-ups
 # Chaque section : (titre, [paragraphes]) ; les paragraphes peuvent contenir du HTML simple (<code>, <b>).
 WRITEUPS = [
@@ -446,7 +507,7 @@ WRITEUPS = [
                     "La limite de débit est propre à chaque instance serverless. Elle suffit contre le spam simple ; au-delà, il faudrait une règle dans le pare-feu de l'hébergeur."]),
                 ("5. Vérifier", [
                     "<code>curl -I</code> sur la page d'accueil affiche tous les en-têtes. En parcourant le site, la console du navigateur ne doit montrer aucune violation de CSP.",
-                    "Et pour t'entraîner : cinq flags sont cachés dans ce site. L'onglet CTF de la page Jeux donne les indices."]),
+                    "Et pour t'entraîner : six flags sont cachés dans ce site. L'onglet CTF de la page Jeux donne les indices."]),
             ],
         },
         "en": {
@@ -473,7 +534,7 @@ WRITEUPS = [
                     "Rate limiting is per serverless instance. It is enough against simple spam; beyond that, it would take a rule in the host's firewall."]),
                 ("5. Checking", [
                     "<code>curl -I</code> on the home page shows every header. While browsing the site, the browser console should show no CSP violation.",
-                    "And to practise: five flags are hidden in this site. The CTF tab on the Games page gives the hints."]),
+                    "And to practise: six flags are hidden in this site. The CTF tab on the Games page gives the hints."]),
             ],
         },
     },

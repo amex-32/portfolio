@@ -9,7 +9,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
-        { "key": "X-Flag", "value": "2/5 FLAG{h34d3rs_t3ll_t4l3s}" }
+        { "key": "X-Flag", "value": "2/6 FLAG{h34d3rs_t3ll_t4l3s}" }
       ]
     }
   ]
