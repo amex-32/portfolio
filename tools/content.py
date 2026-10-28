@@ -448,9 +448,9 @@ CV = {
 
 
 # ---------------------------------------------------------------- musique et galerie
-# Accueil : projets montrés dans la carte « À découvrir » (les autres restent sur la page Projets) et œuvres de l'aperçu de la galerie
+# Accueil, carrousel « À la une » : projets montrés (les autres restent sur la page Projets, et dans « À découvrir ») et œuvres du diaporama de la galerie
 HOME_PROJECTS = ("boutique-cyberpunk", "pixelworld")
-HOME_GALLERY = ("clive-neon", "flame-radio", "knight", "photo-pool")
+HOME_GALLERY = ("clive-neon", "flame-radio", "knight")
 
 # Morceaux du lecteur : (fichier dans audio/ sans .mp3, titre)
 # Masterisés par un script ffmpeg ponctuel : passe-haut 30 Hz, compression 2:1, -14 LUFS, limiteur -1,5 dB, MP3 192 kbps.

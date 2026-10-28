@@ -346,13 +346,23 @@ def build_home(lang):
         <div class="btn-row"><a class="btn btn-primary" href="{r("list")}">{t["cta_projects"]}</a><a class="btn" href="{r("contact")}">{t["cta_contact"]}</a></div></div>
       <div class="term" aria-hidden="true"><div class="term-bar"><span></span><span></span><span></span><em>amex@kali: ~</em></div><pre>{lines}</pre></div>
     </div>'''
+    # carrousel : présentation, galerie, puis les projets choisis dans HOME_PROJECTS (les autres restent sur la page Projets)
+    shown = [p for p in PROJECTS if p["slug"] in HOME_PROJECTS]
     slides = "".join(
         f'''<div class="slide pj" aria-hidden="true">{poster(p)}<div class="inner">
       <span class="pill">{t["featured"]} · {t["kinds"][p["kind"]]}</span><h2>{p[lang]["title"]}</h2>
       <div class="tags">{"".join(f"<span>{x}</span>" for x in p["tech"][:3])}</div><p>{p[lang]["short"]}</p>
       <div class="btn-row"><a class="btn btn-primary" href="{r("detail", p["slug"])}">{ico("play", 16)} {t["see"]}</a><a class="btn" href="{p["code"]}" target="_blank" rel="noopener">{ico("code", 16)} {t["code"]}</a></div></div></div>'''
-        for p in PROJECTS)
-    dots = "".join(f'<button type="button" aria-label="{i + 1}"></button>' for i in range(len(PROJECTS) + 1))
+        for p in shown)
+    work = {w["slug"]: w for w in GALLERY}
+    gtiles = "".join(f'<img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" alt="{esc(work[s][lang])}" loading="lazy" decoding="async">' for s in HOME_GALLERY)
+    gtags = "".join(f"<span>{x}</span>" for x in t["series"].values())
+    gallery_slide = f'''<div class="slide pj gl" aria-hidden="true"><div class="gl-bg" style="background-image:url('{rel(me, f"img/gallery/{HOME_GALLERY[0]}-thumb.webp")}')"></div><div class="shade"></div><div class="gl-tiles" aria-hidden="true">{gtiles}</div><div class="inner">
+      <span class="pill">{t["featured"]} · {re.sub(r"<[^>]+>", "", t["gal_title"])}</span><h2>{t["gal_title"].replace("<em>", "").replace("</em>", "")}</h2>
+      <div class="tags">{gtags}</div><p>{t["gal_lead"]}</p>
+      <div class="btn-row"><a class="btn btn-primary" href="{r("gallery")}">{ico("play", 16)} {t["ext_gallery"]}</a></div></div></div>'''
+    slides = gallery_slide + slides
+    dots = "".join(f'<button type="button" aria-label="{i + 1}"></button>' for i in range(len(shown) + 2))
     nav = (f'<div class="hero-nav"><button class="round" type="button" data-act="prev" aria-label="{t["back"]}">{ico("left", 18)}</button>'
            f'<button class="round" type="button" data-act="next" aria-label="{t["forward"]}">{ico("right", 18)}</button></div>')
     hero = card(f'{intro}{slides}<div class="dots">{dots}</div>{nav}', "hero")
@@ -360,13 +370,8 @@ def build_home(lang):
       <div class="btn-row"><a class="btn small" href="{GITHUB}" target="_blank" rel="noopener">{ICON_GH} GitHub</a><a class="btn small" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>
       <div class="status"><span class="dot"></span>{t["status"]}</div></div>''')
     skills = skills_card(lang)
-    cards = "".join(proj_card(lang, p, me) for p in PROJECTS if p["slug"] in HOME_PROJECTS)
-    work = {w["slug"]: w for w in GALLERY}
-    tiles = "".join(
-        f'<a class="hg" href="{r("gallery")}#{work[s]["series"]}"><img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" alt="{esc(work[s][lang])}" loading="lazy" decoding="async"><span>{esc(work[s][lang])}</span></a>'
-        for s in HOME_GALLERY)
-    discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>'
-                    f'<div class="card-h hg-h"><h3>{re.sub(r"<[^>]+>", "", t["gal_title"])}</h3><a href="{r("gallery")}">{t["see_all"]}</a></div><div class="home-gal">{tiles}</div>')
+    cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
+    discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
     contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label"><b>04</b> / {t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
                    f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
     body = f'<div class="home"><div class="stack aside">{who}{skills}{"".join(cv_cards(lang, False))}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'

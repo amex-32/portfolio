@@ -557,16 +557,15 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 }
 @media (prefers-reduced-motion: reduce) { .gal-item, .gal[data-view="scatter"] .gal-item { animation: none; transition: none; } }
 
-/* ---------- Accueil : aperçu de la galerie ---------- */
-.hg-h { margin-top: 26px; }
-.home-gal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.hg { position: relative; display: block; aspect-ratio: 1; overflow: hidden; border-radius: 0; text-decoration: none; background: #0b1220; }
-.hg img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.22, .61, .36, 1), filter 1.2s ease; }
-.hg span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 10px; color: #fff; font: 500 12px var(--mono); background: linear-gradient(0deg, rgba(5, 8, 16, .85), transparent); opacity: 0; transition: opacity 1s ease; }
-.hg:hover img, .hg:focus-visible img { transform: scale(1.06); filter: brightness(.85); }
-.hg:hover span, .hg:focus-visible span { opacity: 1; }
-@media (max-width: 640px) { .home-gal { grid-template-columns: 1fr 1fr; } .hg span { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .hg img, .hg span { transition: none; } }
+/* ---------- Accueil : diapositive de la galerie (carrousel) ---------- */
+.slide.pj .gl-bg { position: absolute; inset: -40px; background: center / cover no-repeat; filter: blur(22px) brightness(.55) saturate(1.2); transform: scale(1.1); }
+.gl-tiles { position: absolute; right: 6%; top: 7%; z-index: 1; display: flex; pointer-events: none; }
+.gl-tiles img { width: clamp(96px, 12vw, 160px); aspect-ratio: 1; object-fit: cover; background: #f4f1ea; border: 5px solid #f4f1ea; border-radius: 0; box-shadow: 0 18px 44px rgba(0, 0, 0, .5); }
+.gl-tiles img + img { margin-left: -44px; }
+.gl-tiles img:nth-child(1) { transform: rotate(-9deg) translateY(14px); }
+.gl-tiles img:nth-child(2) { transform: rotate(3deg) translateY(-18px); z-index: 1; }
+.gl-tiles img:nth-child(3) { transform: rotate(10deg) translateY(10px); }
+@media (max-width: 760px) { .gl-tiles { right: 4%; top: 5%; } .gl-tiles img { width: 78px; border-width: 4px; } .gl-tiles img + img { margin-left: -26px; } }
 
 /* ---------- Lecteur : aléatoire et j'aime ---------- */
 .pl-shuffle[aria-pressed="true"] { color: var(--on-accent); background: var(--accent); }
