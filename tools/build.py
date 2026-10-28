@@ -24,6 +24,8 @@ _P.update({
     "pause": '<path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor"/>',
     "prev": '<path d="M18 6v12L9 12zM6 6v12" fill="currentColor"/>',
     "next": '<path d="M6 6v12l9-6zM18 6v12" fill="currentColor"/>',
+    "shuffle": '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+    "heart": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
     "volume": '<path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7"/>',
 })
 
@@ -238,6 +240,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content="{desc}">
+  <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#8fb4d8" media="(prefers-color-scheme: light)">
   {seo}
   {icons}
   {FONTS}
@@ -278,11 +281,12 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     <button class="round pl-play" type="button" aria-label="{t["pl_play"]}" data-play="{t["pl_play"]}" data-pause="{t["pl_pause"]}">{ico("play", 16)}{ico("pause", 16)}</button></div>
   <div class="pl-panel"><b class="pl-title"></b><small>amex · FL Studio</small>
     <input class="pl-seek" type="range" min="0" max="1000" value="0" aria-label="{t["pl_seek"]}"><div class="pl-time"><span>0:00</span><span>0:00</span></div>
-    <div class="pl-ctl"><button class="round pl-prev" type="button" aria-label="{t["pl_prev"]}">{ico("prev", 16)}</button><button class="round pl-play" type="button" aria-label="{t["pl_play"]}" data-play="{t["pl_play"]}" data-pause="{t["pl_pause"]}">{ico("play", 16)}{ico("pause", 16)}</button><button class="round pl-next" type="button" aria-label="{t["pl_next"]}">{ico("next", 16)}</button></div>
+    <div class="pl-ctl"><button class="round pl-shuffle" type="button" aria-pressed="false" aria-label="{t["pl_shuffle"]}">{ico("shuffle", 16)}</button><button class="round pl-prev" type="button" aria-label="{t["pl_prev"]}">{ico("prev", 16)}</button><button class="round pl-play" type="button" aria-label="{t["pl_play"]}" data-play="{t["pl_play"]}" data-pause="{t["pl_pause"]}">{ico("play", 16)}{ico("pause", 16)}</button><button class="round pl-next" type="button" aria-label="{t["pl_next"]}">{ico("next", 16)}</button><button class="round pl-like" type="button" aria-pressed="false" data-like="{t["pl_like"]}" data-unlike="{t["pl_unlike"]}" aria-label="{t["pl_like"]}">{ico("heart", 16)}</button></div>
     <label class="pl-vol">{ico("volume", 16)}<input class="pl-volume" type="range" min="0" max="100" value="35" aria-label="{t["pl_volume"]}"></label>
     <ol class="pl-list" aria-label="{t["pl_list"]}">{pl_items}</ol></div>
 </div>
 <script type="application/json" id="tracks">{tracks}</script>
+<script src="{root}js/nav.js"></script>
 <script src="{root}js/player.js"></script>
 <script type="application/json" id="cmd-data">{json.dumps(cmd, ensure_ascii=False).replace("</", "<\\/")}</script>
 <script src="{root}js/site.js"></script>
@@ -356,8 +360,13 @@ def build_home(lang):
       <div class="btn-row"><a class="btn small" href="{GITHUB}" target="_blank" rel="noopener">{ICON_GH} GitHub</a><a class="btn small" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>
       <div class="status"><span class="dot"></span>{t["status"]}</div></div>''')
     skills = skills_card(lang)
-    cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
-    discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
+    cards = "".join(proj_card(lang, p, me) for p in PROJECTS if p["slug"] in HOME_PROJECTS)
+    work = {w["slug"]: w for w in GALLERY}
+    tiles = "".join(
+        f'<a class="hg" href="{r("gallery")}#{work[s]["series"]}"><img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" alt="{esc(work[s][lang])}" loading="lazy" decoding="async"><span>{esc(work[s][lang])}</span></a>'
+        for s in HOME_GALLERY)
+    discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>'
+                    f'<div class="card-h hg-h"><h3>{re.sub(r"<[^>]+>", "", t["gal_title"])}</h3><a href="{r("gallery")}">{t["see_all"]}</a></div><div class="home-gal">{tiles}</div>')
     contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label"><b>04</b> / {t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
                    f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
     body = f'<div class="home"><div class="stack aside">{who}{skills}{"".join(cv_cards(lang, False))}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'

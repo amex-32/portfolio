@@ -356,6 +356,7 @@ UI2 = {
         "series": {"clive": "Clive", "covers": "Pochettes et affiches", "illus": "Illustrations", "3d": "3D", "photos": "Photos"},
         "pl_label": "Lecteur de musique", "pl_play": "Lecture", "pl_pause": "Pause", "pl_prev": "Morceau précédent", "pl_next": "Morceau suivant",
         "pl_list": "Liste des morceaux", "pl_seek": "Position dans le morceau", "pl_volume": "Volume",
+        "pl_shuffle": "Lecture aléatoire", "pl_like": "J'aime ce morceau", "pl_unlike": "Je n'aime plus ce morceau",
     },
     "en": {
         "search_ph": "Search…", "pal_ph": "A page, a project, an action…", "pal_empty": "No results",
@@ -402,6 +403,7 @@ UI2 = {
         "series": {"clive": "Clive", "covers": "Covers and posters", "illus": "Illustrations", "3d": "3D", "photos": "Photos"},
         "pl_label": "Music player", "pl_play": "Play", "pl_pause": "Pause", "pl_prev": "Previous track", "pl_next": "Next track",
         "pl_list": "Track list", "pl_seek": "Position in the track", "pl_volume": "Volume",
+        "pl_shuffle": "Shuffle", "pl_like": "Like this track", "pl_unlike": "Unlike this track",
     },
 }
 for _l in UI:
@@ -446,6 +448,10 @@ CV = {
 
 
 # ---------------------------------------------------------------- musique et galerie
+# Accueil : projets montrés dans la carte « À découvrir » (les autres restent sur la page Projets) et œuvres de l'aperçu de la galerie
+HOME_PROJECTS = ("boutique-cyberpunk", "pixelworld")
+HOME_GALLERY = ("clive-neon", "flame-radio", "knight", "photo-pool")
+
 # Morceaux du lecteur : (fichier dans audio/ sans .mp3, titre)
 # Masterisés par un script ffmpeg ponctuel : passe-haut 30 Hz, compression 2:1, -14 LUFS, limiteur -1,5 dB, MP3 192 kbps.
 TRACKS = [("jolagreen-type-beat", "Jolagreen Type Beat"), ("post-punk", "Post Punk"), ("trap-star", "Trap Star"), ("hip-hop", "Hip Hop"),
@@ -466,9 +472,6 @@ GALLERY = [
     {"slug": "kvrt-cooking", "series": "covers", "date": "2025-10", "fr": "KVRT C00K1N3", "en": "KVRT C00K1N3"},
     {"slug": "knight", "series": "covers", "date": "", "fr": "Knight", "en": "Knight"},
     {"slug": "mf-doom", "series": "covers", "date": "2024-11", "fr": "MF DOOM", "en": "MF DOOM"},
-    {"slug": "ceruledge", "series": "illus", "date": "2025-09", "fr": "Ceruledge", "en": "Ceruledge"},
-    {"slug": "cat-clouds", "series": "illus", "date": "2025-10", "fr": "Dans les nuages", "en": "In the clouds"},
-    {"slug": "cat-red-sky", "series": "illus", "date": "2025-10", "fr": "Ciel rouge", "en": "Red sky"},
     {"slug": "hooded-cat", "series": "illus", "date": "2025-02", "fr": "Chat à capuche", "en": "Hooded cat"},
     {"slug": "studio-3d", "series": "3d", "date": "2025-07", "fr": "Studio de nuit", "en": "Studio at night"},
     {"slug": "building-3d", "series": "3d", "date": "2024-11", "fr": "Outside home", "en": "Outside home"},
