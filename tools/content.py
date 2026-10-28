@@ -350,10 +350,10 @@ UI2 = {
         "ext_art": "Je dessine sur iPad avec Procreate, souvent Clive, un personnage à tête de lune qui revient d'un dessin à l'autre. Je monte aussi des pochettes sous Photoshop et je fais un peu de 3D avec Blender.",
         "ext_listen": "Écouter", "ext_gallery": "Voir la galerie",
         "gal_title": "Ma <em>galerie</em>",
-        "gal_lead": "Dessins, pochettes et rendus 3D. Clique sur une œuvre pour l'agrandir.",
+        "gal_lead": "Dessins, pochettes, rendus 3D et photos. Clique sur une œuvre pour l'agrandir.",
         "gal_works": "œuvres", "gal_series_h": "Séries", "gal_view_h": "Affichage", "gal_all": "Tout",
         "gal_views": {"scatter": "Éparpillé", "grid": "Grille", "albums": "Albums"},
-        "series": {"clive": "Clive", "covers": "Pochettes et affiches", "illus": "Illustrations", "3d": "3D"},
+        "series": {"clive": "Clive", "covers": "Pochettes et affiches", "illus": "Illustrations", "3d": "3D", "photos": "Photos"},
         "pl_label": "Lecteur de musique", "pl_play": "Lecture", "pl_pause": "Pause", "pl_prev": "Morceau précédent", "pl_next": "Morceau suivant",
         "pl_list": "Liste des morceaux", "pl_seek": "Position dans le morceau", "pl_volume": "Volume",
     },
@@ -396,10 +396,10 @@ UI2 = {
         "ext_art": "I draw on iPad with Procreate, often Clive, a moon-headed character who keeps coming back from one drawing to the next. I also design covers in Photoshop and do a bit of 3D in Blender.",
         "ext_listen": "Listen", "ext_gallery": "See the gallery",
         "gal_title": "My <em>gallery</em>",
-        "gal_lead": "Drawings, covers and 3D renders. Click an artwork to enlarge it.",
+        "gal_lead": "Drawings, covers, 3D renders and photos. Click an artwork to enlarge it.",
         "gal_works": "artworks", "gal_series_h": "Series", "gal_view_h": "View", "gal_all": "All",
         "gal_views": {"scatter": "Scattered", "grid": "Grid", "albums": "Albums"},
-        "series": {"clive": "Clive", "covers": "Covers and posters", "illus": "Illustrations", "3d": "3D"},
+        "series": {"clive": "Clive", "covers": "Covers and posters", "illus": "Illustrations", "3d": "3D", "photos": "Photos"},
         "pl_label": "Music player", "pl_play": "Play", "pl_pause": "Pause", "pl_prev": "Previous track", "pl_next": "Next track",
         "pl_list": "Track list", "pl_seek": "Position in the track", "pl_volume": "Volume",
     },
@@ -475,6 +475,10 @@ GALLERY = [
     {"slug": "fisheye-3d", "series": "3d", "date": "2024-11", "fr": "Fisheye", "en": "Fisheye"},
     {"slug": "setup-3d", "series": "3d", "date": "2024-11", "fr": "Setup", "en": "Setup"},
     {"slug": "pool-room", "series": "3d", "date": "", "fr": "Pool Room", "en": "Pool Room"},
+    # photos de soirée : uniquement des clichés où personne n'est reconnaissable, métadonnées (GPS, appareil) retirées à l'export
+    {"slug": "photo-silhouette", "series": "photos", "date": "2024-09", "fr": "Silhouette", "en": "Silhouette"},
+    {"slug": "photo-peace", "series": "photos", "date": "2024-09", "fr": "Peace", "en": "Peace"},
+    {"slug": "photo-rock", "series": "photos", "date": "2024-09", "fr": "Rock", "en": "Rock"},
 ]
 
 
