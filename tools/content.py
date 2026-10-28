@@ -355,7 +355,7 @@ UI2 = {
         "gal_views": {"scatter": "Éparpillé", "grid": "Grille", "albums": "Albums"},
         "series": {"clive": "Clive", "covers": "Pochettes et affiches", "illus": "Illustrations", "3d": "3D"},
         "pl_label": "Lecteur de musique", "pl_play": "Lecture", "pl_pause": "Pause", "pl_prev": "Morceau précédent", "pl_next": "Morceau suivant",
-        "pl_list": "Liste des morceaux", "pl_seek": "Position dans le morceau",
+        "pl_list": "Liste des morceaux", "pl_seek": "Position dans le morceau", "pl_volume": "Volume",
     },
     "en": {
         "search_ph": "Search…", "pal_ph": "A page, a project, an action…", "pal_empty": "No results",
@@ -401,7 +401,7 @@ UI2 = {
         "gal_views": {"scatter": "Scattered", "grid": "Grid", "albums": "Albums"},
         "series": {"clive": "Clive", "covers": "Covers and posters", "illus": "Illustrations", "3d": "3D"},
         "pl_label": "Music player", "pl_play": "Play", "pl_pause": "Pause", "pl_prev": "Previous track", "pl_next": "Next track",
-        "pl_list": "Track list", "pl_seek": "Position in the track",
+        "pl_list": "Track list", "pl_seek": "Position in the track", "pl_volume": "Volume",
     },
 }
 for _l in UI:
@@ -448,9 +448,9 @@ CV = {
 # ---------------------------------------------------------------- musique et galerie
 # Morceaux du lecteur : (fichier dans audio/ sans .mp3, titre)
 # Masterisés par un script ffmpeg ponctuel : passe-haut 30 Hz, compression 2:1, -14 LUFS, limiteur -1,5 dB, MP3 192 kbps.
-TRACKS = [("jolagreen-type-beat", "Jolagreen Type Beat"), ("post-punk", "Post Punk"), ("trap-star", "Trap Star Type Shit"), ("hip-hop", "Hip Hop"),
-          ("piano", "Piano"), ("project-48", "Project 48"), ("marseille", "Marseille 01.06.2026"), ("batman", "Batman"),
-          ("damn-son", "Damn Son Where'd You Find This"), ("listen-prout", "Listen Prout"), ("spiderman-ost", "Spider-Man OST")]
+TRACKS = [("jolagreen-type-beat", "Jolagreen Type Beat"), ("post-punk", "Post Punk"), ("trap-star", "Trap Star"), ("hip-hop", "Hip Hop"),
+          ("ivory", "Ivory"), ("night-shift", "Night Shift"), ("marseille", "Marseille 01.06.2026"), ("batman", "Batman"),
+          ("lost-and-found", "Lost & Found"), ("low-tide", "Low Tide"), ("spiderman-ost", "Spider-Man OST")]
 
 # Œuvres de la galerie, dans img/gallery/ : <slug>.webp (ou .jpg) et <slug>-thumb.webp. Date au format AAAA-MM, "" si inconnue.
 GALLERY = [
@@ -473,8 +473,8 @@ GALLERY = [
     {"slug": "studio-3d", "series": "3d", "date": "2025-07", "fr": "Studio de nuit", "en": "Studio at night"},
     {"slug": "building-3d", "series": "3d", "date": "2024-11", "fr": "Outside home", "en": "Outside home"},
     {"slug": "fisheye-3d", "series": "3d", "date": "2024-11", "fr": "Fisheye", "en": "Fisheye"},
-    {"slug": "corridor-3d", "series": "3d", "date": "2024-11", "fr": "Couloir", "en": "Corridor"},
-    {"slug": "logo-3d", "series": "3d", "date": "2024-11", "fr": "Logo en 3D", "en": "3D logo"},
+    {"slug": "setup-3d", "series": "3d", "date": "2024-11", "fr": "Setup", "en": "Setup"},
+    {"slug": "pool-room", "series": "3d", "date": "", "fr": "Pool Room", "en": "Pool Room"},
 ]
 
 

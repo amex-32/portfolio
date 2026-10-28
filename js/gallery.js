@@ -5,13 +5,21 @@
   if (!gal) return;
   var $ = function (s, c) { return (c || gal).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || gal).querySelectorAll(s)); };
-  var items = $$('.gal-item'), stage = $('.gal-stage'), bg = $('.gal-bg'), name = $('.gal-name'), count = $('.gal-count');
+  var items = $$('.gal-item'), stage = $('.gal-stage'), bgs = $$('.gal-bg'), front = 0, name = $('.gal-name'), count = $('.gal-count');
   var tabs = $$('.gal-time button'), views = $$('.gal-views button');
   // emplacements des tirages en vue éparpillée : x %, y %, rotation, échelle (le premier est au centre, au premier plan)
   var SLOTS = [[50, 47, -3, 1.12], [21, 28, -7, .95], [79, 27, 6, .95], [17, 73, 5, .9], [42, 79, -4, .88], [64, 76, 4, .9], [85, 66, -6, .88], [33, 50, 8, .82]];
 
   var shown = function () { return items.filter(function (it) { return !it.hidden; }); };
-  var setBg = function (it) { if (it) bg.style.backgroundImage = 'url("' + $('img', it).src + '")'; };
+  // deux calques de fond : le nouveau apparaît pendant que l'ancien s'efface (fondu enchaîné)
+  var setBg = function (it) {
+    if (!it) return;
+    var url = 'url("' + $('img', it).src + '")';
+    if (bgs[front].style.backgroundImage === url) return;
+    front = 1 - front;
+    bgs[front].style.backgroundImage = url;
+    bgs[front].classList.add('on'); bgs[1 - front].classList.remove('on');
+  };
 
   function series(s) {
     var k = 0;

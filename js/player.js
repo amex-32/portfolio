@@ -6,8 +6,20 @@
   var $ = function (s) { return root.querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || root).querySelectorAll(s)); };
   var tracks = JSON.parse(data.textContent), audio = new Audio(), i = 0, resumeAt = 0, lastSave = 0;
-  var seek = $('.pl-seek'), times = $$('.pl-time span'), list = $$('.pl-list button'), toggle = $('.pl-toggle');
+  var seek = $('.pl-seek'), times = $$('.pl-time span'), list = $$('.pl-list button'), toggle = $('.pl-toggle'), volEl = $('.pl-volume');
   audio.preload = 'none';
+  // volume mémorisé (35 % par défaut : les morceaux sont masterisés fort), et fondu d'entrée pour ne jamais surprendre
+  var vol = 0.35, fade;
+  try { var v = parseFloat(localStorage.getItem('ak-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  volEl.value = Math.round(vol * 100);
+  function fadeIn() {
+    clearInterval(fade); audio.volume = 0;
+    fade = setInterval(function () { audio.volume = Math.min(vol, audio.volume + vol / 20); if (audio.volume >= vol) clearInterval(fade); }, 40);
+  }
+  volEl.addEventListener('input', function () {
+    vol = volEl.value / 100; clearInterval(fade); audio.volume = vol;
+    try { localStorage.setItem('ak-volume', vol); } catch (e) {}
+  });
 
   function fmt(s) { if (!isFinite(s)) return '–:––'; s = Math.floor(s || 0); return Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
   var known = function () { return isFinite(audio.duration) && audio.duration > 0; };
@@ -51,7 +63,7 @@
     times[0].textContent = fmt(audio.currentTime);
     if (Date.now() - lastSave > 1000) { lastSave = Date.now(); save(); }
   });
-  audio.addEventListener('play', function () { paint(); save(); });
+  audio.addEventListener('play', function () { fadeIn(); paint(); save(); });
   audio.addEventListener('pause', function () { paint(); save(); });
   audio.addEventListener('ended', function () { go(i + 1); });
   seek.addEventListener('input', function () { if (known()) audio.currentTime = seek.value / 1000 * audio.duration; });

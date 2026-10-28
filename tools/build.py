@@ -24,6 +24,7 @@ _P.update({
     "pause": '<path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor"/>',
     "prev": '<path d="M18 6v12L9 12zM6 6v12" fill="currentColor"/>',
     "next": '<path d="M6 6v12l9-6zM18 6v12" fill="currentColor"/>',
+    "volume": '<path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7"/>',
 })
 
 PAGE_NUM = {"home": "00", "list": "01", "detail": "01", "game": "02", "about": "03", "gallery": "03", "contact": "04", "writeups": "05"}
@@ -278,6 +279,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <div class="pl-panel"><b class="pl-title"></b><small>amex · FL Studio</small>
     <input class="pl-seek" type="range" min="0" max="1000" value="0" aria-label="{t["pl_seek"]}"><div class="pl-time"><span>0:00</span><span>0:00</span></div>
     <div class="pl-ctl"><button class="round pl-prev" type="button" aria-label="{t["pl_prev"]}">{ico("prev", 16)}</button><button class="round pl-play" type="button" aria-label="{t["pl_play"]}" data-play="{t["pl_play"]}" data-pause="{t["pl_pause"]}">{ico("play", 16)}{ico("pause", 16)}</button><button class="round pl-next" type="button" aria-label="{t["pl_next"]}">{ico("next", 16)}</button></div>
+    <label class="pl-vol">{ico("volume", 16)}<input class="pl-volume" type="range" min="0" max="100" value="35" aria-label="{t["pl_volume"]}"></label>
     <ol class="pl-list" aria-label="{t["pl_list"]}">{pl_items}</ol></div>
 </div>
 <script type="application/json" id="tracks">{tracks}</script>
@@ -448,7 +450,7 @@ def build_gallery(lang):
     time = "".join(f'<button type="button" role="tab" data-s="{s}" aria-selected="false">{t["series"][s]} <small>{count[s]}</small></button>' for s in series)
     views = "".join(f'<button type="button" data-view="{v}" aria-pressed="false">{label}</button>' for v, label in t["gal_views"].items())
     crumbs = f'<a href="{rel(me, out_path(lang, "about"))}">{t["nav"][3]}</a></span><span>/</span><span>{re.sub(r"<[^>]+>", "", t["gal_title"])}'
-    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<div class="gal-bg" aria-hidden="true"></div>
+    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<div class="gal-bg" aria-hidden="true"></div><div class="gal-bg" aria-hidden="true"></div>
       <aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
         <h4>{t["gal_view_h"]}</h4><div class="gal-views" role="group" aria-label="{t["gal_view_h"]}">{views}</div></aside>
       <div class="gal-main"><div class="gal-head"><h2 class="gal-name"></h2><small class="gal-count" data-unit="{t["gal_works"]}"></small></div>
