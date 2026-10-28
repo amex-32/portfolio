@@ -479,6 +479,10 @@ GALLERY = [
     {"slug": "photo-silhouette", "series": "photos", "date": "2024-09", "fr": "Silhouette", "en": "Silhouette"},
     {"slug": "photo-peace", "series": "photos", "date": "2024-09", "fr": "Peace", "en": "Peace"},
     {"slug": "photo-rock", "series": "photos", "date": "2024-09", "fr": "Rock", "en": "Rock"},
+    {"slug": "photo-pool", "series": "photos", "date": "2024-10", "fr": "La casse", "en": "The break"},
+    {"slug": "photo-foosball", "series": "photos", "date": "2024-10", "fr": "Baby-foot", "en": "Foosball"},
+    {"slug": "photo-foosball-2", "series": "photos", "date": "2024-10", "fr": "Demi-volée", "en": "Half-volley"},
+    {"slug": "photo-foosball-3", "series": "photos", "date": "2024-10", "fr": "Défense", "en": "Defence"},
 ]
 
 
