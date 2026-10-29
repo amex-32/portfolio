@@ -449,8 +449,8 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 .tty-bg { position: fixed; inset: 0; z-index: 520; display: none; align-items: flex-start; justify-content: center; padding: 12vh 16px 0; background: rgba(5, 10, 20, .45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .tty-bg.open { display: flex; }
 .tty { width: min(720px, 100%); display: flex; flex-direction: column; max-height: 70vh; }
-.tty .tty-x { margin-left: auto; padding: 0 4px; font: inherit; color: #8aa4c8; background: none; border: none; cursor: pointer; }
-.tty .tty-x:hover { color: #fff; }
+.tty .tty-x { width: 12px; height: 12px; display: grid; place-items: center; padding: 0; font: 700 8px/1 var(--mono); color: rgba(80, 0, 0, .85); background: #ff5f57; border: none; border-radius: 50%; cursor: pointer; }
+.tty .tty-x:hover { color: #000; filter: brightness(1.1); }
 .tty-out { flex: 1; min-height: 160px; overflow-y: auto; padding: 14px 18px 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .tty-out .cmd { color: #6fd3a0; } .tty-out .ok { color: #7cb7ff; } .tty-out .err { color: #ff8f8f; }
 .tty-in { display: flex; align-items: center; gap: 10px; padding: 10px 18px 16px; }
@@ -636,3 +636,11 @@ html[data-theme="light"] .gal-album { background: rgba(255, 255, 255, .6); borde
 html[data-theme="light"] .gal-time { background: rgba(255, 255, 255, .55); border-top-color: rgba(0, 0, 0, .1); }
 html[data-theme="light"] .gal-time button { color: rgba(20, 32, 46, .6); }
 html[data-theme="light"] .gal-time button:hover { color: #0b1220; }
+
+.now b small { display: inline; font-weight: 400; font-size: 13px; color: var(--text2); }
+
+/* curseur du site : flèche bleue, et anneau sur ce qui se clique */
+html { cursor: url(img/cursor.svg) 5 3, auto; }
+a, button, summary, select, label[for], .proj, .gal-item, .gal-album, [role="button"] { cursor: url(img/cursor-hover.svg) 16 16, pointer !important; }
+input, textarea { cursor: text !important; }
+@media (hover: none) { html, a, button { cursor: auto !important; } }

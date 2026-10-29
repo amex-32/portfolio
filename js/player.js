@@ -66,7 +66,7 @@
     shufBtn.setAttribute('aria-pressed', shuffle ? 'true' : 'false');
   }
   function load(k, t) {
-    i = st.i = (k + tracks.length) % tracks.length; resumeAt = t || 0;
+    i = st.i = (k + tracks.length) % tracks.length; resumeAt = t || 0; st.counted = resumeAt >= 20;
     audio.src = tracks[i].u; seek.value = 0; times[0].textContent = fmt(resumeAt); times[1].textContent = '0:00';
     if ('mediaSession' in navigator && window.MediaMetadata) navigator.mediaSession.metadata = new MediaMetadata({ title: tracks[i].t, artist: 'amex' });
     paint();
@@ -100,6 +100,12 @@
   on(audio, 'timeupdate', function () {
     if (known()) seek.value = Math.round(audio.currentTime / audio.duration * 1000);
     times[0].textContent = fmt(audio.currentTime);
+    // écoute comptée après 20 s de lecture, et seulement si je suis connecté (voir la commande login du terminal)
+    if (!st.counted && !audio.paused && audio.currentTime >= 20) {
+      st.counted = true;
+      var tok = fetchStore('ak-owner');
+      if (tok) fetch('/api/listen', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-owner': tok }, body: JSON.stringify({ track: tracks[i].t }) }).catch(function () {});
+    }
     if (Date.now() - lastSave > 1000) { lastSave = Date.now(); save(); }
   });
   on(audio, 'play', function () { fadeIn(); paint(); save(); });

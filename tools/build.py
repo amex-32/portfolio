@@ -185,6 +185,7 @@ def proj_card(lang, p, me, vt=False):
 
 
 # mesuré avec Lighthouse sur le site en ligne ; à mettre à jour après un gros changement
+NOW_FLAGS = 5  # flags du mini-CTF trouvés par moi (affiché dans « En ce moment »)
 LIGHTHOUSE = "Performance 88 · Accessibilité 98 · Bonnes pratiques 100 · SEO 100"
 LIGHTHOUSE_EN = "Performance 88 · Accessibility 98 · Best practices 100 · SEO 100"
 
@@ -299,7 +300,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <div style="margin-top:4px">Lighthouse (mobile, 29/10/2026) : {LIGHTHOUSE if lang == "fr" else LIGHTHOUSE_EN}</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="{t["search_ph"]}"><div class="pal"><input type="text" placeholder="{t["pal_ph"]}" aria-label="{t["search_ph"]}" autocomplete="off"><ul></ul><footer>{t["pal_hint"]}</footer></div></div>
-<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><span></span><span></span><span></span><em>amex@portfolio: ~</em><button class="tty-x" type="button" aria-label="{t["back"]}">✕</button></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
+<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="{t["back"]}">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
 <div class="toast" role="status"></div>
 <div class="player" role="region" aria-label="{t["pl_label"]}">
   <div class="pl-pill"><button class="pl-toggle" type="button" aria-expanded="false" aria-label="{t["pl_list"]}"><i></i><i></i><i></i><i></i></button><span class="pl-now"></span>
@@ -473,9 +474,10 @@ def build_about(lang, data):
     last30 = sum(c["count"] for c in data["contributions"][-30:])
     now = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["now_label"]}</span><h2>{t["now_h"]}</h2></div><ul class="now">'
                f'<li><span>{t["now_study"]}</span><b>{t["who_tag"]}</b><small>{t["status"]}</small></li>'
-               f'<li><span>{t["now_listen"]}</span><b data-now="track">{t["now_idle"]}</b></li>'
-               f'<li><span>GitHub</span><b>{last30}</b><small>{t["now_gh"]}</small></li>'
-               f'<li><span>{t["now_ctf"]}</span><b data-now="ctf">0 / {len(CTF_FLAGS)}</b></li></ul>', "now-card")
+               f'<li><span>{t["now_last"]}</span><b data-now="last" data-none="{t["now_none"]}">…</b></li>'
+               f'<li><span>{t["now_top"]}</span><b data-now="top">…</b></li>'
+               f'<li><span>GitHub</span><b>{last30} <small>{t["now_gh"]}</small></b></li>'
+               f'<li><span>{t["now_ctf"]}</span><b>{NOW_FLAGS} / {len(CTF_FLAGS)}</b></li></ul>', "now-card")
     body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{now}{ext}{gh}{setup}</div></div>'
     return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
 
@@ -528,8 +530,8 @@ def build_contact(lang):
       <a class="channel" href="{LINKEDIN}" target="_blank" rel="noopener"><div class="contact-icon ci-li">{ICON_LI}</div><div><b>LinkedIn</b><small>alexandre-k-801438256</small></div><span class="go">↗</span></a>
       <a class="channel" href="{GITHUB}" target="_blank" rel="noopener"><div class="contact-icon ci-gh">{ICON_GH}</div><div><b>GitHub</b><small>github.com/amex-32</small></div><span class="go">↗</span></a>{mail}</div>
       {form}<div class="block"><h3>{t["looking_h"]}</h3><ul class="feat">{looking}</ul></div>''')
-    cta = card(f'<div class="block"><h3>{t["contact_cta_h"]}</h3><p>{t["contact_cta_p"]}</p><a class="btn btn-primary" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} {t["write"]}</a> '
-               f'<a class="btn" href="{posixpath.basename(me)}?cv=1#contact-form">{t["cv_ask"]}</a>'
+    cta = card(f'<div class="block"><h3>{t["contact_cta_h"]}</h3><p>{t["contact_cta_p"]}</p><div class="btn-row"><a class="btn btn-primary" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} {t["write"]}</a>'
+               f'<a class="btn" href="{posixpath.basename(me)}?cv=1#contact-form">{t["cv_ask"]}</a></div>'
                f'<p style="margin-top:14px"><span class="dot"></span> {t["status"]}</p></div>')
     right = f'<aside class="side">{cta}{card(f"<dl class=facts>{profile}</dl>")}</aside>'
     body = head_c(lang, me, t["contact_label"], t["contact_h"], t["contact_lead"]) + f'<div class="contact-wrap">{left}{right}</div>'

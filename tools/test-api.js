@@ -34,3 +34,16 @@ assert.strictEqual(HASHES.length, flags.length);
 flags.forEach((f, i) => assert.strictEqual(flagIndex(f), i, f));
 for (const bad of ['FLAG{nope}', 'flag{v13w_s0urc3_1s_y0ur_fr13nd}', flags[0] + ' ', '', null, 42, { a: 1 }, 'FLAG{' + 'a'.repeat(61) + '}']) assert.strictEqual(flagIndex(bad), -1, String(bad));
 console.log('ctf : ok');
+
+// Suivi des écoutes : seul le mot de passe dont l'empreinte est dans OWNER_HASH est accepté.
+const { isOwner, TRACK } = require('../api/listen.js');
+const sha = (s) => require('crypto').createHash('sha256').update(s).digest('hex');
+process.env.OWNER_HASH = sha('mot de passe de test');
+assert(isOwner({ headers: { 'x-owner': 'mot de passe de test' } }));
+assert(!isOwner({ headers: { 'x-owner': 'autre' } }));
+assert(!isOwner({ headers: {} }));
+assert(!isOwner({ headers: { 'x-owner': 'x'.repeat(500) } }));
+process.env.OWNER_HASH = '';
+assert(!isOwner({ headers: { 'x-owner': 'mot de passe de test' } })); // variable absente : personne n'est propriétaire
+assert(TRACK.test('Jolagreen Type Beat') && TRACK.test('Marseille 01.06.2026') && !TRACK.test("a';DROP") && !TRACK.test('x'.repeat(61)));
+console.log('écoutes : ok');

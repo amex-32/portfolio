@@ -31,13 +31,20 @@
   });
   var found = function (n) { try { if (n != null) localStorage.setItem('ak-found', n); return +localStorage.getItem('ak-found') || 0; } catch (e) { return n || 0; } };
   function nowTick() { // appelée par un seul minuteur global (voir plus bas) : elle lit toujours la page courante
-    var t = $('[data-now="track"]'), c = $('[data-now="ctf"]'), p = window.akPlayer, f = found(), fab = $('.tty-fab');
-    if (t && !t.dataset.idle) t.dataset.idle = t.textContent;
-    if (t && p) t.textContent = p.playing() ? '▶ ' + p.tracks[p.current()].t : t.dataset.idle;
-    if (c) c.textContent = f + ' / 6';
+    var f = found(), fab = $('.tty-fab');
     if (fab) { if (f) fab.dataset.n = f; else delete fab.dataset.n; }
   }
   window.akNowFn = nowTick; nowTick();
+  // écoutes enregistrées (publiques) : dernière écoute et plus écoutées
+  var last = $('[data-now="last"]'), topEl = $('[data-now="top"]');
+  if (last && topEl) fetch('/api/listen', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+    if (!d.recent.length) { last.textContent = topEl.textContent = last.dataset.none; return; }
+    var rtf = window.Intl && Intl.RelativeTimeFormat ? new Intl.RelativeTimeFormat(root.lang === 'en' ? 'en' : 'fr', { numeric: 'auto' }) : null;
+    var mins = Math.max(0, Math.round((Date.now() - new Date(d.recent[0].at)) / 60000));
+    var ago = !rtf ? '' : mins < 60 ? rtf.format(-mins, 'minute') : mins < 1440 ? rtf.format(-Math.round(mins / 60), 'hour') : rtf.format(-Math.round(mins / 1440), 'day');
+    last.textContent = d.recent[0].track + (ago ? ' · ' + ago : '');
+    topEl.textContent = d.top.slice(0, 3).map(function (x) { return x.track + ' (' + x.plays + ')'; }).join(' · ');
+  }).catch(function () { last.textContent = topEl.textContent = '–'; });
   if (!window.akNowTimer) window.akNowTimer = setInterval(function () { window.akNowFn(); }, 1000);
 
   // ---------- demande de CV : le formulaire de contact arrive pré-rempli ----------
@@ -161,7 +168,7 @@
       hello: 'Type help to see the commands.', nohist: 'no history yet', unknown: 'command not found: ', nofile: 'no such page: ',
       help: ['help            this list', 'ls [projects]   list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
         'whoami          who am I', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
-        'music           my tracks', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · theme · clear · exit'],
+        'music           my tracks', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · login · logout · theme · clear · exit'],
       whoami: 'Alexandre K., cybersecurity student (Ynov, Sophia Antipolis). Looking for an internship or work-study.',
       ctf: ['6 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
         '3. Robots know things (and so does base64).', '4. The browser console, in ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. One artwork in the gallery says more than it shows (metadata).',
@@ -174,7 +181,7 @@
       hello: 'Tape help pour voir les commandes.', nohist: 'historique vide', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
       help: ['help            cette liste', 'ls [projets]    lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
         'whoami          qui suis-je', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
-        'music           mes morceaux', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · theme · clear · exit'],
+        'music           mes morceaux', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · login · logout · theme · clear · exit'],
       whoami: 'Alexandre K., étudiant en cybersécurité (Ynov, Sophia Antipolis). Je cherche un stage ou une alternance.',
       ctf: ['6 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
         '3. Les robots savent des choses (et le base64 aussi).', '4. La console du navigateur, en ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. Une œuvre de la galerie en dit plus qu\'elle n\'en montre (métadonnées).',
@@ -263,6 +270,14 @@
       like: function () { var p = window.akPlayer; if (!p) return print(TT.err, 'err'); print((p.like() ? '♥ ' : '♡ ') + p.tracks[p.current()].t, 'ok'); },
       shuffle: function () { var p = window.akPlayer; if (!p) return print(TT.err, 'err'); print((en ? 'shuffle: ' : 'aléatoire : ') + (p.shuffle() ? 'on' : 'off'), 'ok'); },
       next: function () { var p = window.akPlayer; if (p) { p.next(); print(TT.nowPlaying + p.tracks[p.current()].t, 'ok'); } },
+      login: function (a) {
+        if (!a) return print(en ? 'usage: login <password>' : 'usage : login <mot de passe>', 'err');
+        fetch('/api/listen?auth=1', { headers: { 'x-owner': a } }).then(function (r) {
+          if (!r.ok) return print(en ? 'access denied' : 'accès refusé', 'err');
+          save('ak-owner', a); print(en ? 'signed in: your plays are now recorded' : 'connecté : tes écoutes sont maintenant enregistrées', 'ok');
+        }).catch(function () { print(TT.err, 'err'); });
+      },
+      logout: function () { try { localStorage.removeItem('ak-owner'); } catch (e) {} print(en ? 'signed out' : 'déconnecté'); },
       theme: function () { toggleTheme(); },
       motion: function () { toggleMotion(); },
       clear: function () { out.textContent = ''; },
@@ -270,7 +285,7 @@
       sudo: function () { print(TT.sudo, 'err'); }
     };
     var exec = function (line) {
-      print('$ ' + line, 'cmd');
+      print('$ ' + line.replace(/^(\s*login\s+).*/i, '$1••••'), 'cmd'); // le mot de passe ne reste pas affiché
       var parts = line.trim().split(/\s+/), c = parts[0].toLowerCase();
       if (!c) return;
       if (/^flag\{/.test(c)) return flag(parts[0]); // un flag collé seul
@@ -299,7 +314,7 @@
     };
     var closeTty = function () { tty.classList.remove('open'); cli.blur(); };
     cli.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { tab = null; var v = cli.value; cli.value = ''; if (v.trim()) { hist.push(v); hi = hist.length; } exec(v); }
+      if (e.key === 'Enter') { tab = null; var v = cli.value; cli.value = ''; if (v.trim() && !/^\s*login/i.test(v)) { hist.push(v); hi = hist.length; } exec(v); }
       else if (e.key === 'ArrowUp' && hi > 0) { cli.value = hist[--hi]; e.preventDefault(); }
       else if (e.key === 'ArrowDown') { hi = Math.min(hist.length, hi + 1); cli.value = hist[hi] || ''; e.preventDefault(); }
       else if (e.key === 'Escape') closeTty();
