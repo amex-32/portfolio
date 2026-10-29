@@ -36,7 +36,7 @@ for (const bad of ['FLAG{nope}', 'flag{v13w_s0urc3_1s_y0ur_fr13nd}', flags[0] + 
 console.log('ctf : ok');
 
 // Suivi des écoutes : seul le mot de passe dont l'empreinte est dans OWNER_HASH est accepté.
-const { isOwner, TRACK } = require('../api/listen.js');
+const { isOwner, newSession, hasSession, TRACK } = require('../api/listen.js');
 const sha = (s) => require('crypto').createHash('sha256').update(s).digest('hex');
 process.env.OWNER_HASH = sha('mot de passe de test');
 assert(isOwner({ headers: { 'x-owner': 'mot de passe de test' } }));
@@ -50,3 +50,16 @@ console.log('écoutes : ok');
 process.env.OWNER_HASH = ` "${sha('abc')}"\n`; // espaces et guillemets autour de la valeur
 assert(isOwner({ headers: { 'x-owner': 'abc' } }));
 console.log('écoutes (valeur collée avec espaces) : ok');
+
+// Session : cookie signé avec OWNER_HASH, refusé s'il est modifié, expiré, ou si OWNER_HASH change.
+const withCookie = (v) => ({ headers: { cookie: 'x=1; ak_owner=' + v } });
+const s = newSession();
+assert(hasSession(withCookie(s)));
+assert(hasSession({ headers: {}, cookies: { ak_owner: s } }));                  // req.cookies de Vercel
+assert(!hasSession(withCookie(s.slice(0, -1) + (s.endsWith('0') ? '1' : '0')))); // signature modifiée
+assert(!hasSession(withCookie(String(Number(s.split('.')[0]) + 1) + '.' + s.split('.')[1]))); // expiration repoussée
+assert(!hasSession(withCookie(newSession(Date.now() - 31 * 864e5))));          // expirée
+assert(!hasSession({ headers: {} }) && !hasSession(withCookie('nimportequoi')));
+process.env.OWNER_HASH = sha('nouveau');
+assert(!hasSession(withCookie(s)));                                                // mot de passe changé : sessions invalidées
+console.log('session : ok');

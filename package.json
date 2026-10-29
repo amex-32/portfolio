@@ -1,6 +1,6 @@
 {
   "name": "portfolio",
   "private": true,
-  "description": "Portfolio statique ; api/scores.js est la seule fonction serveur.",
+  "description": "Portfolio statique ; fonctions serveur dans api/ (classements, CTF, écoutes).",
   "dependencies": { "mysql2": "^3.11.0" }
 }

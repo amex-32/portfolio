@@ -2,7 +2,8 @@
 // GET  /api/ctf                -> { rows: [{ pseudo, found }], total: 6 }
 // POST /api/ctf {pseudo, flag} -> { ok: true, found, total, already } ou 400 { error }
 const crypto = require('crypto');
-const { PSEUDO, connect, tooFast } = require('./scores.js');
+const { PSEUDO } = require('./scores.js');
+const { db, ensure, tooFast } = require('./_lib.js');
 
 // Empreintes SHA-256 des flags (tools/ctf.json, vérifié par tools/test.js) : le code serveur ne contient pas les flags eux-mêmes.
 const HASHES = [
@@ -20,40 +21,33 @@ function flagIndex(flag) {
   return HASHES.indexOf(crypto.createHash('sha256').update(flag).digest('hex'));
 }
 
-let ready; // table créée une fois par instance
-async function db() {
-  const conn = await connect();
-  ready = ready || (async () => {
-    await conn.query('CREATE DATABASE IF NOT EXISTS game_ctf');
-    await conn.query(`CREATE TABLE IF NOT EXISTS game_ctf.found (
-      pseudo VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-      flag TINYINT NOT NULL,
-      found_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (pseudo, flag))`);
-  })();
-  await ready;
-  return conn;
-}
+const schema = () => ensure('ctf', async (pool) => {
+  await pool.query('CREATE DATABASE IF NOT EXISTS game_ctf');
+  await pool.query(`CREATE TABLE IF NOT EXISTS game_ctf.found (
+    pseudo VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    flag TINYINT NOT NULL,
+    found_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (pseudo, flag))`);
+});
 
 async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  let conn;
   try {
     if (req.method === 'GET') {
-      conn = await db();
-      const [rows] = await conn.query(
+      await schema();
+      const [rows] = await db().query(
         'SELECT pseudo, COUNT(*) AS found FROM game_ctf.found GROUP BY pseudo ORDER BY found DESC, MAX(found_at) ASC LIMIT 10');
       return res.status(200).json({ rows: rows.map((r) => ({ pseudo: r.pseudo, found: Number(r.found) })), total: HASHES.length });
     }
     if (req.method === 'POST') {
       const body = req.body || {};
       if (typeof body.pseudo !== 'string' || !PSEUDO.test(body.pseudo)) return res.status(400).json({ error: 'pseudo invalide (2 à 16 lettres, chiffres, _ ou -)' });
-      if (tooFast(req)) return res.status(429).json({ error: 'trop rapide, réessaie dans quelques secondes' });
+      if (tooFast(req, 'ctf')) return res.status(429).json({ error: 'trop rapide, réessaie dans quelques secondes' });
       const i = flagIndex(body.flag);
       if (i < 0) return res.status(400).json({ error: 'flag incorrect' });
-      conn = await db();
-      const [r] = await conn.execute('INSERT IGNORE INTO game_ctf.found (pseudo, flag) VALUES (?, ?)', [body.pseudo, i]);
-      const [[row]] = await conn.execute('SELECT COUNT(*) AS n FROM game_ctf.found WHERE pseudo = ?', [body.pseudo]);
+      await schema();
+      const [r] = await db().execute('INSERT IGNORE INTO game_ctf.found (pseudo, flag) VALUES (?, ?)', [body.pseudo, i]);
+      const [[row]] = await db().execute('SELECT COUNT(*) AS n FROM game_ctf.found WHERE pseudo = ?', [body.pseudo]);
       return res.status(200).json({ ok: true, found: Number(row.n), total: HASHES.length, already: r.affectedRows === 0 });
     }
     res.setHeader('Allow', 'GET, POST');
@@ -61,8 +55,6 @@ async function handler(req, res) {
   } catch (e) {
     console.error(e);
     return res.status(503).json({ error: 'classement indisponible' });
-  } finally {
-    if (conn) conn.end().catch(() => {});
   }
 }
 

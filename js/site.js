@@ -284,12 +284,17 @@
       next: function () { var p = window.akPlayer; if (p) { p.next(); print(TT.nowPlaying + p.tracks[p.current()].t, 'ok'); } },
       login: function (a) {
         if (!a) return print(en ? 'usage: login <password>' : 'usage : login <mot de passe>', 'err');
-        fetch('/api/listen?auth=1', { headers: { 'x-owner': a } }).then(function (r) {
-          if (!r.ok) return print(en ? 'access denied' : 'accès refusé', 'err');
-          save('ak-owner', a); print(en ? 'signed in: your plays are now recorded' : 'connecté : tes écoutes sont maintenant enregistrées', 'ok');
+        // le serveur répond par un cookie de session HttpOnly : le navigateur ne garde que le fait d'être connecté, jamais le mot de passe
+        fetch('/api/listen?auth=1', { method: 'POST', headers: { 'x-owner': a } }).then(function (r) {
+          if (!r.ok) return print(r.status === 429 ? (en ? 'too fast, try again in a few seconds' : 'trop rapide, réessaie dans quelques secondes') : (en ? 'access denied' : 'accès refusé'), 'err');
+          save('ak-owner', '1'); print(en ? 'signed in: your plays are now recorded' : 'connecté : tes écoutes sont maintenant enregistrées', 'ok');
         }).catch(function () { print(TT.err, 'err'); });
       },
-      logout: function () { try { localStorage.removeItem('ak-owner'); } catch (e) {} print(en ? 'signed out' : 'déconnecté'); },
+      logout: function () {
+        try { localStorage.removeItem('ak-owner'); } catch (e) {}
+        fetch('/api/listen?auth=1', { method: 'DELETE' }).catch(function () {});
+        print(en ? 'signed out' : 'déconnecté');
+      },
       theme: function () { toggleTheme(); },
       motion: function () { toggleMotion(); },
       clear: function () { out.textContent = ''; },
