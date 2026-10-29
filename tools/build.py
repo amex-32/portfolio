@@ -255,6 +255,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
               "term": t["pal_term"], "motion": t["pal_motion"], "music": t["pal_music"], "cv": t["cv_ask"]},
     }
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, lp, slug))}">' for l in ("fr", "en"))
+    alts += f'<link rel="alternate" hreflang="x-default" href="{abs_url(out_path("fr", lp, slug))}">'
     boot = ("<script>try{var d=document.documentElement,t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
             "d.dataset.theme=t;var a=localStorage.getItem('accent');if(a)d.dataset.accent=a}catch(e){}</script>")
     plain = lambda s: esc(re.sub(r"<[^>]+>", "", s)).replace('"', "&quot;")
@@ -269,6 +270,15 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
                f'<meta property="og:url" content="{url}"><meta property="og:image" content="{og_url(lang, page, slug, title)}">'
                f'<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
                f'<meta property="og:locale" content="{t["og_locale"]}"><meta name="twitter:card" content="summary_large_image">')
+        if page in ("home", "about"):
+            # données structurées : qui je suis, pour les moteurs de recherche (un bloc de données, non exécuté : hors CSP)
+            person = {"@context": "https://schema.org", "@type": "Person", "name": "Alexandre K.", "jobTitle": t["who_tag"],
+                      "url": abs_url(out_path(lang, "home")), "image": f"{SITE_URL}/img/avatar.webp", "sameAs": [GITHUB, LINKEDIN],
+                      "affiliation": {"@type": "EducationalOrganization", "name": "Ynov Campus Sophia Antipolis"},
+                      "address": {"@type": "PostalAddress", "addressRegion": "Alpes-Maritimes", "addressCountry": "FR"},
+                      "knowsLanguage": ["fr", "en"]}
+            seo += f'<script type="application/ld+json">{json.dumps(person, ensure_ascii=False)}</script>'
+
     icons = (f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml"><link rel="icon" href="{root}favicon.ico" sizes="32x32">'
              f'<link rel="apple-touch-icon" href="{root}apple-touch-icon.png">')
     flag = f"\n  <!-- {CTF_FLAGS[0]} : 1/6, le code source ne ment jamais. -->" if page == "home" else ""
@@ -593,6 +603,7 @@ def seo_files(pages):
     urls = ""
     for page, slug in pages:
         alts = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, page, slug))}"/>' for l in ("fr", "en"))
+        alts += f'<xhtml:link rel="alternate" hreflang="x-default" href="{abs_url(out_path("fr", page, slug))}"/>'
         urls += "".join(f"<url><loc>{abs_url(out_path(l, page, slug))}</loc>{alts}</url>\n" for l in ("fr", "en"))
     sitemap = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
                f'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n{urls}</urlset>\n')
