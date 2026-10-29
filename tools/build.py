@@ -261,7 +261,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     <nav class="tabs" aria-label="Navigation">{tabs}</nav>
     <div class="top-right">
       <button class="round bell" type="button" data-act="bell" aria-label="{t["notif_h"]}">{ico("bell", 19)}<i></i></button>
-      <a class="profile" href="{r("about")}"><span class="avatar">AK</span><div><b>Alexandre K.</b><small>{t["handle"]}</small></div></a>
+      <a class="profile" href="{r("about")}"><img class="avatar" src="{root}img/avatar.webp" alt=""><div><b>Alexandre K.</b><small>{t["handle"]}</small></div></a>
       <div class="drop" id="notifs"><h4>{t["notif_h"]}</h4><ul>{notifs}</ul></div>
     </div>
   </header>
@@ -366,13 +366,13 @@ def build_home(lang):
     nav = (f'<div class="hero-nav"><button class="round" type="button" data-act="prev" aria-label="{t["back"]}">{ico("left", 18)}</button>'
            f'<button class="round" type="button" data-act="next" aria-label="{t["forward"]}">{ico("right", 18)}</button></div>')
     hero = card(f'{intro}{slides}<div class="dots">{dots}</div>{nav}', "hero")
-    who = card(f'''<div class="who"><div class="avatar">AK</div><h3>Alexandre K.</h3><p>{t["who_tag"]}</p>
+    who = card(f'''<div class="who"><img class="avatar" src="{rel(me, "img/avatar.webp")}" alt=""><h3>Alexandre K.</h3><p>{t["who_tag"]}</p>
       <div class="btn-row"><a class="btn small" href="{GITHUB}" target="_blank" rel="noopener">{ICON_GH} GitHub</a><a class="btn small" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>
       <div class="status"><span class="dot"></span>{t["status"]}</div></div>''')
     skills = skills_card(lang)
     cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
     discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
-    contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label"><b>04</b> / {t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
+    contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label">{t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
                    f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
     body = f'<div class="home"><div class="stack aside">{who}{skills}{"".join(cv_cards(lang, False))}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'
     return chrome(lang, "home", None, me, t["title"], t["meta"], body)

@@ -1,4 +1,4 @@
-// Galerie : tirages éparpillés (par pages de 8, avec rotation au changement de page) sur un fond flouté, grille ou albums ; frise des séries en bas ; visionneuse.
+// Galerie : tirages éparpillés (par pages de 8, avec fondu glissé au changement de page) sur un fond flouté, grille ou albums ; frise des séries en bas ; visionneuse.
 (function () {
   'use strict';
   var gal = document.querySelector('.gal');
@@ -49,21 +49,28 @@
     var all = inSeries(), grid = gal.dataset.view === 'grid', n = Math.max(1, Math.ceil(all.length / PER));
     if (page >= n) page = 0;
     var want = grid ? all : all.slice(page * PER, page * PER + PER);
-    var fresh = want.some(function (it) { return it.hidden; }); // un tirage de plus à placer : on redistribue toute la page
+    // un tirage de plus à placer, ou jamais placé (premier affichage) : on redistribue toute la page
+    var fresh = want.some(function (it) { return it.hidden || !it.style.getPropertyValue('--x'); });
     items.forEach(function (it) { it.classList.remove('out'); it.hidden = want.indexOf(it) < 0; });
     if (!grid && fresh) scatter(want);
     pager.hidden = grid || n < 2;
     pageEl.textContent = (page + 1) + ' / ' + n;
     setBg(want[0]);
   }
-  // change de page : les tirages partent en tournant, puis ceux de la page suivante arrivent en tournant (sens selon la direction)
+  // change de page : fondu + léger glissement dans le sens de la navigation, la nouvelle page arrive du côté opposé
   function turn(dir) {
     var n = Math.ceil(inSeries().length / PER);
     if (busy || n < 2) return;
     busy = true;
-    gal.style.setProperty('--dir', dir);
-    visible().forEach(function (it) { it.classList.add('out'); });
-    setTimeout(function () { page = (page + dir + n) % n; render(); busy = false; }, 560);
+    var slide = function (from, to, ms, ease) {
+      return stage.animate([{ opacity: from[0], transform: 'translateX(' + from[1] + 'px)' }, { opacity: to[0], transform: 'translateX(' + to[1] + 'px)' }], { duration: ms, easing: ease, fill: 'forwards' });
+    };
+    slide([1, 0], [0, -28 * dir], 300, 'ease-in').finished.then(function () {
+      page = (page + dir + n) % n; render();
+      var inn = slide([0, 28 * dir], [1, 0], 420, 'cubic-bezier(.22,.61,.36,1)');
+      stage.getAnimations().forEach(function (a) { if (a !== inn) a.cancel(); });
+      return inn.finished;
+    }).then(function () { stage.getAnimations().forEach(function (a) { a.cancel(); }); busy = false; }, function () { busy = false; });
   }
 
   function series(s) {
