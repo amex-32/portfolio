@@ -47,9 +47,9 @@ body {
   font: 15px/1.6 var(--sans); color: var(--text);
   min-height: 100vh; overflow-x: hidden;
 }
-body::before { content: ''; position: fixed; inset: 0; z-index: -2; background: url("img/bg.webp") center / cover no-repeat; filter: blur(14px) saturate(1.1); transform: scale(1.08); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -2; background: url("img/bg-blur.webp") center / cover no-repeat; }
 body::after { content: ''; position: fixed; inset: 0; z-index: -1; background: var(--veil); transition: background .3s; }
-body.sub::before { background-image: url("img/bg.webp"); }
+body.sub::before { background-image: url("img/bg-blur.webp"); }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @view-transition { navigation: auto; }
@@ -662,16 +662,13 @@ html[data-theme="light"] .gal-time button:hover { color: #0b1220; }
 .head-c.tight { padding: 6px 0; } .head-c.flush { padding-top: 0; }
 .btn-row.center { justify-content: center; }
 
-/* Firefox : le flou d'arrière-plan (backdrop-filter) y est redessiné à chaque image dès que ce qui est dessous bouge.
-   Sous la coque (toute la hauteur de la page) il y a le fond fixe et la lumière de la souris : chaque défilement et chaque
-   mouvement de souris refloutait une surface de plusieurs milliers de pixels, en plus des flous imbriqués et masqués des vignettes.
-   Le fond est déjà flou (body::before), donc une coque un peu plus opaque sans flou donne presque le même rendu.
-   On garde le flou sur les petits éléments fixes (dock, lecteur, barre d'adresse) et les fenêtres ouvertes à la demande. */
+/* Firefox : le flou d'arrière-plan (backdrop-filter) y oblige à redessiner tout ce qui est dessous à chaque image dès que
+   quelque chose bouge (défilement, lumière de la souris), même pour un petit élément fixe comme le dock ou la barre d'adresse.
+   On le coupe partout dans Firefox et on rend les surfaces vitrées un peu plus opaques : le fond est déjà flou, le rendu reste proche. */
 @supports (-moz-appearance: none) {
-  .shell { backdrop-filter: none; background: rgba(255, 255, 255, .56); }
-  :root[data-theme="dark"] .shell { background: rgba(24, 28, 36, .66); }
-  .shade::before, .slide.pj .shade::before, .banner .shade::before,
-  .proj .pill, .slide.pj .pill, .hero-nav .round { backdrop-filter: none; }
+  *, *::before, *::after { backdrop-filter: none !important; }
+  :root { --shell: rgba(255, 255, 255, .62); }
+  :root[data-theme="dark"] { --shell: rgba(24, 28, 36, .74); }
   .proj .pill, .slide.pj .pill { background: rgba(255, 255, 255, .24); }
   .hero-nav .round { background: rgba(0, 0, 0, .5); }
 }
