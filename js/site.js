@@ -240,12 +240,28 @@
       if (!out.childNodes.length) print(TT.hello);
       cli.focus();
     };
+    // Tab : complète la commande, ou la page / le projet après cd, ls, cat ; Tab répété = candidat suivant
+    var tab = null;
+    var complete = function () {
+      if (!tab) {
+        var m = /^(\s*)(\S*)(?:(\s+)(\S*))?$/.exec(cli.value); if (!m) return;
+        var arg = m[3] != null, typed = arg ? m[4] : m[2], word = typed.toLowerCase(), base = cli.value.slice(0, cli.value.length - typed.length);
+        var pool = arg ? (/^(cd|ls|cat)$/i.test(m[2]) ? data.pages.map(function (q) { return name(q) + '/'; }).concat(data.projects.map(function (q) { return q.s; })) : []) : Object.keys(CMDS);
+        var hits = pool.filter(function (c) { return c.indexOf(word) === 0; });
+        if (!hits.length) return;
+        tab = { base: base, hits: hits, i: -1 };
+      }
+      tab.i = (tab.i + 1) % tab.hits.length;
+      cli.value = tab.base + tab.hits[tab.i];
+    };
     var closeTty = function () { tty.classList.remove('open'); cli.blur(); };
     cli.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { var v = cli.value; cli.value = ''; if (v.trim()) { hist.push(v); hi = hist.length; } exec(v); }
+      if (e.key === 'Enter') { tab = null; var v = cli.value; cli.value = ''; if (v.trim()) { hist.push(v); hi = hist.length; } exec(v); }
       else if (e.key === 'ArrowUp' && hi > 0) { cli.value = hist[--hi]; e.preventDefault(); }
       else if (e.key === 'ArrowDown') { hi = Math.min(hist.length, hi + 1); cli.value = hist[hi] || ''; e.preventDefault(); }
       else if (e.key === 'Escape') closeTty();
+      else if (e.key === 'Tab') { e.preventDefault(); complete(); }
+      else if (!e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) tab = null;
     });
     $('.tty-x', tty).addEventListener('click', closeTty);
     tty.addEventListener('click', function (e) { if (e.target === tty) closeTty(); });
