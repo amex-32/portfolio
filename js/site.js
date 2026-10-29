@@ -206,7 +206,7 @@
     var TT = en ? {
       hello: 'Type help to see the commands.', nohist: 'no history yet', unknown: 'command not found: ', nofile: 'no such page: ',
       help: ['help            this list', 'ls [projects]   list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
-        'whoami          who am I', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
+        'whoami          who am I', 'github          my GitHub profile', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
         'music           my tracks', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · login · logout · theme · clear · exit'],
       whoami: 'Alexandre K., cybersecurity student (Ynov, Sophia Antipolis). Looking for an internship or work-study.',
       ctf: ['6 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
@@ -219,7 +219,7 @@
     } : {
       hello: 'Tape help pour voir les commandes.', nohist: 'historique vide', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
       help: ['help            cette liste', 'ls [projets]    lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
-        'whoami          qui suis-je', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
+        'whoami          qui suis-je', 'github          mon profil GitHub', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
         'music           mes morceaux', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · login · logout · theme · clear · exit'],
       whoami: 'Alexandre K., étudiant en cybersécurité (Ynov, Sophia Antipolis). Je cherche un stage ou une alternance.',
       ctf: ['6 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
@@ -288,6 +288,11 @@
       history: function () { print(hist.length ? hist.map(function (h, k) { return (k + 1 + '  ').slice(0, 4) + h; }) : TT.nohist); },
       uname: function () { print('amex-portfolio 1.0 (static, vercel) ' + (en ? 'en' : 'fr')); },
       whoami: function () { print(TT.whoami); },
+      github: function () { // lien cliquable vers le profil, ouvert aussi tout de suite
+        var d = document.createElement('div'), a = document.createElement('a');
+        a.href = data.gh; a.target = '_blank'; a.rel = 'noopener'; a.textContent = data.gh.replace(/^https:\/\//, '') + ' ↗';
+        d.appendChild(a); out.appendChild(d); out.scrollTop = out.scrollHeight; window.open(data.gh, '_blank', 'noopener');
+      },
       ctf: function () { print(TT.ctf); },
       pseudo: function (a) {
         if (!a) return print(TT.pseudoIs + (pseudo() || '–'));
