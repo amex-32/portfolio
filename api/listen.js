@@ -7,9 +7,12 @@ const crypto = require('crypto');
 const mysql = require('mysql2/promise');
 const { tooFast } = require('./scores.js');
 
+const ownerHash = () => (process.env.OWNER_HASH || '').trim().replace(/^["']|["']$/g, ''); // tolère espaces et guillemets collés avec la valeur
+const hashOk = () => /^[0-9a-f]{64}$/i.test(ownerHash());
+
 function isOwner(req) {
-  const hash = (process.env.OWNER_HASH || '').trim().replace(/^["']|["']$/g, ''), tok = req.headers['x-owner']; // tolère espaces et guillemets collés avec la valeur
-  if (!/^[0-9a-f]{64}$/i.test(hash) || typeof tok !== 'string' || !tok || tok.length > 200) return false;
+  const hash = ownerHash(), tok = req.headers['x-owner'];
+  if (!hashOk() || typeof tok !== 'string' || !tok || tok.length > 200) return false;
   return crypto.timingSafeEqual(crypto.createHash('sha256').update(tok).digest(), Buffer.from(hash, 'hex'));
 }
 const TRACK = /^[\p{L}\p{N} .,'!?()&+_-]{1,60}$/u;
@@ -39,6 +42,7 @@ async function handler(req, res) {
   try {
     if (req.method === 'GET' && req.query.auth) {
       if (tooFast(req)) return res.status(429).json({ error: 'trop rapide' });
+      if (!hashOk()) return res.status(503).json({ error: 'OWNER_HASH absent ou mal formé (64 caractères hexadécimaux attendus)' });
       return isOwner(req) ? res.status(200).json({ owner: true }) : res.status(401).json({ error: 'refusé' });
     }
     if (req.method === 'GET') {
