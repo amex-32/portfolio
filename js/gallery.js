@@ -1,16 +1,39 @@
-// Galerie : tirages éparpillés sur un fond flouté, grille ou albums ; frise des séries en bas ; visionneuse.
+// Galerie : tirages éparpillés (par pages de 8, avec rotation au changement de page) sur un fond flouté, grille ou albums ; frise des séries en bas ; visionneuse.
 (function () {
   'use strict';
   var gal = document.querySelector('.gal');
   if (!gal) return;
   var $ = function (s, c) { return (c || gal).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || gal).querySelectorAll(s)); };
-  var items = $$('.gal-item'), stage = $('.gal-stage'), bgs = $$('.gal-bg'), front = 0, name = $('.gal-name'), count = $('.gal-count');
+  var items = $$('.gal-item'), bgs = $$('.gal-bg'), front = 0, name = $('.gal-name'), count = $('.gal-count');
   var tabs = $$('.gal-time button'), views = $$('.gal-views button');
-  // emplacements des tirages en vue éparpillée : x %, y %, rotation, échelle (le premier est au centre, au premier plan)
-  var SLOTS = [[50, 47, -3, 1.12], [21, 28, -7, .95], [79, 27, 6, .95], [17, 73, 5, .9], [42, 79, -4, .88], [64, 76, 4, .9], [85, 66, -6, .88], [33, 50, 8, .82]];
+  var pager = $('.gal-pager'), pageEl = $('.gal-page');
+  var stage = $('.gal-stage'), PER = 8, cur = '', page = 0, pref = 'scatter', busy = false;
 
-  var shown = function () { return items.filter(function (it) { return !it.hidden; }); };
+  // Placement aléatoire des tirages (nouveau à chaque affichage), sous contraintes : tout reste dans la scène, rotation et échelle bornées,
+  // et deux tirages ne se recouvrent que d'environ 30 % au plus (meilleur de 60 essais par tirage ; au pire le moins mauvais).
+  // shortcut: pas de garantie absolue si la scène est très étroite, les tirages se chevauchent alors un peu plus.
+  function scatter(want) {
+    var r = stage.getBoundingClientRect(), W = r.width || 800, H = r.height || 520;
+    var cw = Math.min(235, Math.max(150, W * .21)) * 1.1, ch = cw * 1.2; // taille d'un tirage, échelle maximale comprise
+    var mx = Math.min(cw / 2 + 8, W / 2), my = Math.min(ch / 2 + 6, H / 2), placed = [];
+    var order = want.map(function (_, k) { return k; }).sort(function () { return Math.random() - .5; }); // ordre d'empilement
+    want.forEach(function (it, k) {
+      var best = null, bestSep = -1;
+      for (var t = 0; t < 60 && bestSep < 1; t++) {
+        var x = mx + Math.random() * (W - 2 * mx), y = my + Math.random() * (H - 2 * my), sep = Infinity;
+        placed.forEach(function (q) { sep = Math.min(sep, Math.max(Math.abs(x - q[0]) / (cw * .72), Math.abs(y - q[1]) / (ch * .72))); });
+        if (sep > bestSep) { bestSep = sep; best = [x, y]; }
+      }
+      placed.push(best);
+      it.style.setProperty('--x', (best[0] / W * 100).toFixed(1) + '%'); it.style.setProperty('--y', (best[1] / H * 100).toFixed(1) + '%');
+      it.style.setProperty('--r', ((Math.random() * 16 - 8)).toFixed(1) + 'deg'); it.style.setProperty('--k', (.88 + Math.random() * .2).toFixed(2));
+      it.style.setProperty('--z', order[k] + 1);
+    });
+  }
+
+  var inSeries = function () { return items.filter(function (it) { return it.dataset.s === cur; }); };
+  var visible = function () { return items.filter(function (it) { return !it.hidden; }); };
   // deux calques de fond : le nouveau apparaît pendant que l'ancien s'efface (fondu enchaîné)
   var setBg = function (it) {
     if (!it) return;
@@ -21,43 +44,55 @@
     bgs[front].classList.add('on'); bgs[1 - front].classList.remove('on');
   };
 
+  // affiche la page courante : tous les tirages de la série en grille, PER tirages par page en vue éparpillée
+  function render() {
+    var all = inSeries(), grid = gal.dataset.view === 'grid', n = Math.max(1, Math.ceil(all.length / PER));
+    if (page >= n) page = 0;
+    var want = grid ? all : all.slice(page * PER, page * PER + PER);
+    var fresh = want.some(function (it) { return it.hidden; }); // un tirage de plus à placer : on redistribue toute la page
+    items.forEach(function (it) { it.classList.remove('out'); it.hidden = want.indexOf(it) < 0; });
+    if (!grid && fresh) scatter(want);
+    pager.hidden = grid || n < 2;
+    pageEl.textContent = (page + 1) + ' / ' + n;
+    setBg(want[0]);
+  }
+  // change de page : les tirages partent en tournant, puis ceux de la page suivante arrivent en tournant (sens selon la direction)
+  function turn(dir) {
+    var n = Math.ceil(inSeries().length / PER);
+    if (busy || n < 2) return;
+    busy = true;
+    gal.style.setProperty('--dir', dir);
+    visible().forEach(function (it) { it.classList.add('out'); });
+    setTimeout(function () { page = (page + dir + n) % n; render(); busy = false; }, 560);
+  }
+
   function series(s) {
-    var k = 0;
+    cur = s; page = 0;
     tabs.forEach(function (b) { b.setAttribute('aria-selected', b.dataset.s === s ? 'true' : 'false'); });
-    items.forEach(function (it) {
-      it.hidden = it.dataset.s !== s;
-      if (it.hidden) return;
-      var p = SLOTS[k % SLOTS.length];
-      it.style.setProperty('--x', p[0] + '%'); it.style.setProperty('--y', p[1] + '%');
-      it.style.setProperty('--r', p[2] + 'deg'); it.style.setProperty('--k', p[3]); it.style.setProperty('--z', SLOTS.length - k);
-      k++;
-    });
     var tab = tabs.filter(function (b) { return b.dataset.s === s; })[0];
     name.textContent = tab.firstChild.textContent.trim();
-    count.textContent = k + ' ' + count.dataset.unit;
-    // la vue éparpillée n'a que SLOTS.length emplacements : une série plus grosse s'ouvre en grille (sinon les tirages s'empilent)
-    var many = k > SLOTS.length;
-    views.forEach(function (b) { if (b.dataset.view === 'scatter') b.disabled = many; });
-    if (gal.dataset.view !== 'albums') setView(many ? 'grid' : pref);
-    setBg(shown()[0]);
+    count.textContent = inSeries().length + ' ' + count.dataset.unit;
+    if (gal.dataset.view !== 'albums') setView(pref); else render();
     if (history.replaceState) history.replaceState(null, '', '#' + s);
   }
-  var pref = 'scatter'; // vue choisie par le visiteur (grille ou éparpillée), retrouvée sur les séries qui le permettent
   function setView(v) {
     gal.dataset.view = v;
     views.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.view === v ? 'true' : 'false'); });
+    render();
   }
 
   tabs.forEach(function (b) { b.addEventListener('click', function () { if (gal.dataset.view === 'albums') setView(pref); series(b.dataset.s); }); });
   views.forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.view !== 'albums') pref = b.dataset.view; setView(b.dataset.view); }); });
   $$('.gal-album').forEach(function (b) { b.addEventListener('click', function () { setView(pref); series(b.dataset.s); }); });
+  $('.gal-prev').addEventListener('click', function () { turn(-1); });
+  $('.gal-next').addEventListener('click', function () { turn(1); });
   items.forEach(function (it) {
     it.addEventListener('pointerenter', function () { setBg(it); });
     it.addEventListener('focus', function () { setBg(it); });
-    it.addEventListener('click', function () { show(shown().indexOf(it)); });
+    it.addEventListener('click', function () { show(inSeries().indexOf(it)); });
   });
 
-  // ---------- visionneuse ----------
+  // ---------- visionneuse (parcourt toute la série, pas seulement la page affichée) ----------
   var lb = document.createElement('div'), img = document.createElement('img'), cap = document.createElement('span'), at = 0, list = [];
   lb.className = 'lb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); cap.className = 'count';
   [['x', '✕'], ['prev', '‹'], ['next', '›']].forEach(function (b) {
@@ -69,8 +104,10 @@
     var it = list[at], t = $('b', it).textContent, d = $('small', it).textContent;
     img.src = it.dataset.full; img.alt = t;
     cap.textContent = t + (d ? ' · ' + d : '') + '  ' + (at + 1) + ' / ' + list.length;
+    // la page affichée derrière suit l'œuvre ouverte
+    if (it.hidden && gal.dataset.view !== 'grid') { page = Math.floor(at / PER); render(); }
   }
-  function show(n) { list = shown(); go(n); lb.classList.add('open'); $('.x', lb).focus(); }
+  function show(n) { list = inSeries(); go(n); lb.classList.add('open'); $('.x', lb).focus(); }
   function shut() { lb.classList.remove('open'); if (list[at]) list[at].focus(); }
   $('.x', lb).addEventListener('click', shut);
   $('.prev', lb).addEventListener('click', function () { go(at - 1); });

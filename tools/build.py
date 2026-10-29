@@ -468,7 +468,8 @@ def build_gallery(lang):
       <aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
         <h4>{t["gal_view_h"]}</h4><div class="gal-views" role="group" aria-label="{t["gal_view_h"]}">{views}</div></aside>
       <div class="gal-main"><div class="gal-head"><h2 class="gal-name"></h2><small class="gal-count" data-unit="{t["gal_works"]}"></small></div>
-        <div class="gal-stage" data-view="scatter">{items}</div><div class="gal-albums">{albums}</div></div>
+        <div class="gal-stage" data-view="scatter">{items}</div><div class="gal-albums">{albums}</div>
+        <div class="gal-pager" hidden><button class="round gal-prev" type="button" aria-label="{t["back"]}">{ico("left", 16)}</button><span class="gal-page" aria-live="polite"></span><button class="round gal-next" type="button" aria-label="{t["forward"]}">{ico("right", 16)}</button></div></div>
       <nav class="gal-time" role="tablist" aria-label="{t["gal_series_h"]}">{time}</nav>''', "gal")
     return chrome(lang, "gallery", None, me, f'{re.sub(r"<[^>]+>", "", t["gal_title"])} — Alexandre K.', t["gal_lead"], body,
                   '<script src="ROOT/js/gallery.js"></script>')
