@@ -184,6 +184,11 @@ def proj_card(lang, p, me, vt=False):
             f'<div class="meta"><h3>{d["title"]}</h3><p>{d["short"]}</p></div><span class="go">{ico("right", 20)}</span></a>')
 
 
+# mesuré avec Lighthouse sur le site en ligne ; à mettre à jour après un gros changement
+LIGHTHOUSE = "Performance 88 · Accessibilité 98 · Bonnes pratiques 100 · SEO 100"
+LIGHTHOUSE_EN = "Performance 88 · Accessibility 98 · Best practices 100 · SEO 100"
+
+
 def og_url(lang, page, slug, title):
     """Aperçu de lien propre à la page (img/og/…), généré une fois avec Pillow et versionné ; sinon l'aperçu général."""
     if page == "home":
@@ -291,6 +296,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
 <div class="foot">
   <a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a><a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a><a href="{SITE_REPO}" target="_blank" rel="noopener">{t["source"]}</a>
   <div style="margin-top:8px">{t["rights"]} · {t["kb_hint"]}</div>
+  <div style="margin-top:4px">Lighthouse (mobile, 29/10/2026) : {LIGHTHOUSE if lang == "fr" else LIGHTHOUSE_EN}</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="{t["search_ph"]}"><div class="pal"><input type="text" placeholder="{t["pal_ph"]}" aria-label="{t["search_ph"]}" autocomplete="off"><ul></ul><footer>{t["pal_hint"]}</footer></div></div>
 <div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><span></span><span></span><span></span><em>amex@portfolio: ~</em><button class="tty-x" type="button" aria-label="{t["back"]}">✕</button></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
