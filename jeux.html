@@ -55,26 +55,26 @@
     </div><aside class="sb" data-game="2048"></aside></div></div>
 <div class="gp" id="g-snake"><div class="cols"><div class="play">
   <div class="gbar"><span>Score <b id="sn-score">0</b></span><span>Meilleur <b id="sn-best">0</b></span><span class="msg" id="sn-msg"></span><button class="xp-btn" id="sn-btn" type="button"></button></div>
-  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="snake"></aside></div></div>
+  <canvas id="snake" width="360" height="360"></canvas><p class="lead help" id="snake-help"></p></div><aside class="sb" data-game="snake"></aside></div></div>
 <div class="gp" id="g-memory"><div class="cols"><div class="play">
   <div class="gbar"><span>Coups <b id="mem-moves">0</b></span><span>Temps <b id="mem-time">0s</b></span><span>Meilleur <b id="mem-best">–</b></span><span class="msg" id="mem-msg"></span><button class="xp-btn" id="mem-btn" type="button"></button></div>
-  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="memory"></aside></div></div>
+  <div class="mem" id="mem"></div><p class="lead help" id="mem-help"></p></div><aside class="sb" data-game="memory"></aside></div></div>
 <div class="gp" id="g-code"><div class="cols"><div class="play"><div class="cb">
   <div class="gbar"><span>Essais restants <b id="cb-left">8</b></span><span class="msg" id="cb-msg"></span><button class="xp-btn" id="cb-btn" type="button"></button></div>
-  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
+  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead help" id="cb-help"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
 <div class="gp" id="g-cipher"><div class="cols"><div class="play"><div class="ci">
   <div class="gbar"><span>Score <b id="ci-score">0</b></span><span>Temps <b id="ci-time">60s</b></span><span>Meilleur <b id="ci-best">0</b></span><span class="msg" id="ci-msg"></span><button class="xp-btn" id="ci-btn" type="button"></button></div>
   <p class="ci-text" id="ci-cipher">· · ·</p><p class="ci-text ci-plain" id="ci-plain" aria-live="polite">· · ·</p>
   <div class="ci-ctl"><button class="round" id="ci-down" type="button" aria-label="−1">◀</button><span>Décalage <b id="ci-shift">0</b></span><button class="round" id="ci-up" type="button" aria-label="+1">▶</button><button class="xp-btn" id="ci-ok" type="button">Valider</button></div>
-  <p class="lead" style="margin:0;font-size:13px">Fais tourner l'alphabet avec ◀ ▶ (ou les flèches) jusqu'à lire un mot, puis valide. 60 secondes, −5 s par erreur.</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
+  <p class="lead help">Fais tourner l'alphabet avec ◀ ▶ (ou les flèches) jusqu'à lire un mot, puis valide. 60 secondes, −5 s par erreur.</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
 <div class="gp" id="g-ctf"><div class="cols"><div class="play ctf"><h3>Mini-CTF</h3><p>Six flags au format FLAG{…} sont cachés dans ce site. Trouve-les, puis soumets-les dans le terminal : tape <code>pseudo ton_pseudo</code>, puis <code>flag FLAG{…}</code>.</p>
   <ol><li>Le code source de l'accueil a un secret.</li><li>Les en-têtes HTTP parlent plus qu'on ne croit.</li><li>Les robots savent des choses (et le base64 aussi).</li><li>La console du navigateur, en ROT13.</li><li>↑ ↑ ↓ ↓ ← → ← → B A</li><li>Une œuvre de la galerie en dit plus qu'elle n'en montre (métadonnées).</li></ol><button class="btn btn-primary" type="button" data-act="term">Ouvrir le terminal</button></div><aside class="sb" data-ctf></aside></div></div></section>
   </main>
 </div>
 <div class="foot">
   <a href="https://github.com/amex-32" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/amex-32/portfolio" target="_blank" rel="noopener">Code source du site</a>
-  <div style="margin-top:8px">© 2026 Alexandre K. · Astuce : ⌘K ou Ctrl+K ouvre la recherche, ² ou ` ouvre le terminal.</div>
-  <div style="margin-top:4px">Lighthouse (mobile, 29/10/2026) : Performance 88 · Accessibilité 98 · Bonnes pratiques 100 · SEO 100</div>
+  <div class="mt-8">© 2026 Alexandre K. · Astuce : ⌘K ou Ctrl+K ouvre la recherche, ² ou ` ouvre le terminal.</div>
+  <div class="mt-4">Lighthouse (mobile, 29/10/2026) : Performance 88 · Accessibilité 98 · Bonnes pratiques 100 · SEO 100</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="Rechercher…"><div class="pal"><input type="text" placeholder="Une page, un projet, une action…" aria-label="Rechercher…" autocomplete="off"><ul></ul><footer>↑↓ naviguer · ↵ ouvrir · échap fermer</footer></div></div>
 <div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="Fermer le terminal">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>

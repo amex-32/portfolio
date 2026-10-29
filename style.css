@@ -655,3 +655,9 @@ html[data-theme="light"] .gal-time button:hover { color: #0b1220; }
 
 /* téléphones : pas de flou d'arrière-plan sur les vignettes, coûteux à dessiner ; le dégradé suffit à la lisibilité */
 @media (max-width: 760px) { .shade::before, .slide.pj .shade::before, .banner .shade::before { backdrop-filter: none; -webkit-backdrop-filter: none; } }
+
+/* petites classes utilitaires (remplacent les styles en ligne des gabarits) */
+.mt-4 { margin-top: 4px; } .mt-8 { margin-top: 8px; } .mt-14 { margin-top: 14px; }
+.lead.help { margin: 0; font-size: 13px; }
+.head-c.tight { padding: 6px 0; } .head-c.flush { padding-top: 0; }
+.btn-row.center { justify-content: center; }

@@ -172,18 +172,18 @@ def games_panels(lang):
 <div class="gp" id="g-2048"><div class="cols"><div>{inner}</div><aside class="sb" data-game="2048"></aside></div></div>
 <div class="gp" id="g-snake"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["score"]} <b id="sn-score">0</b></span><span>{t["best"]} <b id="sn-best">0</b></span><span class="msg" id="sn-msg"></span><button class="xp-btn" id="sn-btn" type="button"></button></div>
-  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="snake"></aside></div></div>
+  <canvas id="snake" width="360" height="360"></canvas><p class="lead help" id="snake-help"></p></div><aside class="sb" data-game="snake"></aside></div></div>
 <div class="gp" id="g-memory"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["moves"]} <b id="mem-moves">0</b></span><span>{t["time"]} <b id="mem-time">0s</b></span><span>{t["best"]} <b id="mem-best">–</b></span><span class="msg" id="mem-msg"></span><button class="xp-btn" id="mem-btn" type="button"></button></div>
-  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="memory"></aside></div></div>
+  <div class="mem" id="mem"></div><p class="lead help" id="mem-help"></p></div><aside class="sb" data-game="memory"></aside></div></div>
 <div class="gp" id="g-code"><div class="cols"><div class="play"><div class="cb">
   <div class="gbar"><span>{t["left"]} <b id="cb-left">8</b></span><span class="msg" id="cb-msg"></span><button class="xp-btn" id="cb-btn" type="button"></button></div>
-  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
+  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead help" id="cb-help"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
 <div class="gp" id="g-cipher"><div class="cols"><div class="play"><div class="ci">
   <div class="gbar"><span>{t["score"]} <b id="ci-score">0</b></span><span>{t["time"]} <b id="ci-time">60s</b></span><span>{t["best"]} <b id="ci-best">0</b></span><span class="msg" id="ci-msg"></span><button class="xp-btn" id="ci-btn" type="button"></button></div>
   <p class="ci-text" id="ci-cipher">· · ·</p><p class="ci-text ci-plain" id="ci-plain" aria-live="polite">· · ·</p>
   <div class="ci-ctl"><button class="round" id="ci-down" type="button" aria-label="−1">◀</button><span>{u["ci_shift"]} <b id="ci-shift">0</b></span><button class="round" id="ci-up" type="button" aria-label="+1">▶</button><button class="xp-btn" id="ci-ok" type="button">{u["ci_ok"]}</button></div>
-  <p class="lead" style="margin:0;font-size:13px">{u["ci_help"]}</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
+  <p class="lead help">{u["ci_help"]}</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
 <div class="gp" id="g-ctf"><div class="cols"><div class="play ctf"><h3>{u["ctf_h"]}</h3><p>{u["ctf_p"]}</p>
   <ol>{"".join(f"<li>{esc(h)}</li>" for h in u["ctf_hints"])}</ol><button class="btn btn-primary" type="button" data-act="term">{u["ctf_open"]}</button></div><aside class="sb" data-ctf></aside></div></div>'''
 
@@ -323,8 +323,8 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
 </div>
 <div class="foot">
   <a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a><a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a><a href="{SITE_REPO}" target="_blank" rel="noopener">{t["source"]}</a>
-  <div style="margin-top:8px">{t["rights"]} · {t["kb_hint"]}</div>
-  <div style="margin-top:4px">Lighthouse (mobile, 29/10/2026) : {LIGHTHOUSE if lang == "fr" else LIGHTHOUSE_EN}</div>
+  <div class="mt-8">{t["rights"]} · {t["kb_hint"]}</div>
+  <div class="mt-4">Lighthouse (mobile, 29/10/2026) : {LIGHTHOUSE if lang == "fr" else LIGHTHOUSE_EN}</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="{t["search_ph"]}"><div class="pal"><input type="text" placeholder="{t["pal_ph"]}" aria-label="{t["search_ph"]}" autocomplete="off"><ul></ul><footer>{t["pal_hint"]}</footer></div></div>
 <div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="{t["tty_close"]}">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
@@ -427,8 +427,8 @@ def build_home(lang):
     skills = skills_card(lang)
     cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
     discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
-    contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label">{t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
-                   f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
+    contact = card(f'<div class="head-c tight"><span class="label">{t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
+                   f'<div class="btn-row center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
     body = f'<div class="home"><div class="stack aside">{who}{skills}{"".join(cv_cards(lang, False))}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'
     return chrome(lang, "home", None, me, t["title"], t["meta"], body)
 
@@ -495,18 +495,18 @@ def build_about(lang, data):
     sw = "".join(
         f'<a class="tile" href="{url}" target="_blank" rel="noopener"><div class="tile-ico"{f" style=color:{c}" if c else ""}>{brand_icon(ic)}</div><b>{n}</b></a>'
         for n, ic, url, c in SOFTWARE)
-    gh = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
+    gh = card(f'<div class="head-c flush"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
     setup = card(f'<div class="block"><h3>{t["hw_h"]}</h3><div class="tiles">{hw}</div></div><div class="block"><h3>{t["sw_h"]}</h3><div class="tiles">{sw}</div></div>')
     left = f'<div class="stack">{skills_card(lang)}{"".join(cv_cards(lang, True))}</div>'
     tags = lambda xs: '<div class="tags">' + "".join(f"<span>{x}</span>" for x in xs) + '</div>'
     peek = "".join(f'<img src="{rel(me, "img/gallery/" + s + "-thumb.webp")}" {dims("img/gallery/" + s + "-thumb.webp")} alt="" loading="lazy" decoding="async">' for s in ("clive-neon", "flame-radio", "knight"))
-    ext = card(f'''<div class="head-c" style="padding-top:0"><span class="label">{t["ext_h"]}</span><h2>{t["ext_lead"]}</h2></div>
+    ext = card(f'''<div class="head-c flush"><span class="label">{t["ext_h"]}</span><h2>{t["ext_lead"]}</h2></div>
       <div class="ext"><div class="block"><h3>{t["ext_music_h"]}</h3><p>{t["ext_music"]}</p>{tags(["FL Studio", "Breakcore", "Jungle", "UK garage", "Trap"])}
-        <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" type="button" data-act="music">{ico("play", 16)} {t["ext_listen"]}</button></div></div>
+        <div class="btn-row mt-14"><button class="btn btn-primary" type="button" data-act="music">{ico("play", 16)} {t["ext_listen"]}</button></div></div>
       <div class="block"><h3>{t["ext_art_h"]}</h3><p>{t["ext_art"]}</p>{tags(["Procreate", "Photoshop", "Blender"])}
         <a class="ext-peek" href="{rel(me, out_path(lang, "gallery"))}">{peek}<span class="btn">{t["ext_gallery"]} {ico("right", 16)}</span></a></div></div>''', "ext-card")
     last30 = sum(c["count"] for c in data["contributions"][-30:])
-    now = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["now_label"]}</span><h2>{t["now_h"]}</h2></div><ul class="now">'
+    now = card(f'<div class="head-c flush"><span class="label">{t["now_label"]}</span><h2>{t["now_h"]}</h2></div><ul class="now">'
                f'<li><span>{t["now_study"]}</span><b>{t["who_tag"]}</b><small>{t["status"]}</small></li>'
                f'<li><span>{t["now_last"]}</span><b data-now="last" data-none="{t["now_none"]}">…</b></li>'
                f'<li><span>{t["now_top"]}</span><b data-now="top">…</b></li>'
@@ -566,7 +566,7 @@ def build_contact(lang):
       {form}<div class="block"><h3>{t["looking_h"]}</h3><ul class="feat">{looking}</ul></div>''')
     cta = card(f'<div class="block"><h3>{t["contact_cta_h"]}</h3><p>{t["contact_cta_p"]}</p><div class="btn-row"><a class="btn btn-primary" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} {t["write"]}</a>'
                f'<a class="btn" href="{posixpath.basename(me)}?cv=1#contact-form">{t["cv_ask"]}</a></div>'
-               f'<p style="margin-top:14px"><span class="dot"></span> {t["status"]}</p></div>')
+               f'<p class="mt-14"><span class="dot"></span> {t["status"]}</p></div>')
     right = f'<aside class="side">{cta}{card(f"<dl class=facts>{profile}</dl>")}</aside>'
     body = head_c(lang, me, t["contact_label"], t["contact_h"], t["contact_lead"]) + f'<div class="contact-wrap">{left}{right}</div>'
     return chrome(lang, "contact", None, me, f'{t["contact_label"]} — Alexandre K.', t["contact_lead"], body)
@@ -590,7 +590,7 @@ def build_404():
     en = UI["en"]
     body = card(f'<div class="head-c nf"><span class="label"><b>404</b> / not found</span><h1 class="page-title">{t["nf_title"]}</h1>'
                 f'<p class="lead">{t["nf_lead"]}</p><p class="lead" lang="en">{en["nf_lead"]}</p>'
-                f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
+                f'<div class="btn-row center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
                 f'<a class="btn" href="en/index.html" lang="en">{en["nf_home"]}</a>'
                 f'<button class="btn" type="button" data-act="term">{t["nf_term"]}</button><a class="btn" href="jeux.html">{t["nf_game"]}</a></div></div>')
     return chrome("fr", "notfound", None, me, "404 — Alexandre K.", t["nf_lead"], body)

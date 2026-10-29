@@ -16,7 +16,7 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
     const SIZE = 4;
     let board = []; // flat 16-element array
     let score = 0;
-    let best  = parseInt(localStorage.getItem('ak2048best')||'0',10);
+    let best  = 0; try { best = parseInt(localStorage.getItem('ak2048best')||'0',10) || 0; } catch(e) {}
 
     // ---- Tile colors ----
     const COLORS = {
@@ -148,7 +148,7 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
 
     function updateScore(){
       scoreEl.textContent = score;
-      if(score>best){ best=score; localStorage.setItem('ak2048best',best); }
+      if(score>best){ best=score; try { localStorage.setItem('ak2048best',best); } catch(e) {} }
       bestEl.textContent = best;
       if(score>0) window.dispatchEvent(new CustomEvent('ak-score',{detail:{game:'2048',score}}));
     }
