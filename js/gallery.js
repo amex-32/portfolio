@@ -35,17 +35,22 @@
     var tab = tabs.filter(function (b) { return b.dataset.s === s; })[0];
     name.textContent = tab.firstChild.textContent.trim();
     count.textContent = k + ' ' + count.dataset.unit;
+    // la vue éparpillée n'a que SLOTS.length emplacements : une série plus grosse s'ouvre en grille (sinon les tirages s'empilent)
+    var many = k > SLOTS.length;
+    views.forEach(function (b) { if (b.dataset.view === 'scatter') b.disabled = many; });
+    if (gal.dataset.view !== 'albums') setView(many ? 'grid' : pref);
     setBg(shown()[0]);
     if (history.replaceState) history.replaceState(null, '', '#' + s);
   }
+  var pref = 'scatter'; // vue choisie par le visiteur (grille ou éparpillée), retrouvée sur les séries qui le permettent
   function setView(v) {
     gal.dataset.view = v;
     views.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.view === v ? 'true' : 'false'); });
   }
 
-  tabs.forEach(function (b) { b.addEventListener('click', function () { series(b.dataset.s); if (gal.dataset.view === 'albums') setView('scatter'); }); });
-  views.forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
-  $$('.gal-album').forEach(function (b) { b.addEventListener('click', function () { series(b.dataset.s); setView('scatter'); }); });
+  tabs.forEach(function (b) { b.addEventListener('click', function () { if (gal.dataset.view === 'albums') setView(pref); series(b.dataset.s); }); });
+  views.forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.view !== 'albums') pref = b.dataset.view; setView(b.dataset.view); }); });
+  $$('.gal-album').forEach(function (b) { b.addEventListener('click', function () { setView(pref); series(b.dataset.s); }); });
   items.forEach(function (it) {
     it.addEventListener('pointerenter', function () { setBg(it); });
     it.addEventListener('focus', function () { setBg(it); });
@@ -80,5 +85,4 @@
 
   var h = location.hash.replace('#', '');
   series(tabs.some(function (b) { return b.dataset.s === h; }) ? h : tabs[0].dataset.s);
-  setView('scatter');
 })();

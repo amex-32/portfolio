@@ -218,6 +218,10 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
     // Make board position:relative for absolute tile placement
     boardEl.style.position = 'relative';
 
+    // The tiles are placed from the cells' measured size, which is 0 while the 2048 tab is hidden (the page opens on another tab,
+    // or the games script selects the tab after this one has run). Place them again whenever the board gets a size.
+    if(window.ResizeObserver) new ResizeObserver(()=>{ if(boardEl.offsetWidth) render(board, null); }).observe(boardEl);
+
     // ---- Init ----
     newGame();
 

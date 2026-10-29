@@ -1,6 +1,6 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ---------- Thème ---------- */
+/* ---------- ThÃ¨me ---------- */
 :root {
   --text: #0f1b2a;
   --text2: #475a70;
@@ -279,7 +279,7 @@ h2 { font: 700 clamp(24px, 3.4vw, 34px)/1.15 var(--display); margin-bottom: 8px;
 .pad button { padding: 12px 0; font: 600 16px var(--mono); color: var(--text); background: var(--card-hi); border: 1px solid var(--edge); border-radius: 12px; cursor: pointer; }
 .pad button:active { transform: scale(.94); }
 
-/* ---------- À propos, contact ---------- */
+/* ---------- Ã€ propos, contact ---------- */
 .sq.l0 { background: var(--line); } .sq.l1 { background: #9be9a8; } .sq.l2 { background: #40c463; } .sq.l3 { background: #30a14e; } .sq.l4 { background: #216e39; }
 .heat-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; font: 12px var(--mono); color: var(--text2); }
 .legend { display: inline-flex; align-items: center; gap: 4px; }
@@ -353,7 +353,7 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
   .banner > .inner { padding: 22px; }
 }
 
-/* ---------- Éléments du CV ---------- */
+/* ---------- Ã‰lÃ©ments du CV ---------- */
 .hl { padding: 12px 0; border-bottom: 1px solid var(--line); }
 .hl:last-child { border-bottom: none; padding-bottom: 0; } .hl:first-of-type { padding-top: 0; }
 .hl b { display: block; font: 700 16px var(--display); } .hl small { display: block; font: 12px var(--mono); color: var(--text2); margin: 2px 0 8px; }
@@ -364,7 +364,7 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 @media (max-width: 960px) { .topbar { grid-template-columns: 1fr auto; } }
 @media (max-width: 640px) { .topbar { grid-template-columns: 1fr; } .top-right { display: none; } }
 
-/* recherche : même largeur que les cartes dès que la page passe en une colonne */
+/* recherche : mÃªme largeur que les cartes dÃ¨s que la page passe en une colonne */
 @media (max-width: 1100px) {
   .topbar { grid-template-columns: 1fr auto; }
   .search { grid-column: 1 / -1; order: 3; }
@@ -372,11 +372,11 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 @media (max-width: 960px) { .top-right { grid-column: 1 / -1; justify-self: end; order: 1; } }
 @media (max-width: 640px) { .topbar { grid-template-columns: 1fr; } .top-right { display: none; } }
 
-/* ---------- Captures d'écran des projets ---------- */
+/* ---------- Captures d'Ã©cran des projets ---------- */
 .poster[data-p="boutique-cyberpunk"] { background: center top / cover url(img/boutique-cyberpunk-1.jpg); }
 .poster[data-p="pokedex-interactive"] { background: center top / cover url(img/pokedex-interactive-1.jpg); }
 .poster[data-p="forum-musical"] { background: center top / cover url(img/forum-musical-1.jpg); }
-.poster[data-p="pixelworld"] { background: center / cover url(img/pixelworld-1.jpg); }
+.poster[data-p="pixelworld"] { background: center / cover url(img/poster-pixelworld.jpg); }
 .poster[data-p]::before, .poster[data-p] .glyph { display: none; }
 .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .shots a { display: block; overflow: hidden; border: 1px solid var(--edge); border-radius: 18px; box-shadow: var(--soft); }
@@ -399,7 +399,7 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 
 .demo-note { font: 12px var(--mono); color: rgba(255, 255, 255, .7); margin: 0; }
 
-/* ---------- Graphe GitHub sans défilement ---------- */
+/* ---------- Graphe GitHub sans dÃ©filement ---------- */
 .heat { display: grid; grid-auto-flow: column; grid-template-rows: 16px repeat(7, auto); grid-template-columns: auto repeat(var(--weeks), minmax(0, 1fr)); gap: 3px; }
 .heat > b { font: 500 11px/16px var(--mono); color: var(--text2); white-space: nowrap; overflow: visible; }
 .heat > span { display: flex; align-items: center; justify-content: flex-end; padding-right: 4px; font: 10px var(--mono); color: var(--text2); }
@@ -424,7 +424,7 @@ a.tile:hover .tile-ico { border-color: var(--accent); }
 .sb-form button[disabled] { opacity: .5; cursor: default; }
 .sb-msg { min-height: 1.3em; margin-top: 8px; font-size: 13px; color: var(--accent); }
 
-/* ---------- César, CTF ---------- */
+/* ---------- CÃ©sar, CTF ---------- */
 .ci { display: grid; gap: 14px; width: min(420px, 100%); }
 .ci-text { padding: 14px 16px; background: var(--card); border-radius: 14px; font: 600 clamp(17px, 4.6vw, 22px) var(--mono); letter-spacing: .12em; text-align: center; overflow-wrap: anywhere; }
 .ci-plain { color: var(--accent); background: var(--card-hi); }
@@ -458,7 +458,7 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 /* le dock du mobile garde ses 8 boutons sur une ligne */
 @media (max-width: 640px) { .dock { gap: 2px; padding: 6px; } .dock a, .dock button { width: 40px; height: 40px; } }
 
-/* ---------- Lecteur de musique (en haut à droite) ---------- */
+/* ---------- Lecteur de musique (en haut Ã  droite) ---------- */
 .player { position: fixed; top: 14px; right: 14px; z-index: 125; }
 .pl-pill { display: flex; align-items: center; gap: 8px; padding: 6px; background: var(--shell); border: 1px solid var(--edge); border-radius: 999px; backdrop-filter: blur(30px) saturate(1.5); -webkit-backdrop-filter: blur(30px) saturate(1.5); box-shadow: var(--soft); }
 .pl-toggle { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; gap: 2px; flex-shrink: 0; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; }
@@ -485,11 +485,11 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 .pl-vol { display: flex; align-items: center; gap: 10px; color: var(--text2); }
 .pl-volume { flex: 1; accent-color: var(--accent); }
 @media (max-width: 1199px) { .pl-now { display: none; } }
-/* la barre d'adresse se décale à gauche quand le lecteur risque de la chevaucher */
+/* la barre d'adresse se dÃ©cale Ã  gauche quand le lecteur risque de la chevaucher */
 @media (max-width: 800px) { .urlbar { margin: 14px 0 0 14px; width: calc(100% - 128px); } }
 @media (prefers-reduced-motion: reduce) { .player.playing .pl-toggle i { animation: none; } }
 
-/* ---------- À propos : en dehors du code ---------- */
+/* ---------- Ã€ propos : en dehors du code ---------- */
 .ext { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
 .ext .block { margin: 0; }
 .ext .tags { margin-top: 4px; }
@@ -513,7 +513,7 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 .gal-views button { display: flex; justify-content: space-between; padding: 9px 10px; font: 500 14px var(--sans); color: rgba(255, 255, 255, .75); text-align: left; background: none; border: none; border-radius: 10px; cursor: pointer; }
 .gal-views button:hover { background: rgba(255, 255, 255, .08); }
 .gal-views button[aria-pressed="true"] { color: #fff; background: rgba(255, 255, 255, .12); }
-.gal-views button[aria-pressed="true"]::after { content: '✓'; color: var(--accent); }
+.gal-views button[aria-pressed="true"]::after { content: 'âœ“'; color: var(--accent); }
 .gal-main { display: grid; grid-template-rows: auto 1fr; gap: 10px; padding: 24px 28px 18px; }
 .gal-head { display: flex; align-items: baseline; gap: 14px; }
 .gal-head h2 { margin: 0; font-size: clamp(30px, 4.4vw, 54px); color: #fff; }
@@ -567,13 +567,15 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 .gl-tiles img:nth-child(3) { transform: rotate(10deg) translateY(10px); }
 @media (max-width: 760px) { .gl-tiles { right: 4%; top: 5%; } .gl-tiles img { width: 78px; border-width: 4px; } .gl-tiles img + img { margin-left: -26px; } }
 
-/* ---------- Lecteur : aléatoire et j'aime ---------- */
+/* ---------- Lecteur : alÃ©atoire et j'aime ---------- */
 .pl-shuffle[aria-pressed="true"] { color: var(--on-accent); background: var(--accent); }
 .pl-like[aria-pressed="true"] { color: #ff6b81; }
 .pl-like[aria-pressed="true"] svg { fill: currentColor; }
-.pl-list button[data-liked="true"]::after { content: '♥'; margin-left: auto; color: #ff6b81; }
+.pl-list button[data-liked="true"]::after { content: 'â™¥'; margin-left: auto; color: #ff6b81; }
 
-/* ---------- Zone de rebond (tirer le haut de page sur mobile) : même fond que le site, sans bande unie ---------- */
+/* ---------- Zone de rebond (tirer le haut de page sur mobile) : mÃªme fond que le site, sans bande unie ---------- */
 html { background: #8fb4d8; overscroll-behavior-y: none; }
 html[data-theme="dark"] { background: #0b1220; }
 body { background: transparent; }
+.gal-views button:disabled { opacity: .35; cursor: not-allowed; }
+.gal-views button:disabled:hover { background: none; }
