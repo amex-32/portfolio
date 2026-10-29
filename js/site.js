@@ -131,10 +131,10 @@
     var out = $('.tty-out', tty), cli = $('input', tty), hist = [], hi = 0, PSEUDO = /^[A-Za-z0-9_-]{2,16}$/;
     var en = root.lang === 'en';
     var TT = en ? {
-      hello: 'Type help to see the commands.', unknown: 'command not found: ', nofile: 'no such page: ',
+      hello: 'Type help to see the commands.', nohist: 'no history yet', unknown: 'command not found: ', nofile: 'no such page: ',
       help: ['help            this list', 'ls [projects]   list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
         'whoami          who am I', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
-        'music           my tracks', 'play [n] · pause · next · like · shuffle', 'theme · clear · exit'],
+        'music           my tracks', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · theme · clear · exit'],
       whoami: 'Alexandre K., cybersecurity student (Ynov, Sophia Antipolis). Looking for an internship or work-study.',
       ctf: ['6 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
         '3. Robots know things (and so does base64).', '4. The browser console, in ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. One artwork in the gallery says more than it shows (metadata).',
@@ -144,10 +144,10 @@
       usageFlag: 'usage: flag FLAG{…}', bad: 'wrong flag, keep looking.', slow: 'too fast, try again in a few seconds.', err: 'leaderboard unavailable.',
       got: 'correct flag! ', already: 'already found. ', found: ' flags found', all: 'All flags found. Well done!', none: 'no one yet.', sudo: 'amex is not in the sudoers file. This incident will be reported.'
     } : {
-      hello: 'Tape help pour voir les commandes.', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
+      hello: 'Tape help pour voir les commandes.', nohist: 'historique vide', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
       help: ['help            cette liste', 'ls [projets]    lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
         'whoami          qui suis-je', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
-        'music           mes morceaux', 'play [n] · pause · next · like · shuffle', 'theme · clear · exit'],
+        'music           mes morceaux', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · theme · clear · exit'],
       whoami: 'Alexandre K., étudiant en cybersécurité (Ynov, Sophia Antipolis). Je cherche un stage ou une alternance.',
       ctf: ['6 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
         '3. Les robots savent des choses (et le base64 aussi).', '4. La console du navigateur, en ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. Une œuvre de la galerie en dit plus qu\'elle n\'en montre (métadonnées).',
@@ -192,6 +192,7 @@
     var CMDS = {
       help: function () { print(TT.help); },
       ls: function (a) {
+        a = (a || '').replace(/(^|\s)-\w+/g, '').trim(); // ls -l, ls -la : options ignorées
         var p = find(a);
         if (a && p === data.pages[1]) return print(data.projects.map(function (q) { return q.s; }).join('  '));
         if (a && !p) return print(TT.nofile + a, 'err');
@@ -199,6 +200,19 @@
       },
       cd: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); location.href = p.u; },
       cat: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); print(p.d); },
+      pwd: function () { print('~/amex' + location.pathname.replace(/\.html$/, '').replace(/\/$/, '')); },
+      tree: function () {
+        var lines = ['~/amex'];
+        data.pages.forEach(function (q, i, all) {
+          var last = i === all.length - 1; lines.push((last ? '└── ' : '├── ') + name(q) + '/');
+          if (i === 1) data.projects.forEach(function (r, j) { lines.push((last ? '    ' : '│   ') + (j === data.projects.length - 1 ? '└── ' : '├── ') + r.s); });
+        });
+        print(lines);
+      },
+      echo: function (a) { print(a || ''); },
+      date: function () { print(new Date().toLocaleString(en ? 'en-GB' : 'fr-FR')); },
+      history: function () { print(hist.length ? hist.map(function (h, k) { return (k + 1 + '  ').slice(0, 4) + h; }) : TT.nohist); },
+      uname: function () { print('amex-portfolio 1.0 (static, vercel) ' + (en ? 'en' : 'fr')); },
       whoami: function () { print(TT.whoami); },
       ctf: function () { print(TT.ctf); },
       pseudo: function (a) {
