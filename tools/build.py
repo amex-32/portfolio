@@ -523,7 +523,7 @@ def build_gallery(lang):
     series = list(dict.fromkeys(w["series"] for w in GALLERY))
     count = {s: sum(w["series"] == s for w in GALLERY) for s in series}
     items = "".join(
-        f'<button class="gal-item" type="button" data-i="{i}" data-s="{w["series"]}" data-full="{img(w["slug"] + "." + w.get("ext", "webp"))}" data-bg="{img(w["slug"] + "-bg.webp")}">'
+        f'<button class="gal-item" type="button" data-i="{i}" data-s="{w["series"]}" data-full="{img(w["slug"] + "." + w.get("ext", "webp"))}">'
         f'<img src="{img(w["slug"] + "-thumb.webp")}" {dims("img/gallery/" + w["slug"] + "-thumb.webp")} alt="{esc(w[lang])}" loading="lazy" decoding="async"><span><b>{esc(w[lang])}</b><small>{when(w["date"])}</small></span></button>'
         for i, w in enumerate(GALLERY))
     albums = "".join(
@@ -533,8 +533,7 @@ def build_gallery(lang):
     time = "".join(f'<button type="button" role="tab" data-s="{s}" aria-selected="false">{t["series"][s]} <small>{count[s]}</small></button>' for s in series)
     views = "".join(f'<button type="button" data-view="{v}" aria-pressed="false">{label}</button>' for v, label in t["gal_views"].items())
     crumbs = f'<a href="{rel(me, out_path(lang, "about"))}">{t["nav"][3]}</a></span><span>/</span><span>{re.sub(r"<[^>]+>", "", t["gal_title"])}'
-    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<div class="gal-bg" aria-hidden="true"></div><div class="gal-bg" aria-hidden="true"></div>
-      <aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
+    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
         <h4>{t["gal_view_h"]}</h4><div class="gal-views" role="group" aria-label="{t["gal_view_h"]}">{views}</div></aside>
       <div class="gal-main"><div class="gal-head"><h2 class="gal-name"></h2><small class="gal-count" data-unit="{t["gal_works"]}"></small></div>
         <div class="gal-stage" data-view="scatter">{items}</div><div class="gal-albums">{albums}</div>

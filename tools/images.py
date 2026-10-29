@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Génère og.png (aperçu des liens partagés), favicon.ico, apple-touch-icon.png, img/bg-blur.webp (fond déjà flouté)
-et les fonds flous de la galerie (img/gallery/*-bg.webp) : python3 tools/images.py
+et le fond flou de la diapositive galerie (img/gallery/*-bg.webp) : python3 tools/images.py
 
 À relancer seulement si le visuel change. Demande Pillow et une police grasse (FONT_BOLD) et une police à chasse fixe (FONT_MONO).
 """
@@ -63,8 +63,10 @@ def bg_blur():
 
 
 def gallery_bgs():
-    """Fonds de la galerie floutés d'avance (petites images que le navigateur agrandit) : plus de filter: blur() animé en fondu."""
-    for thumb in sorted((ROOT / "img/gallery").glob("*-thumb.webp")):
+    """Fond flou de la diapositive galerie de l'accueil, flouté d'avance (petite image que le navigateur agrandit)."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from content import HOME_GALLERY
+    for thumb in (ROOT / f"img/gallery/{HOME_GALLERY[0]}-thumb.webp",):
         img = Image.open(thumb).convert("RGB").resize((96, 96), Image.LANCZOS)
         img = ImageEnhance.Color(img.filter(ImageFilter.GaussianBlur(2.5))).enhance(1.25)
         img.save(thumb.with_name(thumb.name.replace("-thumb", "-bg")), quality=70)

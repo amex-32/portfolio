@@ -1,11 +1,11 @@
-// Galerie : tirages éparpillés (par pages de 8, avec fondu glissé au changement de page) sur un fond flouté, grille ou albums ; frise des séries en bas ; visionneuse.
+// Galerie : tirages éparpillés (par pages de 8, avec fondu glissé au changement de page) sur fond noir, grille ou albums ; frise des séries en bas ; visionneuse.
 (function () {
   'use strict';
   var gal = document.querySelector('.gal');
   if (!gal) return;
   var $ = function (s, c) { return (c || gal).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || gal).querySelectorAll(s)); };
-  var items = $$('.gal-item'), bgs = $$('.gal-bg'), front = 0, name = $('.gal-name'), count = $('.gal-count');
+  var items = $$('.gal-item'), name = $('.gal-name'), count = $('.gal-count');
   var tabs = $$('.gal-time button'), views = $$('.gal-views button');
   var pager = $('.gal-pager'), pageEl = $('.gal-page');
   var stage = $('.gal-stage'), PER = 8, cur = '', page = 0, pref = 'scatter', busy = false;
@@ -34,16 +34,6 @@
 
   var inSeries = function () { return items.filter(function (it) { return it.dataset.s === cur; }); };
   var visible = function () { return items.filter(function (it) { return !it.hidden; }); };
-  // deux calques de fond : le nouveau apparaît pendant que l'ancien s'efface (fondu enchaîné)
-  var setBg = function (it) {
-    if (!it) return;
-    var url = 'url("' + it.dataset.bg + '")';
-    if (bgs[front].style.backgroundImage === url) return;
-    front = 1 - front;
-    bgs[front].style.backgroundImage = url;
-    bgs[front].classList.add('on'); bgs[1 - front].classList.remove('on');
-  };
-
   // affiche la page courante : tous les tirages de la série en grille, PER tirages par page en vue éparpillée
   function render() {
     var all = inSeries(), grid = gal.dataset.view === 'grid', n = Math.max(1, Math.ceil(all.length / PER));
@@ -55,7 +45,6 @@
     if (!grid && fresh) scatter(want);
     pager.hidden = grid || n < 2;
     pageEl.textContent = (page + 1) + ' / ' + n;
-    setBg(want[0]);
   }
   // change de page : fondu + léger glissement dans le sens de la navigation, la nouvelle page arrive du côté opposé
   function turn(dir) {
@@ -102,8 +91,6 @@
   $('.gal-prev').addEventListener('click', function () { turn(-1); });
   $('.gal-next').addEventListener('click', function () { turn(1); });
   items.forEach(function (it) {
-    it.addEventListener('pointerenter', function () { setBg(it); });
-    it.addEventListener('focus', function () { setBg(it); });
     it.addEventListener('click', function () { show(inSeries().indexOf(it)); });
   });
 
