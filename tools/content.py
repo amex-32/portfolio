@@ -512,6 +512,8 @@ GALLERY = [
     {"slug": "photo-mood-4", "series": "photos", "date": "2024-10", "fr": "Discussion", "en": "Chat"},
     {"slug": "photo-mood-5", "series": "photos", "date": "2024-10", "fr": "Ambiance", "en": "Mood"},
     {"slug": "photo-mood-6", "series": "photos", "date": "2026-09", "fr": "Miroir", "en": "Mirror"},
+    {"slug": "photo-mood-7", "series": "photos", "date": "2024-10", "fr": "Dos au public", "en": "Back to the crowd"},
+    {"slug": "photo-mood-8", "series": "photos", "date": "2024-10", "fr": "Collier", "en": "Chain"},
     {"slug": "photo-rock", "series": "photos", "date": "2024-09", "fr": "Rock", "en": "Rock"},
     {"slug": "photo-foosball", "series": "photos", "date": "2024-10", "fr": "Baby-foot", "en": "Foosball"},
 ]
