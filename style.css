@@ -42,9 +42,9 @@ body {
   font: 15px/1.6 var(--sans); color: var(--text);
   min-height: 100vh; overflow-x: hidden;
 }
-body::before { content: ''; position: fixed; inset: 0; z-index: -2; background: url("IMG_0764.jpg") center / cover no-repeat; filter: blur(14px) saturate(1.1); transform: scale(1.08); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -2; background: url("img/bg.webp") center / cover no-repeat; filter: blur(14px) saturate(1.1); transform: scale(1.08); }
 body::after { content: ''; position: fixed; inset: 0; z-index: -1; background: var(--veil); transition: background .3s; }
-body.sub::before { background-image: url("../IMG_0764.jpg"); }
+body.sub::before { background-image: url("img/bg.webp"); }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @view-transition { navigation: auto; }
@@ -605,10 +605,10 @@ body { background: transparent; }
 /* deuxième capture au survol d'une carte projet */
 .proj .poster::after { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; background: center top / cover no-repeat; }
 .proj:hover .poster::after, .proj:focus-visible .poster::after { opacity: 1; }
-.poster[data-p="boutique-cyberpunk"]::after { background-image: url(img/boutique-cyberpunk-2.jpg); }
-.poster[data-p="pokedex-interactive"]::after { background-image: url(img/pokedex-interactive-2.jpg); }
-.poster[data-p="forum-musical"]::after { background-image: url(img/forum-musical-2.jpg); }
-.poster[data-p="pixelworld"]::after { background-image: url(img/pixelworld-2.jpg); }
+.proj:hover .poster[data-p="boutique-cyberpunk"]::after, .proj:focus-visible .poster[data-p="boutique-cyberpunk"]::after { background-image: url(img/boutique-cyberpunk-2.jpg); }
+.proj:hover .poster[data-p="pokedex-interactive"]::after, .proj:focus-visible .poster[data-p="pokedex-interactive"]::after { background-image: url(img/pokedex-interactive-2.jpg); }
+.proj:hover .poster[data-p="forum-musical"]::after, .proj:focus-visible .poster[data-p="forum-musical"]::after { background-image: url(img/forum-musical-2.jpg); }
+.proj:hover .poster[data-p="pixelworld"]::after, .proj:focus-visible .poster[data-p="pixelworld"]::after { background-image: url(img/pixelworld-2.jpg); }
 .navbar { position: fixed; top: 0; left: 0; z-index: 900; width: 0; height: 3px; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: width 8s cubic-bezier(.1, .6, .2, 1); pointer-events: none; }
 .navbar.go { width: 85%; }
 /* lumière qui suit la souris, sous les cartes (pas sur écran tactile) */
