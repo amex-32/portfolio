@@ -488,7 +488,7 @@ code { font: 500 .9em var(--mono); padding: 1px 6px; background: var(--card-hi);
 .pl-volume { flex: 1; accent-color: var(--accent); }
 @media (max-width: 1199px) { .pl-now { display: none; } }
 /* la barre d'adresse se décale à gauche quand le lecteur risque de la chevaucher */
-@media (max-width: 800px) { .urlbar { margin: 14px 0 0 14px; width: calc(100% - 128px); } }
+@media (max-width: 800px) { .urlbar { margin: 14px 0 0 68px; width: calc(100% - 182px); } }
 @media (prefers-reduced-motion: reduce) { .player.playing .pl-toggle i { animation: none; } }
 
 /* ---------- À propos : en dehors du code ---------- */
@@ -585,3 +585,8 @@ body { background: transparent; }
 .gal-pager .round:hover { background: rgba(255, 255, 255, .24); }
 
 .pl-list::-webkit-scrollbar { display: none; }
+
+/* bouton rond du terminal (en haut à gauche, comme le lecteur en haut à droite) */
+.tty-fab { position: fixed; top: 14px; left: 14px; z-index: 125; width: 48px; height: 48px; display: grid; place-items: center; color: var(--text); background: var(--shell); border: 1px solid var(--edge); border-radius: 50%; cursor: pointer; backdrop-filter: blur(30px) saturate(1.5); -webkit-backdrop-filter: blur(30px) saturate(1.5); box-shadow: var(--soft); transition: transform .15s, background .15s; }
+.tty-fab:hover { transform: scale(1.06); background: var(--card-hi); }
+.tty-fab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

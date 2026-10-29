@@ -248,6 +248,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   {boot}{flag}
 </head>
 <body>
+<button class="tty-fab" type="button" data-act="term" aria-label="{t["ctf_open"]}" title="{t["ctf_open"]}">{ico("terminal", 20)}</button>
 <div class="urlbar">
   <button class="round" type="button" data-act="back" aria-label="{t["back"]}">{ico("left", 18)}</button>
   <button class="round" type="button" data-act="forward" aria-label="{t["forward"]}">{ico("right", 18)}</button>
