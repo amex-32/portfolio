@@ -24,13 +24,26 @@
   var motion = function (v) { try { if (v != null) localStorage.setItem('ak-motion', v); return localStorage.getItem('ak-motion') || 'on'; } catch (e) { return v || 'on'; } };
   root.dataset.motion = motion();
   function toggleMotion() { var v = motion() === 'off' ? 'on' : 'off'; motion(v); root.dataset.motion = v; toast((root.lang === 'en' ? 'Animations: ' : 'Animations : ') + v); }
-  var pm = 0;
+  // lumière qui suit la souris : un calque déplacé par transform (pas de variable CSS sur <html>, qui recalculerait toute la page)
+  // et halo des cartes ; une seule mise à jour par image
+  var glow = document.createElement('div'), pm = 0, pe = null;
+  glow.className = 'glow'; glow.setAttribute('aria-hidden', 'true'); root.appendChild(glow);
   document.addEventListener('pointermove', function (e) {
-    if (pm || e.pointerType === 'touch') return;
-    pm = requestAnimationFrame(function () { pm = 0; root.style.setProperty('--sx', e.clientX + 'px'); root.style.setProperty('--sy', e.clientY + 'px'); });
+    if (e.pointerType === 'touch') return;
+    pe = e;
+    if (pm) return;
+    pm = requestAnimationFrame(function () {
+      pm = 0;
+      glow.style.transform = 'translate3d(' + (pe.clientX - 520) + 'px,' + (pe.clientY - 520) + 'px,0)';
+      var el = pe.target.closest && pe.target.closest('.card, .proj');
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (pe.clientX - r.left) + 'px');
+      el.style.setProperty('--my', (pe.clientY - r.top) + 'px');
+    });
   });
   var found = function (n) { try { if (n != null) localStorage.setItem('ak-found', n); return +localStorage.getItem('ak-found') || 0; } catch (e) { return n || 0; } };
-  function nowTick() { // appelée par un seul minuteur global (voir plus bas) : elle lit toujours la page courante
+  function nowTick() { // pastille du bouton terminal : au chargement, à chaque flag trouvé et quand un autre onglet en trouve un
     var f = found(), fab = $('.tty-fab');
     if (fab) { if (f) fab.dataset.n = f; else delete fab.dataset.n; }
   }
@@ -45,7 +58,7 @@
     last.textContent = d.recent[0].track + (ago ? ' · ' + ago : '');
     topEl.textContent = d.top.slice(0, 3).map(function (x) { return x.track + ' (' + x.plays + ')'; }).join(' · ');
   }).catch(function () { last.textContent = topEl.textContent = '–'; });
-  if (!window.akNowTimer) window.akNowTimer = setInterval(function () { window.akNowFn(); }, 1000);
+  window.onstorage = function (e) { if (e.key === 'ak-found') nowTick(); }; // réassigné à chaque page (navigation douce)
 
   // ---------- demande de CV : le formulaire de contact arrive pré-rempli ----------
   var cvForm = $('#contact-form'), cvMsg = cvForm && $('textarea[name="message"]', cvForm);
@@ -55,18 +68,11 @@
   $$('[data-act="back"]').forEach(function (b) { b.addEventListener('click', function () { history.back(); }); });
   $$('[data-act="forward"]').forEach(function (b) { b.addEventListener('click', function () { history.forward(); }); });
 
-  // ---------- apparition, halo des cartes ----------
+  // ---------- apparition des cartes ----------
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
   }, { threshold: 0.05 });
   $$('.fadein').forEach(function (el) { io.observe(el); });
-  document.addEventListener('pointermove', function (e) {
-    var el = e.target.closest && e.target.closest('.card, .proj');
-    if (!el) return;
-    var r = el.getBoundingClientRect();
-    el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-    el.style.setProperty('--my', (e.clientY - r.top) + 'px');
-  });
 
   // ---------- notifications ----------
   var bell = $('[data-act="bell"]'), drop = $('#notifs');
@@ -79,18 +85,24 @@
   var hero = $('.hero');
   if (hero) {
     var slides = $$('.slide', hero), dots = $$('.dots button', hero), cur = 0, timer;
+    // défilement : arrêté par le bouton pause (choix gardé), au survol et tant que le focus clavier est dans le carrousel
+    var pauseBtn = $('[data-act="pause"]', hero), stopped = reduce, hover = false, focus = false;
     var show = function (n) {
       cur = (n + slides.length) % slides.length;
-      slides.forEach(function (s, i) { s.classList.toggle('on', i === cur); s.setAttribute('aria-hidden', i === cur ? 'false' : 'true'); });
-      dots.forEach(function (d, i) { d.classList.toggle('on', i === cur); });
+      slides.forEach(function (s, i) { s.classList.toggle('on', i === cur); s.setAttribute('aria-hidden', i === cur ? 'false' : 'true'); s.inert = i !== cur; });
+      dots.forEach(function (d, i) { d.classList.toggle('on', i === cur); if (i === cur) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
     };
-    var play = function () { clearInterval(timer); if (!reduce) timer = setInterval(function () { show(cur + 1); }, 8000); };
+    var play = function () { clearInterval(timer); if (!stopped && !hover && !focus) timer = setInterval(function () { show(cur + 1); }, 8000); };
+    var syncPause = function () { pauseBtn.setAttribute('aria-pressed', stopped ? 'true' : 'false'); pauseBtn.setAttribute('aria-label', stopped ? pauseBtn.dataset.play : pauseBtn.dataset.pause); };
     $('[data-act="prev"]', hero).addEventListener('click', function () { show(cur - 1); play(); });
     $('[data-act="next"]', hero).addEventListener('click', function () { show(cur + 1); play(); });
+    pauseBtn.addEventListener('click', function () { stopped = !stopped; syncPause(); play(); });
     dots.forEach(function (d, i) { d.addEventListener('click', function () { show(i); play(); }); });
-    hero.addEventListener('pointerenter', function () { clearInterval(timer); });
-    hero.addEventListener('pointerleave', play);
-    show(0); play();
+    hero.addEventListener('pointerenter', function () { hover = true; play(); });
+    hero.addEventListener('pointerleave', function () { hover = false; play(); });
+    hero.addEventListener('focusin', function () { focus = true; play(); });
+    hero.addEventListener('focusout', function (e) { if (!hero.contains(e.relatedTarget)) { focus = false; play(); } });
+    syncPause(); show(0); play();
   }
 
   // ---------- filtres de la liste de projets ----------
