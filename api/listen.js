@@ -8,8 +8,8 @@ const mysql = require('mysql2/promise');
 const { tooFast } = require('./scores.js');
 
 function isOwner(req) {
-  const hash = process.env.OWNER_HASH, tok = req.headers['x-owner'];
-  if (!/^[0-9a-f]{64}$/i.test(hash || '') || typeof tok !== 'string' || !tok || tok.length > 200) return false;
+  const hash = (process.env.OWNER_HASH || '').trim().replace(/^["']|["']$/g, ''), tok = req.headers['x-owner']; // tolère espaces et guillemets collés avec la valeur
+  if (!/^[0-9a-f]{64}$/i.test(hash) || typeof tok !== 'string' || !tok || tok.length > 200) return false;
   return crypto.timingSafeEqual(crypto.createHash('sha256').update(tok).digest(), Buffer.from(hash, 'hex'));
 }
 const TRACK = /^[\p{L}\p{N} .,'!?()&+_-]{1,60}$/u;

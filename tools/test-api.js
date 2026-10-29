@@ -47,3 +47,6 @@ process.env.OWNER_HASH = '';
 assert(!isOwner({ headers: { 'x-owner': 'mot de passe de test' } })); // variable absente : personne n'est propriétaire
 assert(TRACK.test('Jolagreen Type Beat') && TRACK.test('Marseille 01.06.2026') && !TRACK.test("a';DROP") && !TRACK.test('x'.repeat(61)));
 console.log('écoutes : ok');
+process.env.OWNER_HASH = ` "${sha('abc')}"\n`; // espaces et guillemets autour de la valeur
+assert(isOwner({ headers: { 'x-owner': 'abc' } }));
+console.log('écoutes (valeur collée avec espaces) : ok');
