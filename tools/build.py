@@ -284,7 +284,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#8fb4d8" media="(prefers-color-scheme: light)">
   {seo}
   {icons}
-  {FONTS}
+  {FONTS.format(root=root)}
   <link rel="stylesheet" href="{root}style.css">
   {boot}{flag}
 </head>
