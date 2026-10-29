@@ -91,6 +91,14 @@
   tabs.forEach(function (b) { b.addEventListener('click', function () { if (gal.dataset.view === 'albums') setView(pref); series(b.dataset.s); }); });
   views.forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.view !== 'albums') pref = b.dataset.view; setView(b.dataset.view); }); });
   $$('.gal-album').forEach(function (b) { b.addEventListener('click', function () { setView(pref); series(b.dataset.s); }); });
+  // glisser vers la gauche / la droite change de page (écran tactile)
+  var sx = null;
+  stage.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', function (e) {
+    if (sx == null) return;
+    var dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) > 60 && gal.dataset.view !== 'grid') turn(dx < 0 ? 1 : -1);
+  });
   $('.gal-prev').addEventListener('click', function () { turn(-1); });
   $('.gal-next').addEventListener('click', function () { turn(1); });
   items.forEach(function (it) {

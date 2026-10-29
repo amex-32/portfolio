@@ -256,6 +256,54 @@ PROJECTS = [
     },
 ]
 
+
+# Études de cas affichées sur chaque fiche projet : problème, ce que j'ai fait, difficulté technique, résultat
+CASES = {
+    "boutique-cyberpunk": {
+        "fr": ["Vendre des véhicules en ligne, avec plusieurs variantes de couleur, sans mélanger catalogue, commandes et comptes.",
+               "Réalisation de l'API Node.js / Express, du schéma MySQL et du front en HTML et JavaScript.",
+               "Associer chaque variante de couleur à ses propres visuels, avec un visuel de repli quand une image est introuvable.",
+               "Une boutique fonctionnelle en démo publique : catalogue, commandes, inscription et connexion, migrations et jeux de données versionnés."],
+        "en": ["Selling vehicles online, with several colour variants, without mixing up the catalogue, orders and accounts.",
+               "Built the Node.js / Express API, the MySQL schema and the HTML / JavaScript front end.",
+               "Tying each colour variant to its own visuals, with a fallback visual when an image is missing.",
+               "A working shop with a public demo: catalogue, orders, sign-up and login, with migrations and seed data versioned."],
+    },
+    "pokedex-interactive": {
+        "fr": ["Exploiter une API externe sans framework JavaScript, tout en gardant une interface rapide à parcourir (recherche, filtres).",
+               "Écriture du serveur Go : routes, mapping des données de l'API Tyradex, templates HTML.",
+               "Ranger les données de l'API dans des structures Go dédiées, puis les rendre côté serveur avec html/template.",
+               "Une application déployée en démo : recherche, filtres par type et génération, fiches détaillées et favoris."],
+        "en": ["Using an external API without a JavaScript framework, while keeping an interface that is quick to browse (search, filters).",
+               "Wrote the Go server: routes, mapping of the Tyradex API data, HTML templates.",
+               "Mapping the API data into dedicated Go structs, then rendering it server-side with html/template.",
+               "A deployed demo app: search, filters by type and generation, detail pages and favourites."],
+    },
+    "forum-musical": {
+        "fr": ["Permettre à une communauté d'échanger sur la musique tout en gardant la main sur la modération.",
+               "Projet en binôme avec Omrane Riahi : API Node.js / Express / MySQL, authentification JWT, front HTML et JavaScript.",
+               "Sécuriser les accès : jetons JWT, droits d'administration, bannissement et suppression de contenus.",
+               "Un forum complet (sujets, réponses, votes, profils) avec un espace d'administration, en démo publique."],
+        "en": ["Letting a community talk about music while keeping control over moderation.",
+               "Pair project with Omrane Riahi: Node.js / Express / MySQL API, JWT authentication, HTML and JavaScript front end.",
+               "Securing access: JWT tokens, admin rights, banning users and removing content.",
+               "A complete forum (topics, replies, votes, profiles) with an admin area, as a public demo."],
+    },
+    "pixelworld": {
+        "fr": ["Faire partager une même toile de 1000 × 1000 pixels à plusieurs joueurs, en temps réel.",
+               "Serveur Node.js avec Socket.IO, rendu dans un Canvas, cahier des charges et décision d'architecture (ADR).",
+               "Diffuser les mises à jour de la grille à tous les joueurs, à l'unité ou par lot, sans base de données : état en mémoire, sauvegarde sur disque.",
+               "Une toile collaborative jouable en ligne, avec zoom, pseudos, scores et modération."],
+        "en": ["Letting several players share the same 1000 × 1000 pixel canvas, in real time.",
+               "Node.js server with Socket.IO, Canvas rendering, a specification and an architecture decision record (ADR).",
+               "Broadcasting grid updates to every player, one by one or in batches, without a database: state in memory, saved to disk.",
+               "A collaborative canvas playable online, with zoom, nicknames, scores and moderation."],
+    },
+}
+for _p in PROJECTS:
+    for _l in ("fr", "en"):
+        _p[_l]["case"] = CASES[_p["slug"]][_l]
+
 def brand_icon(name):
     d = re.search(r' d="([^"]+)"', (ROOT / f"src/icons/{name}.svg").read_text()).group(1)
     return f'<svg viewBox="0 0 24 24" width="42" height="42" fill="currentColor" aria-hidden="true"><path d="{d}"/></svg>'
@@ -330,6 +378,12 @@ UI2 = {
         "konami": "Konami code ! Mode Matrix activé.",
         "kb_hint": "Astuce : ⌘K ou Ctrl+K ouvre la recherche, ² ou ` ouvre le terminal.",
         "pal_term": "Ouvrir le terminal",
+        "pal_motion": "Animations : activer / désactiver", "pal_music": "Musique : lecture / pause",
+        "case_h": "Étude de cas", "case_k": ["Problème", "Ce que j'ai fait", "Difficulté technique", "Résultat"],
+        "cv_ask": "Demander mon CV", "cv_msg": "Bonjour, pourriez-vous m'envoyer votre CV ? Merci.",
+        "now_label": "En ce moment", "now_h": "Ce que je fais <em>maintenant</em>", "now_listen": "J'écoute", "now_idle": "Rien en lecture — lance un morceau",
+        "now_gh": "contributions GitHub sur 30 jours", "now_ctf": "Flags du mini-CTF", "now_study": "Études",
+        "nf_term": "Ouvrir le terminal", "nf_game": "Jouer à 2048",
         "og_locale": "fr_FR",
         "wu_title": "<em>Write-ups</em>",
         "wu_lead": "Mes démarches de sécurité, expliquées étape par étape.",
@@ -377,6 +431,12 @@ UI2 = {
         "konami": "Konami code! Matrix mode on.",
         "kb_hint": "Tip: ⌘K or Ctrl+K opens search, ` opens the terminal.",
         "pal_term": "Open the terminal",
+        "pal_motion": "Animations: on / off", "pal_music": "Music: play / pause",
+        "case_h": "Case study", "case_k": ["Problem", "What I did", "Technical challenge", "Outcome"],
+        "cv_ask": "Request my CV", "cv_msg": "Hello, could you send me your CV? Thank you.",
+        "now_label": "Right now", "now_h": "What I'm doing <em>now</em>", "now_listen": "Listening to", "now_idle": "Nothing playing — start a track",
+        "now_gh": "GitHub contributions over 30 days", "now_ctf": "Mini-CTF flags", "now_study": "Studies",
+        "nf_term": "Open the terminal", "nf_game": "Play 2048",
         "og_locale": "en_US",
         "wu_title": "<em>Write-ups</em>",
         "wu_lead": "My security work, explained step by step.",

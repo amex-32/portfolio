@@ -591,3 +591,48 @@ body { background: transparent; }
 .tty-fab:hover { transform: scale(1.06); background: var(--card-hi); }
 .tty-fab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 800px) { .tty-fab { display: none; } }
+
+/* ---------- étude de cas, « en ce moment », aperçu au survol, barre de chargement, lumière de la souris ---------- */
+.case { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
+.case small { display: block; margin-bottom: 6px; font: 600 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.case p { font-size: 14.5px; line-height: 1.55; color: var(--text); }
+.now { list-style: none; display: grid; gap: 0; }
+.now li { display: grid; grid-template-columns: 120px 1fr; gap: 2px 14px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.now li:last-child { border-bottom: none; }
+.now span { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text2); }
+.now b { font: 600 15px var(--sans); } .now small { grid-column: 2; font-size: 13px; color: var(--text2); }
+@media (max-width: 520px) { .now li { grid-template-columns: 1fr; } .now small { grid-column: 1; } }
+/* deuxième capture au survol d'une carte projet */
+.proj .poster::after { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; background: center top / cover no-repeat; }
+.proj:hover .poster::after, .proj:focus-visible .poster::after { opacity: 1; }
+.poster[data-p="boutique-cyberpunk"]::after { background-image: url(img/boutique-cyberpunk-2.jpg); }
+.poster[data-p="pokedex-interactive"]::after { background-image: url(img/pokedex-interactive-2.jpg); }
+.poster[data-p="forum-musical"]::after { background-image: url(img/forum-musical-2.jpg); }
+.poster[data-p="pixelworld"]::after { background-image: url(img/pixelworld-2.jpg); }
+.navbar { position: fixed; top: 0; left: 0; z-index: 900; width: 0; height: 3px; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: width 8s cubic-bezier(.1, .6, .2, 1); pointer-events: none; }
+.navbar.go { width: 85%; }
+/* lumière qui suit la souris, sous les cartes (pas sur écran tactile) */
+html::after { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(520px circle at var(--sx, 50%) var(--sy, 25%), rgba(255, 255, 255, .09), transparent 65%); }
+html[data-theme="light"]::after { background: radial-gradient(520px circle at var(--sx, 50%) var(--sy, 25%), rgba(255, 255, 255, .35), transparent 65%); }
+@media (hover: none) { html::after { display: none; } }
+/* animations coupées à la demande (bouton de la palette / commande motion) */
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+html[data-motion="off"]::after { display: none; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .28s; }
+/* pastille : nombre de flags trouvés */
+.tty-fab[data-n]::after { content: attr(data-n); position: absolute; right: -2px; bottom: -2px; min-width: 20px; height: 20px; padding: 0 5px; display: grid; place-items: center; font: 700 11px var(--mono); color: var(--on-accent); background: var(--accent); border-radius: 99px; }
+/* galerie en thème clair */
+html[data-theme="light"] .gal { color: #14202e; background: #eef3fa; }
+html[data-theme="light"] .card.gal > .gal-bg { filter: blur(30px) brightness(1.08) saturate(1.1); }
+html[data-theme="light"] .card.gal > .gal-bg.on { opacity: .55; }
+html[data-theme="light"] .gal-side { background: rgba(255, 255, 255, .55); border-right-color: rgba(0, 0, 0, .1); }
+html[data-theme="light"] .gal-stat { border-bottom-color: rgba(0, 0, 0, .12); }
+html[data-theme="light"] .gal-stat span, html[data-theme="light"] .gal-side h4, html[data-theme="light"] .gal-album small { color: rgba(20, 32, 46, .6); }
+html[data-theme="light"] .gal-views button { color: rgba(20, 32, 46, .75); }
+html[data-theme="light"] .gal-views button:hover { background: rgba(0, 0, 0, .06); }
+html[data-theme="light"] .gal-views button[aria-pressed="true"], html[data-theme="light"] .gal-time button[aria-selected="true"] { color: #0b1220; background: rgba(0, 0, 0, .09); }
+html[data-theme="light"] .gal-head h2, html[data-theme="light"] .gal-album { color: #0b1220; }
+html[data-theme="light"] .gal-album { background: rgba(255, 255, 255, .6); border-color: rgba(0, 0, 0, .12); }
+html[data-theme="light"] .gal-time { background: rgba(255, 255, 255, .55); border-top-color: rgba(0, 0, 0, .1); }
+html[data-theme="light"] .gal-time button { color: rgba(20, 32, 46, .6); }
+html[data-theme="light"] .gal-time button:hover { color: #0b1220; }

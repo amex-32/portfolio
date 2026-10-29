@@ -20,6 +20,30 @@
   function setAccent(a) { root.dataset.accent = a; save('accent', a); }
   $$('[data-act="theme"]').forEach(function (b) { b.addEventListener('click', toggleTheme); });
 
+  // ---------- animations coupées à la demande, lumière de la souris, « en ce moment », pastille de flags ----------
+  var motion = function (v) { try { if (v != null) localStorage.setItem('ak-motion', v); return localStorage.getItem('ak-motion') || 'on'; } catch (e) { return v || 'on'; } };
+  root.dataset.motion = motion();
+  function toggleMotion() { var v = motion() === 'off' ? 'on' : 'off'; motion(v); root.dataset.motion = v; toast((root.lang === 'en' ? 'Animations: ' : 'Animations : ') + v); }
+  var pm = 0;
+  document.addEventListener('pointermove', function (e) {
+    if (pm || e.pointerType === 'touch') return;
+    pm = requestAnimationFrame(function () { pm = 0; root.style.setProperty('--sx', e.clientX + 'px'); root.style.setProperty('--sy', e.clientY + 'px'); });
+  });
+  var found = function (n) { try { if (n != null) localStorage.setItem('ak-found', n); return +localStorage.getItem('ak-found') || 0; } catch (e) { return n || 0; } };
+  function nowTick() { // appelée par un seul minuteur global (voir plus bas) : elle lit toujours la page courante
+    var t = $('[data-now="track"]'), c = $('[data-now="ctf"]'), p = window.akPlayer, f = found(), fab = $('.tty-fab');
+    if (t && !t.dataset.idle) t.dataset.idle = t.textContent;
+    if (t && p) t.textContent = p.playing() ? '▶ ' + p.tracks[p.current()].t : t.dataset.idle;
+    if (c) c.textContent = f + ' / 6';
+    if (fab) { if (f) fab.dataset.n = f; else delete fab.dataset.n; }
+  }
+  window.akNowFn = nowTick; nowTick();
+  if (!window.akNowTimer) window.akNowTimer = setInterval(function () { window.akNowFn(); }, 1000);
+
+  // ---------- demande de CV : le formulaire de contact arrive pré-rempli ----------
+  var cvForm = $('#contact-form'), cvMsg = cvForm && $('textarea[name="message"]', cvForm);
+  if (cvMsg && /[?&]cv=1/.test(location.search) && !cvMsg.value) cvMsg.value = cvForm.dataset.cv || '';
+
   // ---------- historique (barre d'adresse) ----------
   $$('[data-act="back"]').forEach(function (b) { b.addEventListener('click', function () { history.back(); }); });
   $$('[data-act="forward"]').forEach(function (b) { b.addEventListener('click', function () { history.forward(); }); });
@@ -83,6 +107,9 @@
     all.push({ g: data.l.actions, t: data.l.lang, h: 'FR / EN', run: function () { location.href = data.langUrl; } });
     accents.forEach(function (a) { all.push({ g: data.l.actions, t: data.l.accent + ' — ' + data.l.accents[a], h: '●', run: function () { setAccent(a); } }); });
     all.push({ g: data.l.actions, t: data.l.term, h: '>_', run: function () { openTty(); } });
+    all.push({ g: data.l.actions, t: data.l.motion, h: '◌', run: toggleMotion });
+    all.push({ g: data.l.actions, t: data.l.music, h: '♪', run: function () { var p = window.akPlayer; if (p) p.playing() ? p.pause() : p.play(); } });
+    all.push({ g: data.l.actions, t: data.l.cv, h: 'CV', run: function () { location.href = data.cvUrl; } });
     data.links.forEach(function (p) { all.push({ g: data.l.links, t: p.t, h: '↗', run: function () { window.open(p.u, '_blank', 'noopener'); } }); });
     var render = function () {
       var q = input.value.trim().toLowerCase(), last = '', html = '';
@@ -176,6 +203,7 @@
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { s: r.status, d: d }; }); })
         .then(function (x) {
           if (x.s === 200) {
+            found(x.d.found); nowTick();
             print((x.d.already ? TT.already : TT.got) + x.d.found + ' / ' + x.d.total + TT.found, 'ok');
             if (x.d.found === x.d.total) print(TT.all, 'ok');
             window.dispatchEvent(new CustomEvent('ak-flag'));
@@ -236,6 +264,7 @@
       shuffle: function () { var p = window.akPlayer; if (!p) return print(TT.err, 'err'); print((en ? 'shuffle: ' : 'aléatoire : ') + (p.shuffle() ? 'on' : 'off'), 'ok'); },
       next: function () { var p = window.akPlayer; if (p) { p.next(); print(TT.nowPlaying + p.tracks[p.current()].t, 'ok'); } },
       theme: function () { toggleTheme(); },
+      motion: function () { toggleMotion(); },
       clear: function () { out.textContent = ''; },
       exit: function () { closeTty(); },
       sudo: function () { print(TT.sudo, 'err'); }

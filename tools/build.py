@@ -172,15 +172,33 @@ def games_panels(lang):
 
 
 # ---------------------------------------------------------------- briques
-def poster(p):
-    return f'<div class="poster" data-p="{p["slug"]}" style="--h:{p["hue"]}"><span class="glyph">{p["glyph"]}</span></div><div class="shade"></div>'
+def poster(p, vt=False):
+    name = f";view-transition-name:p-{p['slug']}" if vt else ""  # nom unique par page : la vignette devient la bannière au clic
+    return f'<div class="poster" data-p="{p["slug"]}" style="--h:{p["hue"]}{name}"><span class="glyph">{p["glyph"]}</span></div><div class="shade"></div>'
 
 
-def proj_card(lang, p, me):
+def proj_card(lang, p, me, vt=False):
     d, t = p[lang], UI[lang]
-    return (f'<a class="proj" href="{rel(me, out_path(lang, "detail", p["slug"]))}" data-kind="{p["kind"]}">{poster(p)}'
+    return (f'<a class="proj" href="{rel(me, out_path(lang, "detail", p["slug"]))}" data-kind="{p["kind"]}">{poster(p, vt)}'
             f'<span class="pill">{t["kinds"][p["kind"]]}</span>'
             f'<div class="meta"><h3>{d["title"]}</h3><p>{d["short"]}</p></div><span class="go">{ico("right", 20)}</span></a>')
+
+
+def og_url(lang, page, slug, title):
+    """Aperçu de lien propre à la page (img/og/…), généré une fois avec Pillow et versionné ; sinon l'aperçu général."""
+    if page == "home":
+        return f"{SITE_URL}/og.png"
+    rel_path = f"img/og/{lang}-{slug or page}.png"
+    if not (ROOT / rel_path).exists():
+        try:
+            sys.path.insert(0, str(ROOT / "tools"))
+            from images import og_card
+            (ROOT / rel_path).parent.mkdir(exist_ok=True)
+            og_card(re.sub(r"<[^>]+>", "", title.split(" — ")[0])).save(ROOT / rel_path, optimize=True)
+        except Exception as e:  # Pillow ou polices absents (CI) : aperçu général
+            print("aperçu de lien :", rel_path, "non généré (", e, ")")
+            return f"{SITE_URL}/og.png"
+    return f"{SITE_URL}/{rel_path}"
 
 
 def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
@@ -208,10 +226,10 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
         "pages": [{"t": label, "u": r(k), "i": PAGE_NUM[k], "k": TERM_NAMES[k], "d": descs[k]} for k, label, _ in pages],
         "projects": [{"t": p[lang]["title"], "u": r("detail", p["slug"]), "k": t["kinds"][p["kind"]], "s": p["slug"], "d": p[lang]["short"]} for p in PROJECTS],
         "links": [{"t": "GitHub", "u": GITHUB}, {"t": "LinkedIn", "u": LINKEDIN}, {"t": t["source"], "u": SITE_REPO}],
-        "langUrl": rel(me, out_path(other, lp, slug)),
+        "langUrl": rel(me, out_path(other, lp, slug)), "cvUrl": rel(me, out_path(lang, "contact")) + "?cv=1#contact-form",
         "l": {"pages": t["pal_pages"], "projects": t["pal_projects"], "actions": t["pal_actions"], "links": t["pal_links"],
               "theme": t["pal_theme"], "lang": t["pal_lang"], "accent": t["pal_accent"], "accents": t["accent_names"], "empty": t["pal_empty"],
-              "term": t["pal_term"]},
+              "term": t["pal_term"], "motion": t["pal_motion"], "music": t["pal_music"], "cv": t["cv_ask"]},
     }
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, lp, slug))}">' for l in ("fr", "en"))
     boot = ("<script>try{var d=document.documentElement,t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
@@ -225,7 +243,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
         seo = (f'<link rel="canonical" href="{url}">{alts}'
                f'<meta property="og:type" content="website"><meta property="og:site_name" content="Alexandre K.">'
                f'<meta property="og:title" content="{plain(title)}"><meta property="og:description" content="{plain(desc)}">'
-               f'<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE_URL}/og.png">'
+               f'<meta property="og:url" content="{url}"><meta property="og:image" content="{og_url(lang, page, slug, title)}">'
                f'<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
                f'<meta property="og:locale" content="{t["og_locale"]}"><meta name="twitter:card" content="summary_large_image">')
     icons = (f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml"><link rel="icon" href="{root}favicon.ico" sizes="32x32">'
@@ -384,7 +402,7 @@ def build_list(lang):
     kinds = sorted({p["kind"] for p in PROJECTS})
     btns = f'<button type="button" data-f="all" aria-pressed="true">{t["all"]}</button>' + "".join(
         f'<button type="button" data-f="{k}" aria-pressed="false">{t["kinds"][k]}</button>' for k in kinds)
-    cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
+    cards = "".join(proj_card(lang, p, me, True) for p in PROJECTS)
     body = (head_c(lang, me, t["crumb_projects"], t["list_title"], t["list_lead"], f'<div class="filters" role="group">{btns}</div>')
             + f'<div class="proj-grid fadein">{cards}</div>')
     return chrome(lang, "list", None, me, f'{t["crumb_projects"]} — Alexandre K.', t["list_lead"], body)
@@ -396,10 +414,12 @@ def build_detail(lang, p):
     tags = "".join(f"<span>{x}</span>" for x in p["tech"][:4])
     demo_btn = f'<a class="btn btn-primary" href="{p["demo"]}" target="_blank" rel="noopener">{ico("play", 16)} {t["view_demo"]}</a>' if p.get("demo") else ""
     demo_note = f'<p class="demo-note">{t["demo_note"]}</p>' if p.get("demo") else ""
-    banner = (f'<section class="card banner fadein">{poster(p)}<div class="inner">'
+    banner = (f'<section class="card banner fadein">{poster(p, True)}<div class="inner">'
               f'<div class="crumbs"><a href="{r("home")}">{t["crumb_home"]}</a><span>/</span><a href="{r("list")}">{t["crumb_projects"]}</a><span>/</span><span>{d["title"]}</span></div>'
               f'<h1>{d["title"]} <em>{t["detail_word"]}</em></h1><div class="tags">{tags}</div>'
               f'<div class="btn-row">{demo_btn}<a class="btn {"" if demo_btn else "btn-primary"}" href="{p["code"]}" target="_blank" rel="noopener">{ICON_GH} {t["view_code"]}</a><a class="btn" href="{r("list")}">{t["all_projects"]}</a></div>{demo_note}</div></section>')
+    study = card('<div class="card-h"><h3>' + t["case_h"] + '</h3></div><div class="case">' + "".join(
+        f'<div><small>{k}</small><p>{v}</p></div>' for k, v in zip(t["case_k"], d["case"])) + '</div>')
     longp = "".join(f"<p>{x}</p>" for x in d["long"])
     chips = "".join(f"<span>{x}</span>" for x in p["tech"])
     feats = "".join(f"<li>{x}</li>" for x in d["features"])
@@ -415,8 +435,8 @@ def build_detail(lang, p):
     side = (f'<aside class="side"><div class="term fadein"><div class="term-bar"><span></span><span></span><span></span><em>{p["slug"]} ~ {t["repo_tree"].lower()}</em></div><pre class="tree">{tree}</pre></div>'
             + card(facts) + '</aside>')
     others = sorted((q for q in PROJECTS if q["slug"] != p["slug"]), key=lambda q: q["kind"] != p["kind"])
-    sim = card(f'<div class="card-h"><h3>{t["similar_small"]}</h3></div><div class="proj-grid">{"".join(proj_card(lang, q, me) for q in others[:3])}</div>')
-    return chrome(lang, "detail", p["slug"], me, f'{d["title"]} — Alexandre K.', d["short"], f'{banner}<div class="detail-grid">{main}{side}</div>{gallery}{sim}')
+    sim = card(f'<div class="card-h"><h3>{t["similar_small"]}</h3></div><div class="proj-grid">{"".join(proj_card(lang, q, me, True) for q in others[:3])}</div>')
+    return chrome(lang, "detail", p["slug"], me, f'{d["title"]} — Alexandre K.', d["short"], f'{banner}{study}<div class="detail-grid">{main}{side}</div>{gallery}{sim}')
 
 
 def build_game(lang):
@@ -444,7 +464,13 @@ def build_about(lang, data):
         <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" type="button" data-act="music">{ico("play", 16)} {t["ext_listen"]}</button></div></div>
       <div class="block"><h3>{t["ext_art_h"]}</h3><p>{t["ext_art"]}</p>{tags(["Procreate", "Photoshop", "Blender"])}
         <a class="ext-peek" href="{rel(me, out_path(lang, "gallery"))}">{peek}<span class="btn">{t["ext_gallery"]} {ico("right", 16)}</span></a></div></div>''', "ext-card")
-    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{ext}{gh}{setup}</div></div>'
+    last30 = sum(c["count"] for c in data["contributions"][-30:])
+    now = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["now_label"]}</span><h2>{t["now_h"]}</h2></div><ul class="now">'
+               f'<li><span>{t["now_study"]}</span><b>{t["who_tag"]}</b><small>{t["status"]}</small></li>'
+               f'<li><span>{t["now_listen"]}</span><b data-now="track">{t["now_idle"]}</b></li>'
+               f'<li><span>GitHub</span><b>{last30}</b><small>{t["now_gh"]}</small></li>'
+               f'<li><span>{t["now_ctf"]}</span><b data-now="ctf">0 / {len(CTF_FLAGS)}</b></li></ul>', "now-card")
+    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{now}{ext}{gh}{setup}</div></div>'
     return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
 
 
@@ -481,7 +507,7 @@ def build_contact(lang):
     form = ""
     if FORM_ENDPOINT:
         form = f'''<div class="block"><h3>{t["form_h"]}</h3>
-      <form id="contact-form" class="form" action="{FORM_ENDPOINT}" method="post" data-ok="{t["form_ok"]}" data-err="{t["form_err"]}" data-sending="{t["form_sending"]}">
+      <form id="contact-form" class="form" data-cv="{esc(t["cv_msg"])}" action="{FORM_ENDPOINT}" method="post" data-ok="{t["form_ok"]}" data-err="{t["form_err"]}" data-sending="{t["form_sending"]}">
         <label>{t["form_name"]}<input name="name" required maxlength="80" autocomplete="name"></label>
         <label>{t["form_email"]}<input name="email" type="email" required maxlength="120" autocomplete="email"></label>
         <label>{t["form_msg"]}<textarea name="message" required rows="6" maxlength="3000"></textarea></label>
@@ -496,7 +522,8 @@ def build_contact(lang):
       <a class="channel" href="{LINKEDIN}" target="_blank" rel="noopener"><div class="contact-icon ci-li">{ICON_LI}</div><div><b>LinkedIn</b><small>alexandre-k-801438256</small></div><span class="go">↗</span></a>
       <a class="channel" href="{GITHUB}" target="_blank" rel="noopener"><div class="contact-icon ci-gh">{ICON_GH}</div><div><b>GitHub</b><small>github.com/amex-32</small></div><span class="go">↗</span></a>{mail}</div>
       {form}<div class="block"><h3>{t["looking_h"]}</h3><ul class="feat">{looking}</ul></div>''')
-    cta = card(f'<div class="block"><h3>{t["contact_cta_h"]}</h3><p>{t["contact_cta_p"]}</p><a class="btn btn-primary" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} {t["write"]}</a>'
+    cta = card(f'<div class="block"><h3>{t["contact_cta_h"]}</h3><p>{t["contact_cta_p"]}</p><a class="btn btn-primary" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} {t["write"]}</a> '
+               f'<a class="btn" href="{posixpath.basename(me)}?cv=1#contact-form">{t["cv_ask"]}</a>'
                f'<p style="margin-top:14px"><span class="dot"></span> {t["status"]}</p></div>')
     right = f'<aside class="side">{cta}{card(f"<dl class=facts>{profile}</dl>")}</aside>'
     body = head_c(lang, me, t["contact_label"], t["contact_h"], t["contact_lead"]) + f'<div class="contact-wrap">{left}{right}</div>'
@@ -522,7 +549,8 @@ def build_404():
     body = card(f'<div class="head-c nf"><span class="label"><b>404</b> / not found</span><h1 class="page-title">{t["nf_title"]}</h1>'
                 f'<p class="lead">{t["nf_lead"]}</p><p class="lead" lang="en">{en["nf_lead"]}</p>'
                 f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
-                f'<a class="btn" href="en/index.html" lang="en">{en["nf_home"]}</a></div></div>')
+                f'<a class="btn" href="en/index.html" lang="en">{en["nf_home"]}</a>'
+                f'<button class="btn" type="button" data-act="term">{t["nf_term"]}</button><a class="btn" href="jeux.html">{t["nf_game"]}</a></div></div>')
     return chrome("fr", "notfound", None, me, "404 — Alexandre K.", t["nf_lead"], body)
 
 

@@ -70,7 +70,7 @@ for (const f of deployed('').filter((x) => x.endsWith('.html'))) {
   if (tracks) urls.push(...JSON.parse(tracks[1]).map((t) => t.u));
   for (const u of urls) {
     if (/^(https?:|mailto:|#|\/_vercel\/)/.test(u)) continue;
-    const target = path.posix.normalize(path.posix.join(base, u.split('#')[0]));
+    const target = path.posix.normalize(path.posix.join(base, u.split('#')[0].split('?')[0]));
     assert(served.has(target), `${f} : lien cassé vers ${u}`);
     links++;
   }

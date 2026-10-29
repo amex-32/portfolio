@@ -36,18 +36,26 @@ def monogram(size):
     return img
 
 
-og = gradient(1200, 630, BG1, BG2)
-d = ImageDraw.Draw(og)
-for x in range(0, 1200, 40):
-    d.line((x, 0, x, 630), fill=(20, 32, 50))
-for y in range(0, 630, 40):
-    d.line((0, y, 1200, y), fill=(20, 32, 50))
-og.paste(monogram(132), (90, 90), monogram(132))
-d.text((90, 280), "Alexandre K.", font=ImageFont.truetype(FONT_BOLD, 96), fill=TEXT)
-d.text((94, 400), "Étudiant en cybersécurité · Portfolio", font=ImageFont.truetype(FONT_BOLD, 40), fill=ACCENT)
-d.text((94, 500), "$ projets · write-ups · mini-CTF", font=ImageFont.truetype(FONT_MONO, 32), fill=TEXT2)
-og.save(ROOT / "og.png", optimize=True)
+def og_card(title, sub="Alexandre K. · Portfolio"):
+    """Aperçu de lien (1200 × 630) : le titre de la page sur le fond du site."""
+    og = gradient(1200, 630, BG1, BG2)
+    d = ImageDraw.Draw(og)
+    for x in range(0, 1200, 40):
+        d.line((x, 0, x, 630), fill=(20, 32, 50))
+    for y in range(0, 630, 40):
+        d.line((0, y, 1200, y), fill=(20, 32, 50))
+    og.paste(monogram(132), (90, 90), monogram(132))
+    size = 96
+    while d.textlength(title, font=ImageFont.truetype(FONT_BOLD, size)) > 1020 and size > 40:
+        size -= 4  # un long titre rétrécit pour tenir dans la largeur
+    d.text((90, 280), title, font=ImageFont.truetype(FONT_BOLD, size), fill=TEXT)
+    d.text((94, 400), sub, font=ImageFont.truetype(FONT_BOLD, 40), fill=ACCENT)
+    d.text((94, 500), "$ projets · write-ups · mini-CTF", font=ImageFont.truetype(FONT_MONO, 32), fill=TEXT2)
+    return og
 
-monogram(180).save(ROOT / "apple-touch-icon.png", optimize=True)
-monogram(64).save(ROOT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-print("ok")
+
+if __name__ == "__main__":
+    og_card("Alexandre K.", "Étudiant en cybersécurité · Portfolio").save(ROOT / "og.png", optimize=True)
+    monogram(180).save(ROOT / "apple-touch-icon.png", optimize=True)
+    monogram(64).save(ROOT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    print("ok")

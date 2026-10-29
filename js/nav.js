@@ -13,6 +13,8 @@
   function go(url, push) {
     if (busy) return;
     busy = true;
+    var bar = document.createElement('div'); bar.className = 'navbar'; document.documentElement.appendChild(bar);
+    requestAnimationFrame(function () { bar.classList.add('go'); }); // barre de chargement : se remplit tant que la page arrive
     fetch(url, { credentials: 'same-origin' }).then(function (r) {
       if (!r.ok || !/text\/html/.test(r.headers.get('content-type') || '')) throw 0;
       return r.text();
@@ -20,10 +22,19 @@
       // le script de mesures de Vercel reste celui de la première page : il suit déjà history.pushState
       html = html.replace(/<script[^>]*_vercel\/insights[^>]*><\/script>/, '');
       if (push) history.pushState(null, '', url);
-      document.open(); document.write(html); document.close();
-      var h = new URL(url, location.href).hash, el = h && document.getElementById(h.slice(1));
-      window.scrollTo(0, el ? el.getBoundingClientRect().top + scrollY - 90 : 0);
-    }).catch(function () { busy = false; location.href = url; });
+      var done = false, swap = function () {
+        if (done) return; done = true;
+        document.open(); document.write(html); document.close();
+        var h = new URL(url, location.href).hash, el = h && document.getElementById(h.slice(1));
+        window.scrollTo(0, el ? el.getBoundingClientRect().top + scrollY - 90 : 0);
+      };
+      // transition entre pages : fondu, et la vignette d'un projet devient sa bannière (view-transition-name posé par le site)
+      var calm = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'off';
+      if (document.startViewTransition && !calm) {
+        document.startViewTransition(swap).finished.catch(function () {});
+        setTimeout(swap, 700); // fenêtre qui ne dessine pas (onglet en arrière-plan) : on ne reste pas bloqué
+      } else swap();
+    }).catch(function () { busy = false; bar.remove(); location.href = url; });
   }
 
   document.addEventListener('click', function (e) {
