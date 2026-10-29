@@ -322,8 +322,8 @@ ICON_GH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" a
 ICON_LI = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>'
 ICON_MAIL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>'
 
-FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">')
+# polices servies par le site (fonts/, sous-ensemble latin de Google Fonts) : pas de requête vers Google ; Inter préchargée
+FONTS = '<link rel="preload" href="{root}fonts/inter.woff2" as="font" type="font/woff2" crossorigin>'
 THEME_JS = ("<script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
             "document.documentElement.dataset.theme=t}catch(e){}</script>")
 
@@ -372,6 +372,9 @@ UI2 = {
         "profile_card": "Profil", "stack_card": "Compétences",
         "discover": "À découvrir", "see_all": "Voir tout",
         "back": "Retour", "forward": "Suivant",
+        "slide_prev": "Diapo précédente", "slide_next": "Diapo suivante", "slide_n": "Diapo {n} sur {total}",
+        "slide_pause": "Mettre le défilement en pause", "slide_play": "Reprendre le défilement",
+        "tty_close": "Fermer le terminal", "page_prev": "Page précédente", "page_next": "Page suivante",
         "games_title": "Salle de <em>jeux</em>",
         "games_lead": "Cinq mini-jeux pour faire une pause, et un CTF caché dans le site. Chaque jeu a son classement, partagé entre tous les visiteurs.",
         "games_tabs": ["2048", "Snake", "Memory", "Code Breaker", "César", "CTF"],
@@ -425,6 +428,9 @@ UI2 = {
         "profile_card": "Profile", "stack_card": "Skills",
         "discover": "Discover", "see_all": "See all",
         "back": "Back", "forward": "Forward",
+        "slide_prev": "Previous slide", "slide_next": "Next slide", "slide_n": "Slide {n} of {total}",
+        "slide_pause": "Pause the slideshow", "slide_play": "Resume the slideshow",
+        "tty_close": "Close the terminal", "page_prev": "Previous page", "page_next": "Next page",
         "games_title": "Game <em>room</em>",
         "games_lead": "Five mini-games for a break, and a CTF hidden in the site. Each game has its own leaderboard, shared between all visitors.",
         "games_tabs": ["2048", "Snake", "Memory", "Code Breaker", "Caesar", "CTF"],

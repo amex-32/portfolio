@@ -22,6 +22,12 @@
 
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function fetchStore(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  // ancienne version : le mot de passe était gardé ici en clair ; on l'échange une fois contre un cookie de session, puis on l'efface
+  var oldTok = fetchStore('ak-owner');
+  if (oldTok && oldTok !== '1') {
+    try { localStorage.removeItem('ak-owner'); } catch (e) {}
+    fetch('/api/listen?auth=1', { method: 'POST', headers: { 'x-owner': oldTok } }).then(function (r) { if (r.ok) store('ak-owner', '1'); }).catch(function () {});
+  }
 
   // volume mémorisé (35 % par défaut : les morceaux sont masterisés fort), et fondu d'entrée pour ne jamais surprendre
   var vol = 0.35;
@@ -103,8 +109,9 @@
     // écoute comptée après 20 s de lecture, et seulement si je suis connecté (voir la commande login du terminal)
     if (!st.counted && !audio.paused && audio.currentTime >= 20) {
       st.counted = true;
-      var tok = fetchStore('ak-owner');
-      if (tok) fetch('/api/listen', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-owner': tok }, body: JSON.stringify({ track: tracks[i].t }) }).catch(function () {});
+      // la session est un cookie HttpOnly envoyé avec la requête ; si elle a expiré, on oublie qu'on était connecté
+      if (fetchStore('ak-owner') === '1') fetch('/api/listen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ track: tracks[i].t }) })
+        .then(function (r) { if (r.status === 401) try { localStorage.removeItem('ak-owner'); } catch (e) {} }).catch(function () {});
     }
     if (Date.now() - lastSave > 1000) { lastSave = Date.now(); save(); }
   });

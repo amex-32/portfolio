@@ -16,6 +16,8 @@ python3 -m http.server   # puis http://localhost:8000
 - `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Snake, Memory, Code Breaker, César
 - `src/trees.json` : arborescences affichées sur les pages projet
 - `api/scores.js` : classements des 5 jeux, une base MySQL par jeu (`game_2048`, `game_snake`, `game_memory`, `game_code`, `game_cipher`) ; `js/scores.js` : l'interface
+- `tools/shots.py` : convertit les captures de projets `img/*.jpg` en WebP (1600 px et `-800`)
+- `fonts/` : Inter, JetBrains Mono et Space Grotesk (sous-ensemble latin, servies par le site)
 - `tools/images.py` : génère `og.png` (aperçu des liens partagés), `favicon.ico` et `apple-touch-icon.png` (Pillow) ; `favicon.svg` est écrit à la main
 - `vercel.json` : en-têtes de sécurité (CSP, anti-clickjacking…) ; `.vercelignore` : les fichiers de travail (`tools/`, `src/`…) ne sont pas déployés
 - `js/player.js` : lecteur de musique en haut à droite, qui garde le morceau et la position d'une page à l'autre ; morceaux dans `audio/`, liste dans `TRACKS` (`tools/content.py`). Ils sont masterisés à -14 LUFS (ffmpeg : passe-haut 30 Hz, compression 2:1, loudnorm, limiteur -1,5 dB, MP3 192 kbps).
@@ -29,7 +31,7 @@ Six flags sont cachés dans le site ; ils se soumettent dans le terminal (`pseud
 
 ## Classements des jeux
 
-Les fonctions `api/scores.js` et `api/ctf.js` tournent sur Vercel et se connecte à une base MySQL (TiDB Cloud). Elles créent les bases et tables au premier appel. Variables d'environnement à définir dans Vercel : `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`.
+Les fonctions `api/scores.js`, `api/ctf.js` et `api/listen.js` tournent sur Vercel et se connectent à une base MySQL (TiDB Cloud) via un petit pool partagé (`api/_lib.js`, avec l'anti-spam par route). Elles créent les bases et tables au premier appel. Variables d'environnement à définir dans Vercel : `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, et `OWNER_HASH` (empreinte SHA-256 du mot de passe de la commande `login` du terminal). Après `login`, le navigateur garde un cookie de session HttpOnly signé avec cette empreinte (30 jours) ; changer `OWNER_HASH` déconnecte toutes les sessions.
 
 En local : `npm install`, puis `DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js` (ajouter `DB_SSL=0` pour un MySQL local sans TLS). Tests : `node tools/test.js && node tools/test-api.js`.
 

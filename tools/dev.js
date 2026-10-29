@@ -1,11 +1,11 @@
-// Serveur local : fichiers statiques + /api/scores et /api/ctf. Usage : DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js [port]
+// Serveur local : fichiers statiques + /api/scores, /api/ctf et /api/listen. Usage : DB_HOST=… DB_USER=… DB_PASSWORD=… node tools/dev.js [port]
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const API = { '/api/scores': require('../api/scores.js'), '/api/ctf': require('../api/ctf.js') };
+const API = { '/api/scores': require('../api/scores.js'), '/api/ctf': require('../api/ctf.js'), '/api/listen': require('../api/listen.js') };
 
 const ROOT = path.join(__dirname, '..');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.json': 'application/json', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.mp3': 'audio/mpeg', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.json': 'application/json', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.mp3': 'audio/mpeg', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml' };
 
 http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');

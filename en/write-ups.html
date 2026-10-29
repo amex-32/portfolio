@@ -6,9 +6,9 @@
   <title>Write-ups — Alexandre K.</title>
   <meta name="description" content="My security work, explained step by step.">
   <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#8fb4d8" media="(prefers-color-scheme: light)">
-  <link rel="canonical" href="https://alexandre-k.vercel.app/en/write-ups.html"><link rel="alternate" hreflang="fr" href="https://alexandre-k.vercel.app/write-ups.html"><link rel="alternate" hreflang="en" href="https://alexandre-k.vercel.app/en/write-ups.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Alexandre K."><meta property="og:title" content="Write-ups — Alexandre K."><meta property="og:description" content="My security work, explained step by step."><meta property="og:url" content="https://alexandre-k.vercel.app/en/write-ups.html"><meta property="og:image" content="https://alexandre-k.vercel.app/img/og/en-writeups.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://alexandre-k.vercel.app/en/write-ups.html"><link rel="alternate" hreflang="fr" href="https://alexandre-k.vercel.app/write-ups.html"><link rel="alternate" hreflang="en" href="https://alexandre-k.vercel.app/en/write-ups.html"><link rel="alternate" hreflang="x-default" href="https://alexandre-k.vercel.app/write-ups.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Alexandre K."><meta property="og:title" content="Write-ups — Alexandre K."><meta property="og:description" content="My security work, explained step by step."><meta property="og:url" content="https://alexandre-k.vercel.app/en/write-ups.html"><meta property="og:image" content="https://alexandre-k.vercel.app/img/og/en-writeups.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="icon" href="../favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="../apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link rel="preload" href="../fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../style.css">
   <script>try{var d=document.documentElement,t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');d.dataset.theme=t;var a=localStorage.getItem('accent');if(a)d.dataset.accent=a}catch(e){}</script>
 </head>
@@ -27,7 +27,7 @@
     <nav class="tabs" aria-label="Navigation"><a href="index.html">Home</a><a href="projects.html">Projects</a><a href="games.html">Games</a><a href="write-ups.html" aria-current="page">Write-ups</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
     <div class="top-right">
       <button class="round bell" type="button" data-act="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a2 2 0 0 0 3.4 0"/></svg><i></i></button>
-      <a class="profile" href="about.html"><img class="avatar" src="../img/avatar.webp" alt=""><div><b>Alexandre K.</b><small>@amex-32</small></div></a>
+      <a class="profile" href="about.html"><img class="avatar" src="../img/avatar.webp" width="256" height="256" alt=""><div><b>Alexandre K.</b><small>@amex-32</small></div></a>
       <div class="drop" id="notifs"><h4>Notifications</h4><ul><li><b>Available</b><span>For an internship or work-study, in the Alpes-Maritimes</span></li><li><b>New</b><span>6 flags are hidden on this site: go find them</span></li><li><b>Contact</b><span>The contact form is live</span></li></ul></div>
     </div>
   </header>
@@ -37,11 +37,11 @@
 </div>
 <div class="foot">
   <a href="https://github.com/amex-32" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/alexandre-k-801438256/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/amex-32/portfolio" target="_blank" rel="noopener">Site source code</a>
-  <div style="margin-top:8px">© 2026 Alexandre K. · Tip: ⌘K or Ctrl+K opens search, ` opens the terminal.</div>
-  <div style="margin-top:4px">Lighthouse (mobile, 29/10/2026) : Performance 88 · Accessibility 98 · Best practices 100 · SEO 100</div>
+  <div class="mt-8">© 2026 Alexandre K. · Tip: ⌘K or Ctrl+K opens search, ` opens the terminal.</div>
+  <div class="mt-4">Lighthouse (mobile, 29/10/2026) : Performance 88 · Accessibility 98 · Best practices 100 · SEO 100</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="Search…"><div class="pal"><input type="text" placeholder="A page, a project, an action…" aria-label="Search…" autocomplete="off"><ul></ul><footer>↑↓ navigate · ↵ open · esc close</footer></div></div>
-<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="Back">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
+<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="Close the terminal">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
 <div class="toast" role="status"></div>
 <div class="player" role="region" aria-label="Music player">
   <div class="pl-pill"><button class="pl-toggle" type="button" aria-expanded="false" aria-label="Track list"><i></i><i></i><i></i><i></i></button><span class="pl-now"></span>

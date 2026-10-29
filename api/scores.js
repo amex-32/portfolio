@@ -1,7 +1,7 @@
 // Classements des mini-jeux : une base MySQL (TiDB Cloud) par jeu, un score par pseudo.
 // GET  /api/scores?game=snake            -> { rows: [{ pseudo, score }], best: "high" | "low" }
 // POST /api/scores {game, pseudo, score}  -> { ok: true, best: <meilleur score de ce pseudo> }
-const mysql = require('mysql2/promise');
+const { db, ensure, tooFast } = require('./_lib.js');
 
 // best "high" : le plus grand score gagne ; "low" : le plus petit gagne (coups, essais).
 // min/max : bornes plausibles, rien d'autre n'est accepté.
@@ -24,59 +24,37 @@ function validate(body) {
   return { game, pseudo: body.pseudo, score };
 }
 
-let ready; // schéma créé une fois par instance
-async function connect() {
-  const conn = await mysql.createConnection({
-    host: process.env.DB_HOST, port: Number(process.env.DB_PORT) || 4000,
-    user: process.env.DB_USER, password: process.env.DB_PASSWORD,
-    ssl: process.env.DB_SSL === '0' ? undefined : { minVersion: 'TLSv1.2', rejectUnauthorized: true },
-    connectTimeout: 8000,
-  });
-  ready = ready || Promise.all(Object.values(GAMES).map(async (g) => {
-    await conn.query(`CREATE DATABASE IF NOT EXISTS ${g.db}`);
-    await conn.query(`CREATE TABLE IF NOT EXISTS ${g.db}.scores (
-      pseudo VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci PRIMARY KEY,
-      score INT NOT NULL,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`);
-  }));
-  await ready;
-  return conn;
-}
-
-// shortcut: limite par instance serverless (pas partagée entre instances), suffisante contre le spam simple.
-const lastPost = new Map();
-function tooFast(req) {
-  const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
-  const now = Date.now();
-  if (now - (lastPost.get(ip) || 0) < 5000) return true;
-  lastPost.set(ip, now);
-  if (lastPost.size > 5000) lastPost.clear();
-  return false;
-}
+// une base par jeu (créées au premier appel de chaque instance)
+const schema = () => ensure('scores', (pool) => Promise.all(Object.values(GAMES).map(async (g) => {
+  await pool.query(`CREATE DATABASE IF NOT EXISTS ${g.db}`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS ${g.db}.scores (
+    pseudo VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci PRIMARY KEY,
+    score INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`);
+})));
 
 async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  let conn;
   try {
     if (req.method === 'GET') {
       const game = GAMES[req.query.game];
       if (!game) return res.status(400).json({ error: 'jeu inconnu' });
-      conn = await connect();
+      await schema();
       const order = game.best === 'high' ? 'DESC' : 'ASC';
-      const [rows] = await conn.query(`SELECT pseudo, score FROM ${game.db}.scores ORDER BY score ${order}, updated_at ASC LIMIT 10`);
+      const [rows] = await db().query(`SELECT pseudo, score FROM ${game.db}.scores ORDER BY score ${order}, updated_at ASC LIMIT 10`);
       return res.status(200).json({ rows, best: game.best });
     }
     if (req.method === 'POST') {
       const v = validate(req.body);
       if (v.error) return res.status(400).json({ error: v.error });
-      if (tooFast(req)) return res.status(429).json({ error: 'trop rapide, réessaie dans quelques secondes' });
-      conn = await connect();
+      if (tooFast(req, 'scores')) return res.status(429).json({ error: 'trop rapide, réessaie dans quelques secondes' });
+      await schema();
       const better = v.game.best === 'high' ? '<' : '>'; // ancien score moins bon que le nouveau
-      await conn.execute(
+      await db().execute(
         `INSERT INTO ${v.game.db}.scores (pseudo, score) VALUES (?, ?)
          ON DUPLICATE KEY UPDATE score = IF(score ${better} VALUES(score), VALUES(score), score)`,
         [v.pseudo, v.score]);
-      const [[row]] = await conn.execute(`SELECT score FROM ${v.game.db}.scores WHERE pseudo = ?`, [v.pseudo]);
+      const [[row]] = await db().execute(`SELECT score FROM ${v.game.db}.scores WHERE pseudo = ?`, [v.pseudo]);
       return res.status(200).json({ ok: true, best: row.score });
     }
     res.setHeader('Allow', 'GET, POST');
@@ -84,8 +62,6 @@ async function handler(req, res) {
   } catch (e) {
     console.error(e);
     return res.status(503).json({ error: 'classement indisponible' });
-  } finally {
-    if (conn) conn.end().catch(() => {});
   }
 }
 
@@ -93,5 +69,3 @@ module.exports = handler;
 module.exports.validate = validate;
 module.exports.GAMES = GAMES;
 module.exports.PSEUDO = PSEUDO;
-module.exports.connect = connect;
-module.exports.tooFast = tooFast;

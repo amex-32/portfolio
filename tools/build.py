@@ -63,6 +63,23 @@ def rel(src, dst):
     return posixpath.relpath(dst, posixpath.dirname(src) or ".")
 
 
+def webp_size(path):
+    """Largeur et hauteur d'une image WebP (VP8, VP8L ou VP8X), sans dépendance."""
+    b = open(path, "rb").read(30)
+    kind = b[12:16]
+    if kind == b"VP8X":
+        return 1 + int.from_bytes(b[24:27], "little"), 1 + int.from_bytes(b[27:30], "little")
+    if kind == b"VP8L":
+        v = int.from_bytes(b[21:25], "little")
+        return 1 + (v & 0x3FFF), 1 + ((v >> 14) & 0x3FFF)
+    return int.from_bytes(b[26:28], "little") & 0x3FFF, int.from_bytes(b[28:30], "little") & 0x3FFF
+
+
+def dims(path):
+    """Attributs width et height d'une image du site, pour réserver sa place avant le chargement."""
+    return 'width="{}" height="{}"'.format(*webp_size(ROOT / path))
+
+
 def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
@@ -155,18 +172,18 @@ def games_panels(lang):
 <div class="gp" id="g-2048"><div class="cols"><div>{inner}</div><aside class="sb" data-game="2048"></aside></div></div>
 <div class="gp" id="g-snake"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["score"]} <b id="sn-score">0</b></span><span>{t["best"]} <b id="sn-best">0</b></span><span class="msg" id="sn-msg"></span><button class="xp-btn" id="sn-btn" type="button"></button></div>
-  <canvas id="snake" width="360" height="360"></canvas><p class="lead" id="snake-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="snake"></aside></div></div>
+  <canvas id="snake" width="360" height="360"></canvas><p class="lead help" id="snake-help"></p></div><aside class="sb" data-game="snake"></aside></div></div>
 <div class="gp" id="g-memory"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["moves"]} <b id="mem-moves">0</b></span><span>{t["time"]} <b id="mem-time">0s</b></span><span>{t["best"]} <b id="mem-best">–</b></span><span class="msg" id="mem-msg"></span><button class="xp-btn" id="mem-btn" type="button"></button></div>
-  <div class="mem" id="mem"></div><p class="lead" id="mem-help" style="margin:0;font-size:13px"></p></div><aside class="sb" data-game="memory"></aside></div></div>
+  <div class="mem" id="mem"></div><p class="lead help" id="mem-help"></p></div><aside class="sb" data-game="memory"></aside></div></div>
 <div class="gp" id="g-code"><div class="cols"><div class="play"><div class="cb">
   <div class="gbar"><span>{t["left"]} <b id="cb-left">8</b></span><span class="msg" id="cb-msg"></span><button class="xp-btn" id="cb-btn" type="button"></button></div>
-  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead" id="cb-help" style="margin:0;font-size:13px"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
+  <div class="cb-rows" id="cb-rows"></div><div class="pad" id="cb-pad"></div><p class="lead help" id="cb-help"></p></div></div><aside class="sb" data-game="code"></aside></div></div>
 <div class="gp" id="g-cipher"><div class="cols"><div class="play"><div class="ci">
   <div class="gbar"><span>{t["score"]} <b id="ci-score">0</b></span><span>{t["time"]} <b id="ci-time">60s</b></span><span>{t["best"]} <b id="ci-best">0</b></span><span class="msg" id="ci-msg"></span><button class="xp-btn" id="ci-btn" type="button"></button></div>
   <p class="ci-text" id="ci-cipher">· · ·</p><p class="ci-text ci-plain" id="ci-plain" aria-live="polite">· · ·</p>
   <div class="ci-ctl"><button class="round" id="ci-down" type="button" aria-label="−1">◀</button><span>{u["ci_shift"]} <b id="ci-shift">0</b></span><button class="round" id="ci-up" type="button" aria-label="+1">▶</button><button class="xp-btn" id="ci-ok" type="button">{u["ci_ok"]}</button></div>
-  <p class="lead" style="margin:0;font-size:13px">{u["ci_help"]}</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
+  <p class="lead help">{u["ci_help"]}</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
 <div class="gp" id="g-ctf"><div class="cols"><div class="play ctf"><h3>{u["ctf_h"]}</h3><p>{u["ctf_p"]}</p>
   <ol>{"".join(f"<li>{esc(h)}</li>" for h in u["ctf_hints"])}</ol><button class="btn btn-primary" type="button" data-act="term">{u["ctf_open"]}</button></div><aside class="sb" data-ctf></aside></div></div>'''
 
@@ -238,6 +255,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
               "term": t["pal_term"], "motion": t["pal_motion"], "music": t["pal_music"], "cv": t["cv_ask"]},
     }
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, lp, slug))}">' for l in ("fr", "en"))
+    alts += f'<link rel="alternate" hreflang="x-default" href="{abs_url(out_path("fr", lp, slug))}">'
     boot = ("<script>try{var d=document.documentElement,t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
             "d.dataset.theme=t;var a=localStorage.getItem('accent');if(a)d.dataset.accent=a}catch(e){}</script>")
     plain = lambda s: esc(re.sub(r"<[^>]+>", "", s)).replace('"', "&quot;")
@@ -252,6 +270,15 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
                f'<meta property="og:url" content="{url}"><meta property="og:image" content="{og_url(lang, page, slug, title)}">'
                f'<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
                f'<meta property="og:locale" content="{t["og_locale"]}"><meta name="twitter:card" content="summary_large_image">')
+        if page in ("home", "about"):
+            # données structurées : qui je suis, pour les moteurs de recherche (un bloc de données, non exécuté : hors CSP)
+            person = {"@context": "https://schema.org", "@type": "Person", "name": "Alexandre K.", "jobTitle": t["who_tag"],
+                      "url": abs_url(out_path(lang, "home")), "image": f"{SITE_URL}/img/avatar.webp", "sameAs": [GITHUB, LINKEDIN],
+                      "affiliation": {"@type": "EducationalOrganization", "name": "Ynov Campus Sophia Antipolis"},
+                      "address": {"@type": "PostalAddress", "addressRegion": "Alpes-Maritimes", "addressCountry": "FR"},
+                      "knowsLanguage": ["fr", "en"]}
+            seo += f'<script type="application/ld+json">{json.dumps(person, ensure_ascii=False)}</script>'
+
     icons = (f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml"><link rel="icon" href="{root}favicon.ico" sizes="32x32">'
              f'<link rel="apple-touch-icon" href="{root}apple-touch-icon.png">')
     flag = f"\n  <!-- {CTF_FLAGS[0]} : 1/6, le code source ne ment jamais. -->" if page == "home" else ""
@@ -267,7 +294,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#8fb4d8" media="(prefers-color-scheme: light)">
   {seo}
   {icons}
-  {FONTS}
+  {FONTS.format(root=root)}
   <link rel="stylesheet" href="{root}style.css">
   {boot}{flag}
 </head>
@@ -286,7 +313,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     <nav class="tabs" aria-label="Navigation">{tabs}</nav>
     <div class="top-right">
       <button class="round bell" type="button" data-act="bell" aria-label="{t["notif_h"]}">{ico("bell", 19)}<i></i></button>
-      <a class="profile" href="{r("about")}"><img class="avatar" src="{root}img/avatar.webp" alt=""><div><b>Alexandre K.</b><small>{t["handle"]}</small></div></a>
+      <a class="profile" href="{r("about")}"><img class="avatar" src="{root}img/avatar.webp" width="256" height="256" alt=""><div><b>Alexandre K.</b><small>{t["handle"]}</small></div></a>
       <div class="drop" id="notifs"><h4>{t["notif_h"]}</h4><ul>{notifs}</ul></div>
     </div>
   </header>
@@ -296,11 +323,11 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
 </div>
 <div class="foot">
   <a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a><a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a><a href="{SITE_REPO}" target="_blank" rel="noopener">{t["source"]}</a>
-  <div style="margin-top:8px">{t["rights"]} · {t["kb_hint"]}</div>
-  <div style="margin-top:4px">Lighthouse (mobile, 29/10/2026) : {LIGHTHOUSE if lang == "fr" else LIGHTHOUSE_EN}</div>
+  <div class="mt-8">{t["rights"]} · {t["kb_hint"]}</div>
+  <div class="mt-4">Lighthouse (mobile, 29/10/2026) : {LIGHTHOUSE if lang == "fr" else LIGHTHOUSE_EN}</div>
 </div>
 <div class="pal-bg" role="dialog" aria-modal="true" aria-label="{t["search_ph"]}"><div class="pal"><input type="text" placeholder="{t["pal_ph"]}" aria-label="{t["search_ph"]}" autocomplete="off"><ul></ul><footer>{t["pal_hint"]}</footer></div></div>
-<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="{t["back"]}">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
+<div class="tty-bg" role="dialog" aria-modal="true" aria-label="Terminal"><div class="term tty"><div class="term-bar"><button class="tty-x" type="button" aria-label="{t["tty_close"]}">✕</button><span></span><span></span><em>amex@portfolio: ~</em></div><div class="tty-out" aria-live="polite"></div><label class="tty-in"><span class="p">$</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div></div>
 <div class="toast" role="status"></div>
 <div class="player" role="region" aria-label="{t["pl_label"]}">
   <div class="pl-pill"><button class="pl-toggle" type="button" aria-expanded="false" aria-label="{t["pl_list"]}"><i></i><i></i><i></i><i></i></button><span class="pl-now"></span>
@@ -381,25 +408,27 @@ def build_home(lang):
       <div class="btn-row"><a class="btn btn-primary" href="{r("detail", p["slug"])}">{ico("play", 16)} {t["see"]}</a><a class="btn" href="{p["code"]}" target="_blank" rel="noopener">{ico("code", 16)} {t["code"]}</a></div></div></div>'''
         for p in shown)
     work = {w["slug"]: w for w in GALLERY}
-    gtiles = "".join(f'<img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" alt="{esc(work[s][lang])}" loading="lazy" decoding="async">' for s in HOME_GALLERY)
+    gtiles = "".join(f'<img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" {dims(f"img/gallery/{s}-thumb.webp")} alt="{esc(work[s][lang])}" loading="lazy" decoding="async">' for s in HOME_GALLERY)
     gtags = "".join(f"<span>{x}</span>" for x in t["series"].values())
     gallery_slide = f'''<div class="slide pj gl" aria-hidden="true"><div class="gl-bg" style="background-image:url('{rel(me, f"img/gallery/{HOME_GALLERY[0]}-thumb.webp")}')"></div><div class="shade"></div><div class="gl-tiles" aria-hidden="true">{gtiles}</div><div class="inner">
       <span class="pill">{t["featured"]} · {re.sub(r"<[^>]+>", "", t["gal_title"])}</span><h2>{t["gal_title"].replace("<em>", "").replace("</em>", "")}</h2>
       <div class="tags">{gtags}</div><p>{t["gal_lead"]}</p>
       <div class="btn-row"><a class="btn btn-primary" href="{r("gallery")}">{ico("play", 16)} {t["ext_gallery"]}</a></div></div></div>'''
     slides = gallery_slide + slides
-    dots = "".join(f'<button type="button" aria-label="{i + 1}"></button>' for i in range(len(shown) + 2))
-    nav = (f'<div class="hero-nav"><button class="round" type="button" data-act="prev" aria-label="{t["back"]}">{ico("left", 18)}</button>'
-           f'<button class="round" type="button" data-act="next" aria-label="{t["forward"]}">{ico("right", 18)}</button></div>')
+    n_slides = len(shown) + 2
+    dots = "".join(f'<button type="button" aria-label="{t["slide_n"].format(n=i + 1, total=n_slides)}"></button>' for i in range(n_slides))
+    nav = (f'<div class="hero-nav"><button class="round" type="button" data-act="pause" aria-pressed="false" aria-label="{t["slide_pause"]}" data-pause="{t["slide_pause"]}" data-play="{t["slide_play"]}">{ico("pause", 16)}{ico("play", 16)}</button>'
+           f'<button class="round" type="button" data-act="prev" aria-label="{t["slide_prev"]}">{ico("left", 18)}</button>'
+           f'<button class="round" type="button" data-act="next" aria-label="{t["slide_next"]}">{ico("right", 18)}</button></div>')
     hero = card(f'{intro}{slides}<div class="dots">{dots}</div>{nav}', "hero")
-    who = card(f'''<div class="who"><img class="avatar" src="{rel(me, "img/avatar.webp")}" alt=""><h3>Alexandre K.</h3><p>{t["who_tag"]}</p>
+    who = card(f'''<div class="who"><img class="avatar" src="{rel(me, "img/avatar.webp")}" width="256" height="256" alt=""><h3>Alexandre K.</h3><p>{t["who_tag"]}</p>
       <div class="btn-row"><a class="btn small" href="{GITHUB}" target="_blank" rel="noopener">{ICON_GH} GitHub</a><a class="btn small" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div>
       <div class="status"><span class="dot"></span>{t["status"]}</div></div>''')
     skills = skills_card(lang)
     cards = "".join(proj_card(lang, p, me) for p in PROJECTS)
     discover = card(f'<div class="card-h"><h3>{t["discover"]}</h3><a href="{r("list")}">{t["see_all"]}</a></div><div class="proj-grid">{cards}</div>')
-    contact = card(f'<div class="head-c" style="padding:6px 0"><span class="label">{t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
-                   f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
+    contact = card(f'<div class="head-c tight"><span class="label">{t["contact_label"]}</span><h2>{t["contact_h"]}</h2><p class="lead">{t["contact_lead"]}</p>'
+                   f'<div class="btn-row center"><a class="btn btn-primary" href="{r("contact")}">{t["cta_contact"]}</a><a class="btn" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} LinkedIn</a></div></div>')
     body = f'<div class="home"><div class="stack aside">{who}{skills}{"".join(cv_cards(lang, False))}</div><div class="stack">{hero}{discover}</div></div>\n{contact}'
     return chrome(lang, "home", None, me, t["title"], t["meta"], body)
 
@@ -436,9 +465,14 @@ def build_detail(lang, p):
     facts = (f'<dl class="facts"><div><dt>{t["f_type"]}</dt><dd>{t["kinds"][p["kind"]]}</dd></div><div><dt>{t["f_context"]}</dt><dd>{t["context"]}</dd></div>'
              f'<div><dt>{t["f_lang"]}</dt><dd>{p["lang"]}</dd></div><div><dt>{t["f_repo"]}</dt><dd><a href="{p["code"]}" target="_blank" rel="noopener">GitHub ↗</a></dd></div>'
              + (f'<div><dt>Demo</dt><dd><a href="{p["demo"]}" target="_blank" rel="noopener">{t["view_demo"]} ↗</a></dd></div>' if p.get("demo") else "") + '</dl>')
-    shots = sorted((ROOT / "img").glob(f'{p["slug"]}-*.jpg'))
-    gallery = card(f'<div class="card-h"><h3>{t["preview_h"]}</h3></div><div class="shots">' + "".join(
-        f'<a href="{rel(me, "img/" + f.name)}" target="_blank" rel="noopener"><img src="{rel(me, "img/" + f.name)}" alt="{d["title"]}" loading="lazy"></a>' for f in shots) + '</div>') if shots else ""
+    shots = sorted(f for f in (ROOT / "img").glob(f'{p["slug"]}-*.webp') if not f.stem.endswith("-800"))  # captures : tools/shots.py
+
+    def shot(f):
+        w, h = webp_size(f)
+        full, small = rel(me, "img/" + f.name), rel(me, f"img/{f.stem}-800.webp")
+        return (f'<a href="{full}" target="_blank" rel="noopener"><img src="{small}" srcset="{small} 800w, {full} {w}w" '
+                f'sizes="(max-width: 700px) 100vw, 50vw" width="{w}" height="{h}" alt="{d["title"]}" loading="lazy" decoding="async"></a>')
+    gallery = card(f'<div class="card-h"><h3>{t["preview_h"]}</h3></div><div class="shots">' + "".join(map(shot, shots)) + '</div>') if shots else ""
     side = (f'<aside class="side"><div class="term fadein"><div class="term-bar"><span></span><span></span><span></span><em>{p["slug"]} ~ {t["repo_tree"].lower()}</em></div><pre class="tree">{tree}</pre></div>'
             + card(facts) + '</aside>')
     others = sorted((q for q in PROJECTS if q["slug"] != p["slug"]), key=lambda q: q["kind"] != p["kind"])
@@ -461,18 +495,18 @@ def build_about(lang, data):
     sw = "".join(
         f'<a class="tile" href="{url}" target="_blank" rel="noopener"><div class="tile-ico"{f" style=color:{c}" if c else ""}>{brand_icon(ic)}</div><b>{n}</b></a>'
         for n, ic, url, c in SOFTWARE)
-    gh = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
+    gh = card(f'<div class="head-c flush"><span class="label">{t["gh_small"]}</span><h2>{t["gh_h"]}</h2></div>{heatmap(lang, data)}')
     setup = card(f'<div class="block"><h3>{t["hw_h"]}</h3><div class="tiles">{hw}</div></div><div class="block"><h3>{t["sw_h"]}</h3><div class="tiles">{sw}</div></div>')
     left = f'<div class="stack">{skills_card(lang)}{"".join(cv_cards(lang, True))}</div>'
     tags = lambda xs: '<div class="tags">' + "".join(f"<span>{x}</span>" for x in xs) + '</div>'
-    peek = "".join(f'<img src="{rel(me, "img/gallery/" + s + "-thumb.webp")}" alt="" loading="lazy">' for s in ("clive-neon", "flame-radio", "knight"))
-    ext = card(f'''<div class="head-c" style="padding-top:0"><span class="label">{t["ext_h"]}</span><h2>{t["ext_lead"]}</h2></div>
+    peek = "".join(f'<img src="{rel(me, "img/gallery/" + s + "-thumb.webp")}" {dims("img/gallery/" + s + "-thumb.webp")} alt="" loading="lazy" decoding="async">' for s in ("clive-neon", "flame-radio", "knight"))
+    ext = card(f'''<div class="head-c flush"><span class="label">{t["ext_h"]}</span><h2>{t["ext_lead"]}</h2></div>
       <div class="ext"><div class="block"><h3>{t["ext_music_h"]}</h3><p>{t["ext_music"]}</p>{tags(["FL Studio", "Breakcore", "Jungle", "UK garage", "Trap"])}
-        <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" type="button" data-act="music">{ico("play", 16)} {t["ext_listen"]}</button></div></div>
+        <div class="btn-row mt-14"><button class="btn btn-primary" type="button" data-act="music">{ico("play", 16)} {t["ext_listen"]}</button></div></div>
       <div class="block"><h3>{t["ext_art_h"]}</h3><p>{t["ext_art"]}</p>{tags(["Procreate", "Photoshop", "Blender"])}
         <a class="ext-peek" href="{rel(me, out_path(lang, "gallery"))}">{peek}<span class="btn">{t["ext_gallery"]} {ico("right", 16)}</span></a></div></div>''', "ext-card")
     last30 = sum(c["count"] for c in data["contributions"][-30:])
-    now = card(f'<div class="head-c" style="padding-top:0"><span class="label">{t["now_label"]}</span><h2>{t["now_h"]}</h2></div><ul class="now">'
+    now = card(f'<div class="head-c flush"><span class="label">{t["now_label"]}</span><h2>{t["now_h"]}</h2></div><ul class="now">'
                f'<li><span>{t["now_study"]}</span><b>{t["who_tag"]}</b><small>{t["status"]}</small></li>'
                f'<li><span>{t["now_last"]}</span><b data-now="last" data-none="{t["now_none"]}">…</b></li>'
                f'<li><span>{t["now_top"]}</span><b data-now="top">…</b></li>'
@@ -490,11 +524,11 @@ def build_gallery(lang):
     count = {s: sum(w["series"] == s for w in GALLERY) for s in series}
     items = "".join(
         f'<button class="gal-item" type="button" data-i="{i}" data-s="{w["series"]}" data-full="{img(w["slug"] + "." + w.get("ext", "webp"))}">'
-        f'<img src="{img(w["slug"] + "-thumb.webp")}" alt="{esc(w[lang])}" loading="lazy" decoding="async"><span><b>{esc(w[lang])}</b><small>{when(w["date"])}</small></span></button>'
+        f'<img src="{img(w["slug"] + "-thumb.webp")}" {dims("img/gallery/" + w["slug"] + "-thumb.webp")} alt="{esc(w[lang])}" loading="lazy" decoding="async"><span><b>{esc(w[lang])}</b><small>{when(w["date"])}</small></span></button>'
         for i, w in enumerate(GALLERY))
     albums = "".join(
         f'<button class="gal-album" type="button" data-s="{s}"><span class="gal-mosaic">'
-        + "".join(f'<img src="{img(w["slug"] + "-thumb.webp")}" alt="" loading="lazy">' for w in [w for w in GALLERY if w["series"] == s][:4])
+        + "".join(f'<img src="{img(w["slug"] + "-thumb.webp")}" {dims("img/gallery/" + w["slug"] + "-thumb.webp")} alt="" loading="lazy" decoding="async">' for w in [w for w in GALLERY if w["series"] == s][:4])
         + f'</span><b>{t["series"][s]}</b><small>{count[s]} {t["gal_works"]}</small></button>' for s in series)
     time = "".join(f'<button type="button" role="tab" data-s="{s}" aria-selected="false">{t["series"][s]} <small>{count[s]}</small></button>' for s in series)
     views = "".join(f'<button type="button" data-view="{v}" aria-pressed="false">{label}</button>' for v, label in t["gal_views"].items())
@@ -504,7 +538,7 @@ def build_gallery(lang):
         <h4>{t["gal_view_h"]}</h4><div class="gal-views" role="group" aria-label="{t["gal_view_h"]}">{views}</div></aside>
       <div class="gal-main"><div class="gal-head"><h2 class="gal-name"></h2><small class="gal-count" data-unit="{t["gal_works"]}"></small></div>
         <div class="gal-stage" data-view="scatter">{items}</div><div class="gal-albums">{albums}</div>
-        <div class="gal-pager" hidden><button class="round gal-prev" type="button" aria-label="{t["back"]}">{ico("left", 16)}</button><span class="gal-page" aria-live="polite"></span><button class="round gal-next" type="button" aria-label="{t["forward"]}">{ico("right", 16)}</button></div></div>
+        <div class="gal-pager" hidden><button class="round gal-prev" type="button" aria-label="{t["page_prev"]}">{ico("left", 16)}</button><span class="gal-page" aria-live="polite"></span><button class="round gal-next" type="button" aria-label="{t["page_next"]}">{ico("right", 16)}</button></div></div>
       <nav class="gal-time" role="tablist" aria-label="{t["gal_series_h"]}">{time}</nav>''', "gal")
     return chrome(lang, "gallery", None, me, f'{re.sub(r"<[^>]+>", "", t["gal_title"])} — Alexandre K.', t["gal_lead"], body,
                   '<script src="ROOT/js/gallery.js"></script>')
@@ -532,7 +566,7 @@ def build_contact(lang):
       {form}<div class="block"><h3>{t["looking_h"]}</h3><ul class="feat">{looking}</ul></div>''')
     cta = card(f'<div class="block"><h3>{t["contact_cta_h"]}</h3><p>{t["contact_cta_p"]}</p><div class="btn-row"><a class="btn btn-primary" href="{LINKEDIN}" target="_blank" rel="noopener">{ICON_LI} {t["write"]}</a>'
                f'<a class="btn" href="{posixpath.basename(me)}?cv=1#contact-form">{t["cv_ask"]}</a></div>'
-               f'<p style="margin-top:14px"><span class="dot"></span> {t["status"]}</p></div>')
+               f'<p class="mt-14"><span class="dot"></span> {t["status"]}</p></div>')
     right = f'<aside class="side">{cta}{card(f"<dl class=facts>{profile}</dl>")}</aside>'
     body = head_c(lang, me, t["contact_label"], t["contact_h"], t["contact_lead"]) + f'<div class="contact-wrap">{left}{right}</div>'
     return chrome(lang, "contact", None, me, f'{t["contact_label"]} — Alexandre K.', t["contact_lead"], body)
@@ -556,7 +590,7 @@ def build_404():
     en = UI["en"]
     body = card(f'<div class="head-c nf"><span class="label"><b>404</b> / not found</span><h1 class="page-title">{t["nf_title"]}</h1>'
                 f'<p class="lead">{t["nf_lead"]}</p><p class="lead" lang="en">{en["nf_lead"]}</p>'
-                f'<div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
+                f'<div class="btn-row center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
                 f'<a class="btn" href="en/index.html" lang="en">{en["nf_home"]}</a>'
                 f'<button class="btn" type="button" data-act="term">{t["nf_term"]}</button><a class="btn" href="jeux.html">{t["nf_game"]}</a></div></div>')
     return chrome("fr", "notfound", None, me, "404 — Alexandre K.", t["nf_lead"], body)
@@ -569,6 +603,7 @@ def seo_files(pages):
     urls = ""
     for page, slug in pages:
         alts = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, page, slug))}"/>' for l in ("fr", "en"))
+        alts += f'<xhtml:link rel="alternate" hreflang="x-default" href="{abs_url(out_path("fr", page, slug))}"/>'
         urls += "".join(f"<url><loc>{abs_url(out_path(l, page, slug))}</loc>{alts}</url>\n" for l in ("fr", "en"))
     sitemap = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
                f'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n{urls}</urlset>\n')
