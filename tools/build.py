@@ -249,7 +249,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
         "pages": [{"t": label, "u": r(k), "i": PAGE_NUM[k], "k": TERM_NAMES[k], "d": descs[k]} for k, label, _ in pages],
         "projects": [{"t": p[lang]["title"], "u": r("detail", p["slug"]), "k": t["kinds"][p["kind"]], "s": p["slug"], "d": p[lang]["short"]} for p in PROJECTS],
         "links": [{"t": "GitHub", "u": GITHUB}, {"t": "LinkedIn", "u": LINKEDIN}, {"t": t["source"], "u": SITE_REPO}],
-        "langUrl": rel(me, out_path(other, lp, slug)), "cvUrl": rel(me, out_path(lang, "contact")) + "?cv=1#contact-form",
+        "gh": GITHUB, "langUrl": rel(me, out_path(other, lp, slug)), "cvUrl": rel(me, out_path(lang, "contact")) + "?cv=1#contact-form",
         "l": {"pages": t["pal_pages"], "projects": t["pal_projects"], "actions": t["pal_actions"], "links": t["pal_links"],
               "theme": t["pal_theme"], "lang": t["pal_lang"], "accent": t["pal_accent"], "accents": t["accent_names"], "empty": t["pal_empty"],
               "term": t["pal_term"], "motion": t["pal_motion"], "music": t["pal_music"], "cv": t["cv_ask"]},
