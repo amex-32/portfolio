@@ -200,7 +200,7 @@
       },
       cd: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); location.href = p.u; },
       cat: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); print(p.d); },
-      pwd: function () { print('~/amex' + location.pathname.replace(/\.html$/, '').replace(/\/$/, '')); },
+      pwd: function () { print('~/amex' + location.pathname.replace(/(\/index)?(\.html)?\/?$/, '')); },
       tree: function () {
         var lines = ['~/amex'];
         data.pages.forEach(function (q, i, all) {
