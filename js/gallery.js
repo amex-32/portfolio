@@ -37,7 +37,7 @@
   // deux calques de fond : le nouveau apparaît pendant que l'ancien s'efface (fondu enchaîné)
   var setBg = function (it) {
     if (!it) return;
-    var url = 'url("' + $('img', it).src + '")';
+    var url = 'url("' + it.dataset.bg + '")';
     if (bgs[front].style.backgroundImage === url) return;
     front = 1 - front;
     bgs[front].style.backgroundImage = url;

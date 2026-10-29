@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Génère og.png (aperçu des liens partagés), favicon.ico, apple-touch-icon.png et img/bg-blur.webp (fond déjà flouté) : python3 tools/images.py
+"""Génère og.png (aperçu des liens partagés), favicon.ico, apple-touch-icon.png, img/bg-blur.webp (fond déjà flouté)
+et les fonds flous de la galerie (img/gallery/*-bg.webp) : python3 tools/images.py
 
 À relancer seulement si le visuel change. Demande Pillow et une police grasse (FONT_BOLD) et une police à chasse fixe (FONT_MONO).
 """
@@ -61,7 +62,16 @@ def bg_blur():
     return img.crop((24, 14, img.width - 24, img.height - 14))  # bords bavés du flou retirés, comme le scale(1.08) d'avant
 
 
+def gallery_bgs():
+    """Fonds de la galerie floutés d'avance (petites images que le navigateur agrandit) : plus de filter: blur() animé en fondu."""
+    for thumb in sorted((ROOT / "img/gallery").glob("*-thumb.webp")):
+        img = Image.open(thumb).convert("RGB").resize((96, 96), Image.LANCZOS)
+        img = ImageEnhance.Color(img.filter(ImageFilter.GaussianBlur(2.5))).enhance(1.25)
+        img.save(thumb.with_name(thumb.name.replace("-thumb", "-bg")), quality=70)
+
+
 if __name__ == "__main__":
+    gallery_bgs()
     bg_blur().save(ROOT / "img/bg-blur.webp", quality=80)
     og_card("Alexandre K.", "Étudiant en cybersécurité · Portfolio").save(ROOT / "og.png", optimize=True)
     monogram(180).save(ROOT / "apple-touch-icon.png", optimize=True)

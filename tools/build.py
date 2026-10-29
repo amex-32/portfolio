@@ -410,7 +410,7 @@ def build_home(lang):
     work = {w["slug"]: w for w in GALLERY}
     gtiles = "".join(f'<img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" {dims(f"img/gallery/{s}-thumb.webp")} alt="{esc(work[s][lang])}" loading="lazy" decoding="async">' for s in HOME_GALLERY)
     gtags = "".join(f"<span>{x}</span>" for x in t["series"].values())
-    gallery_slide = f'''<div class="slide pj gl" aria-hidden="true"><div class="gl-bg" style="background-image:url('{rel(me, f"img/gallery/{HOME_GALLERY[0]}-thumb.webp")}')"></div><div class="shade"></div><div class="gl-tiles" aria-hidden="true">{gtiles}</div><div class="inner">
+    gallery_slide = f'''<div class="slide pj gl" aria-hidden="true"><div class="gl-bg" style="background-image:url('{rel(me, f"img/gallery/{HOME_GALLERY[0]}-bg.webp")}')"></div><div class="shade"></div><div class="gl-tiles" aria-hidden="true">{gtiles}</div><div class="inner">
       <span class="pill">{t["featured"]} · {re.sub(r"<[^>]+>", "", t["gal_title"])}</span><h2>{t["gal_title"].replace("<em>", "").replace("</em>", "")}</h2>
       <div class="tags">{gtags}</div><p>{t["gal_lead"]}</p>
       <div class="btn-row"><a class="btn btn-primary" href="{r("gallery")}">{ico("play", 16)} {t["ext_gallery"]}</a></div></div></div>'''
@@ -523,7 +523,7 @@ def build_gallery(lang):
     series = list(dict.fromkeys(w["series"] for w in GALLERY))
     count = {s: sum(w["series"] == s for w in GALLERY) for s in series}
     items = "".join(
-        f'<button class="gal-item" type="button" data-i="{i}" data-s="{w["series"]}" data-full="{img(w["slug"] + "." + w.get("ext", "webp"))}">'
+        f'<button class="gal-item" type="button" data-i="{i}" data-s="{w["series"]}" data-full="{img(w["slug"] + "." + w.get("ext", "webp"))}" data-bg="{img(w["slug"] + "-bg.webp")}">'
         f'<img src="{img(w["slug"] + "-thumb.webp")}" {dims("img/gallery/" + w["slug"] + "-thumb.webp")} alt="{esc(w[lang])}" loading="lazy" decoding="async"><span><b>{esc(w[lang])}</b><small>{when(w["date"])}</small></span></button>'
         for i, w in enumerate(GALLERY))
     albums = "".join(
