@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Génère og.png (aperçu des liens partagés), favicon.ico et apple-touch-icon.png : python3 tools/images.py
+"""Génère og.png (aperçu des liens partagés), favicon.ico, apple-touch-icon.png, img/bg-blur.webp (fond déjà flouté)
+et le fond flou de la diapositive galerie (img/gallery/*-bg.webp) : python3 tools/images.py
 
 À relancer seulement si le visuel change. Demande Pillow et une police grasse (FONT_BOLD) et une police à chasse fixe (FONT_MONO).
 """
 import pathlib
 import sys
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FONT_BOLD = sys.argv[1] if len(sys.argv) > 1 else "C:/Windows/Fonts/segoeuib.ttf"
@@ -54,7 +55,26 @@ def og_card(title, sub="Alexandre K. · Portfolio"):
     return og
 
 
+def bg_blur():
+    """Fond du site flouté une fois pour toutes : un filter: blur() sur un calque plein écran coûte à chaque image dans Firefox."""
+    img = Image.open(ROOT / "img/bg.webp").convert("RGB")
+    img = ImageEnhance.Color(img.filter(ImageFilter.GaussianBlur(12))).enhance(1.1)
+    return img.crop((24, 14, img.width - 24, img.height - 14))  # bords bavés du flou retirés, comme le scale(1.08) d'avant
+
+
+def gallery_bgs():
+    """Fond flou de la diapositive galerie de l'accueil, flouté d'avance (petite image que le navigateur agrandit)."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from content import HOME_GALLERY
+    for thumb in (ROOT / f"img/gallery/{HOME_GALLERY[0]}-thumb.webp",):
+        img = Image.open(thumb).convert("RGB").resize((96, 96), Image.LANCZOS)
+        img = ImageEnhance.Color(img.filter(ImageFilter.GaussianBlur(2.5))).enhance(1.25)
+        img.save(thumb.with_name(thumb.name.replace("-thumb", "-bg")), quality=70)
+
+
 if __name__ == "__main__":
+    gallery_bgs()
+    bg_blur().save(ROOT / "img/bg-blur.webp", quality=80)
     og_card("Alexandre K.", "Étudiant en cybersécurité · Portfolio").save(ROOT / "og.png", optimize=True)
     monogram(180).save(ROOT / "apple-touch-icon.png", optimize=True)
     monogram(64).save(ROOT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])

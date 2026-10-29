@@ -42,6 +42,33 @@
       el.style.setProperty('--my', (pe.clientY - r.top) + 'px');
     });
   });
+  // défilement amorti à la molette dans Firefox : ses crans saccadés deviennent un glissé continu (Chrome est déjà fluide)
+  // laisse faire le navigateur pour le zoom (Ctrl), le défilement horizontal, les zones qui défilent elles-mêmes et quand les animations sont coupées
+  if ('MozAppearance' in root.style && !reduce) (function () {
+    var target = scrollY, y = scrollY, raf = 0;
+    var inner = function (el, dy) {
+      for (; el && el !== document.body && el !== root; el = el.parentElement) {
+        var o = getComputedStyle(el).overflowY;
+        if ((o === 'auto' || o === 'scroll') && el.scrollHeight > el.clientHeight &&
+            (dy < 0 ? el.scrollTop > 0 : el.scrollTop + el.clientHeight < el.scrollHeight)) return true;
+      }
+      return false;
+    };
+    var step = function () {
+      y += (target - y) * .14;
+      if (Math.abs(target - y) < .5) y = target;
+      scrollTo({ top: y, behavior: 'instant' });
+      raf = y === target ? 0 : requestAnimationFrame(step);
+    };
+    addEventListener('wheel', function (e) {
+      if (e.ctrlKey || e.defaultPrevented || root.dataset.motion === 'off' || Math.abs(e.deltaX) > Math.abs(e.deltaY) || inner(e.target, e.deltaY)) return;
+      e.preventDefault();
+      if (!raf) target = y = scrollY; // repart d'où la page est (barre de défilement, clavier, ancre)
+      var d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
+      target = Math.max(0, Math.min(root.scrollHeight - innerHeight, target + d));
+      if (!raf) raf = requestAnimationFrame(step);
+    }, { passive: false });
+  })();
   var found = function (n) { try { if (n != null) localStorage.setItem('ak-found', n); return +localStorage.getItem('ak-found') || 0; } catch (e) { return n || 0; } };
   function nowTick() { // pastille du bouton terminal : au chargement, à chaque flag trouvé et quand un autre onglet en trouve un
     var f = found(), fab = $('.tty-fab');

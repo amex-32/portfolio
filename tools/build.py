@@ -410,7 +410,7 @@ def build_home(lang):
     work = {w["slug"]: w for w in GALLERY}
     gtiles = "".join(f'<img src="{rel(me, f"img/gallery/{s}-thumb.webp")}" {dims(f"img/gallery/{s}-thumb.webp")} alt="{esc(work[s][lang])}" loading="lazy" decoding="async">' for s in HOME_GALLERY)
     gtags = "".join(f"<span>{x}</span>" for x in t["series"].values())
-    gallery_slide = f'''<div class="slide pj gl" aria-hidden="true"><div class="gl-bg" style="background-image:url('{rel(me, f"img/gallery/{HOME_GALLERY[0]}-thumb.webp")}')"></div><div class="shade"></div><div class="gl-tiles" aria-hidden="true">{gtiles}</div><div class="inner">
+    gallery_slide = f'''<div class="slide pj gl" aria-hidden="true"><div class="gl-bg" style="background-image:url('{rel(me, f"img/gallery/{HOME_GALLERY[0]}-bg.webp")}')"></div><div class="shade"></div><div class="gl-tiles" aria-hidden="true">{gtiles}</div><div class="inner">
       <span class="pill">{t["featured"]} · {re.sub(r"<[^>]+>", "", t["gal_title"])}</span><h2>{t["gal_title"].replace("<em>", "").replace("</em>", "")}</h2>
       <div class="tags">{gtags}</div><p>{t["gal_lead"]}</p>
       <div class="btn-row"><a class="btn btn-primary" href="{r("gallery")}">{ico("play", 16)} {t["ext_gallery"]}</a></div></div></div>'''
@@ -533,8 +533,7 @@ def build_gallery(lang):
     time = "".join(f'<button type="button" role="tab" data-s="{s}" aria-selected="false">{t["series"][s]} <small>{count[s]}</small></button>' for s in series)
     views = "".join(f'<button type="button" data-view="{v}" aria-pressed="false">{label}</button>' for v, label in t["gal_views"].items())
     crumbs = f'<a href="{rel(me, out_path(lang, "about"))}">{t["nav"][3]}</a></span><span>/</span><span>{re.sub(r"<[^>]+>", "", t["gal_title"])}'
-    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<div class="gal-bg" aria-hidden="true"></div><div class="gal-bg" aria-hidden="true"></div>
-      <aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
+    body = head_c(lang, me, crumbs, t["gal_title"], t["gal_lead"]) + card(f'''<aside class="gal-side"><div class="gal-stat"><b>{len(GALLERY)}</b><span>{t["gal_works"]}</span></div><div class="gal-stat"><b>{len(series)}</b><span>{t["gal_series_h"]}</span></div>
         <h4>{t["gal_view_h"]}</h4><div class="gal-views" role="group" aria-label="{t["gal_view_h"]}">{views}</div></aside>
       <div class="gal-main"><div class="gal-head"><h2 class="gal-name"></h2><small class="gal-count" data-unit="{t["gal_works"]}"></small></div>
         <div class="gal-stage" data-view="scatter">{items}</div><div class="gal-albums">{albums}</div>
