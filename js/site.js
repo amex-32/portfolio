@@ -385,7 +385,7 @@
     for (var i = 0; i < cols; i++) y[i] = Math.random() * -40;
     var t = setInterval(function () {
       g.fillStyle = 'rgba(0,0,0,.08)'; g.fillRect(0, 0, c.width, c.height);
-      g.fillStyle = '#3ddc84'; g.font = '15px monospace';
+      g.fillStyle = '#c6ff3d'; g.font = '15px monospace';
       for (var i = 0; i < cols; i++) {
         g.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, y[i] * 16);
         y[i] = y[i] * 16 > c.height && Math.random() > .975 ? 0 : y[i] + 1;

@@ -11,7 +11,7 @@
     play: 'Play a game to save a score.', yours: 'Your score', saved: 'Saved. Your best: ', error: 'Leaderboard unavailable.',
     rule: '2 to 16 characters: letters, digits, _ or -.', pts: 'pts', moves: 'moves', tries: 'tries', low: 'Lower is better.'
   };
-  var UNIT = { '2048': TX.pts, snake: TX.pts, memory: TX.moves, code: TX.tries, cipher: TX.pts };
+  var UNIT = { '2048': TX.pts, memory: TX.moves, code: TX.tries, cipher: TX.pts };
   var LOW = ['memory', 'code'];
   var candidate = {}; // meilleur score de la session, par jeu
   var boards = {};

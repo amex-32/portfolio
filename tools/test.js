@@ -1,12 +1,12 @@
 // Vérifie la logique pure des mini-jeux : node tools/test.js
 const assert = require('assert');
-const { feedback, shuffle, secretCode, nextHead, caesar } = require('../js/games.js');
+const { marks, shuffle, secretCode, caesar } = require('../js/games.js');
 
-assert.deepStrictEqual(feedback('1234', '1234'), { hit: 4, near: 0 });
-assert.deepStrictEqual(feedback('1234', '4321'), { hit: 0, near: 4 });
-assert.deepStrictEqual(feedback('1234', '1567'), { hit: 1, near: 0 });
-assert.deepStrictEqual(feedback('1234', '5678'), { hit: 0, near: 0 });
-assert.deepStrictEqual(feedback('1234', '1243'), { hit: 2, near: 2 });
+assert.deepStrictEqual(marks('1234', '1234'), ['hit', 'hit', 'hit', 'hit']);
+assert.deepStrictEqual(marks('1234', '4321'), ['near', 'near', 'near', 'near']);
+assert.deepStrictEqual(marks('1234', '1567'), ['hit', 'miss', 'miss', 'miss']);
+assert.deepStrictEqual(marks('1234', '5678'), ['miss', 'miss', 'miss', 'miss']);
+assert.deepStrictEqual(marks('1234', '1243'), ['hit', 'hit', 'near', 'near']);
 
 const s = shuffle([1, 2, 3, 4, 5], Math.random);
 assert.deepStrictEqual(s.slice().sort(), [1, 2, 3, 4, 5]);
@@ -14,8 +14,6 @@ for (let i = 0; i < 200; i++) {
   const c = secretCode(Math.random);
   assert(/^\d{4}$/.test(c) && new Set(c).size === 4, c);
 }
-assert.deepStrictEqual(nextHead({ x: 17, y: 0 }, { x: 1, y: 0 }, 18), { x: 0, y: 0 });
-assert.deepStrictEqual(nextHead({ x: 0, y: 0 }, { x: 0, y: -1 }, 18), { x: 0, y: 17 });
 assert.strictEqual(caesar('PARE FEU', 3), 'SDUH IHX');
 assert.strictEqual(caesar('XYZ', 3), 'ABC');
 assert.strictEqual(caesar(caesar('MOT DE PASSE', 11), -11), 'MOT DE PASSE');

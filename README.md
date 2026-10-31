@@ -13,9 +13,11 @@ python3 -m http.server   # puis http://localhost:8000
 
 - `tools/build.py` : gabarits des pages, plus `404.html`, `robots.txt`, `sitemap.xml` et `.well-known/security.txt` ; `tools/content.py` : textes FR/EN, projets, write-ups, icônes
 - `style.css`, `js/site.js` : styles et interactions (palette ⌘K, terminal `²` ou `` ` ``, carrousel, thème, accent)
-- `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Snake, Memory, Code Breaker, César
+- `src/psp3d.js` : console 3D de la page 404. `js/psp3d.js` en est le bundle : `NODE_PATH=<dossier avec three@0.170.0> esbuild src/psp3d.js --bundle --minify --format=iife --outfile=js/psp3d.js`. `model/psp.glb` vient de `tools/psp_model.py` (modèle d'Ilya Ostrovsky, CC BY 4.0)
+- `tools/serve.py` : serveur local, renvoie `404.html` comme Vercel
+- `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Memory, Code Breaker, César
 - `src/trees.json` : arborescences affichées sur les pages projet
-- `api/scores.js` : classements des 5 jeux, une base MySQL par jeu (`game_2048`, `game_snake`, `game_memory`, `game_code`, `game_cipher`) ; `js/scores.js` : l'interface
+- `api/scores.js` : classements des 4 jeux, une base MySQL par jeu (`game_2048`, `game_memory`, `game_code`, `game_cipher`) ; `js/scores.js` : l'interface
 - `tools/shots.py` : convertit les captures de projets `img/*.jpg` en WebP (1600 px et `-800`)
 - `fonts/` : Inter, JetBrains Mono et Space Grotesk (sous-ensemble latin, servies par le site)
 - `tools/images.py` : génère `og.png` (aperçu des liens partagés), `favicon.ico` et `apple-touch-icon.png` (Pillow) ; `favicon.svg` est écrit à la main
