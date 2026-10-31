@@ -208,7 +208,10 @@ h2 { font: 400 clamp(22px, 2.8vw, 33px)/1.15 var(--display); margin-bottom: 8px;
 .term pre { padding: 12px 14px 16px; white-space: pre; overflow-x: auto; }
 .term .p { color: var(--fill); } .term .k { color: #e8e8e2; } .term .c { color: #8c8c8c; }
 .term .line { opacity: 0; animation: reveal .01s forwards; }
-.term .cursor { display: inline-block; width: 8px; height: 15px; margin-left: 2px; vertical-align: -2px; background: var(--fill); animation: blink 1s steps(1) infinite; }
+.hero-tty { cursor: text; }
+.hero-tty .tty-out { flex: none; height: 17.5em; min-height: 0; padding-bottom: 0; }
+.hero-tty pre { padding: 0; white-space: pre-wrap; }
+.hero-tty .tty-in input::placeholder { color: #8c8c8c; }
 @keyframes reveal { to { opacity: 1; } } @keyframes blink { 50% { opacity: 0; } }
 .term pre.tree { font-size: 12.5px; line-height: 1.6; }
 
@@ -440,7 +443,7 @@ body:has(.nf) .label b, .nf .page-title em { color: var(--alert-text); }
   html { scroll-behavior: auto; }
   .fadein:not(.show) { opacity: 1; }
   .fadein.show, .fadein.show > *, .slide.on, .gp.on, .toast.on, .drop.open, .pal-bg.open .pal, .tty-bg.open .tty, .hud-breach .band, .hud-ticker span { animation: none; }
-  .term .line { animation: none; opacity: 1; } .term .cursor, .dot, .bell i, .urlbar .path b::after, .hud-radar svg .red, .nf-code::before, .nf-code::after { animation: none; }
+  .term .line { animation: none; opacity: 1; } .dot, .bell i, .urlbar .path b::after, .hud-radar svg .red, .nf-code::before, .nf-code::after { animation: none; }
   .g2048-tile, .g2048-tile.merged { animation: none; }
 }
 html[data-motion="off"] .fadein:not(.show) { opacity: 1; }
@@ -461,7 +464,6 @@ html[data-motion="off"] .fadein:not(.show) { opacity: 1; }
   .home .slide.intro h1 { font-size: clamp(26px, 2.5vw, 40px); margin-bottom: 10px; }
   .home .slide.intro p { font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
   .home .slide.intro .term { font-size: 12px; line-height: 1.45; }
-  .home .slide.intro .term pre { padding: 8px 12px 10px; }
   .home .hero .dots { bottom: 22px; left: 24px; }
   .home .card:has(> .proj-grid) { padding: 10px 12px; }
   .home .card-h { margin-bottom: 8px; padding-bottom: 6px; }

@@ -201,7 +201,7 @@
   // ---------- terminal : navigation au clavier et soumission des flags ----------
   var tty = $('.tty-bg'), openTty = function () {};
   if (tty && data) {
-    var out = $('.tty-out', tty), cli = $('input', tty), hist = [], hi = 0, PSEUDO = /^[A-Za-z0-9_-]{2,16}$/;
+    var ttyIn = $('input', tty), out = $('.tty-out', tty), cli = ttyIn, use, hist = [], hi = 0, PSEUDO = /^[A-Za-z0-9_-]{2,16}$/;
     var en = root.lang === 'en';
     var TT = en ? {
       hello: ['amex@portfolio, tty1', 'Type help to see the commands.'], nohist: 'no history yet', unknown: 'command not found: ', nofile: 'no such page: ',
@@ -261,7 +261,7 @@
     // dossier caché, visible seulement avec ls -a
     var FILES = { '.notes': TT.notes, '.vault/README': TT.readme, '.vault/session.log': TT.log }, vault = false;
     var here = function () { return '~/amex' + (vault ? '/.vault' : location.pathname.replace(/(\/index)?(\.html)?\/?$/, '')); };
-    var prompt = function () { $('.tty-in .p', tty).textContent = here() + ' $'; $('.term-bar em', tty).textContent = 'amex@portfolio: ' + here(); };
+    var prompt = function () { $$('.tty-in .p').forEach(function (p) { p.textContent = here() + ' $'; }); $('.term-bar em', tty).textContent = 'amex@portfolio: ' + here(); };
     var file = function (a) { a = (a || '').replace(/^(\.\/|~\/)/, ''); return FILES[(vault ? '.vault/' : '') + a] || FILES[a]; };
     var find = function (x) {
       x = (x || '').toLowerCase().replace(/\/+$/, '');
@@ -396,9 +396,8 @@
     openTty = function () {
       if (bg) bg.classList.remove('open');
       tty.classList.add('open');
+      use(ttyIn); ttyIn.focus();
       if (!out.childNodes.length) { print(TT.hello[0], 'ok'); print(TT.hello[1], 'dim'); }
-      prompt();
-      cli.focus();
     };
     // Tab : complète la commande, ou la page / le projet après cd, ls, cat ; Tab répété = candidat suivant
     var tab = null;
@@ -415,14 +414,20 @@
       cli.value = tab.base + tab.hits[tab.i];
     };
     var closeTty = function () { tty.classList.remove('open'); cli.blur(); };
-    cli.addEventListener('keydown', function (e) {
+    // même moteur pour la fenêtre et le terminal de l'accueil : le champ qui a le focus reçoit les réponses
+    use = function (field) { if (field !== cli) tab = null; cli = field; out = $('.tty-out', field.closest('.term')); prompt(); };
+    $$('.tty-in input').forEach(function (field) { field.addEventListener('focus', function () { use(field); }); });
+    var heroTty = $('.hero-tty');
+    if (heroTty) heroTty.addEventListener('click', function () { if (!String(getSelection())) $('input', heroTty).focus(); });
+    $$('.tty-in input').forEach(function (field) { field.addEventListener('keydown', function (e) {
+      if (field !== cli) use(field); // une fenêtre sans focus ne déclenche pas toujours focus
       if (e.key === 'Enter') { tab = null; var v = cli.value; cli.value = ''; if (v.trim() && !/^\s*login/i.test(v)) { hist.push(v); hi = hist.length; } exec(v); }
       else if (e.key === 'ArrowUp' && hi > 0) { cli.value = hist[--hi]; e.preventDefault(); }
       else if (e.key === 'ArrowDown') { hi = Math.min(hist.length, hi + 1); cli.value = hist[hi] || ''; e.preventDefault(); }
       else if (e.key === 'Escape') closeTty();
       else if (e.key === 'Tab') { e.preventDefault(); complete(); }
       else if (!e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) tab = null;
-    });
+    }); });
     $('.tty-x', tty).addEventListener('click', closeTty);
     tty.addEventListener('click', function (e) { if (e.target === tty) closeTty(); });
     $$('[data-act="term"]').forEach(function (b) { b.addEventListener('click', openTty); });

@@ -391,14 +391,13 @@ def build_home(lang):
     t, me = UI[lang], out_path(lang, "home")
     r = lambda p, s=None: rel(me, out_path(lang, p, s))
     lines = ""
-    for n, (cls, txt) in enumerate(t["term"]):
+    for n, (cls, txt) in enumerate(t["term"][:-1]):  # la dernière invite est le vrai champ de saisie
         txt = f'<span class="p">$</span> {esc(txt)}' if cls == "p" else (f'<span class="{cls}">{esc(txt)}</span>' if cls else esc(txt))
-        tail = '<span class="cursor"></span>' if n == len(t["term"]) - 1 else ""
-        lines += f'<span class="line" style="animation-delay:{.3 + n * .35:.2f}s">{txt}{tail}</span>\n'
+        lines += f'<span class="line" style="animation-delay:{.3 + n * .35:.2f}s">{txt}</span>\n'
     intro = f'''<div class="slide intro on">
       <div><span class="label"><b>00</b> / {t["welcome"]}</span><h1>{t["h1"]}</h1><p>{t["bio"]}</p>
         <div class="btn-row"><a class="btn btn-primary" href="{r("list")}">{t["cta_projects"]}</a><a class="btn" href="{r("contact")}">{t["cta_contact"]}</a></div></div>
-      <div class="term" aria-hidden="true"><div class="term-bar"><span></span><span></span><span></span><em>amex@kali: ~</em></div><pre>{lines}</pre></div>
+      <div class="term hero-tty"><div class="term-bar"><span></span><span></span><span></span><em>amex@kali: ~</em></div><div class="tty-out" aria-live="polite"><pre>{lines}</pre></div><label class="tty-in"><span class="p">$</span><input type="text" placeholder="help" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div>
     </div>'''
     # carrousel : présentation, galerie, puis les projets choisis dans HOME_PROJECTS (les autres restent sur la page Projets)
     shown = [p for p in PROJECTS if p["slug"] in HOME_PROJECTS]

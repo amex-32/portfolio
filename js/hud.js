@@ -210,10 +210,10 @@
       } }, .78)
       .to(o, { autoAlpha: 0, duration: .1, ease: 'steps(2)' });
   }
-  var out = $('.tty-out');
-  if (out) new MutationObserver(function (ms) { // la commande sudo annonce déjà un incident : on le met en scène
+  var incident = new MutationObserver(function (ms) { // la commande sudo annonce déjà un incident : on le met en scène
     ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.className === 'err' && /sudoers/.test(n.textContent)) { $('.tty-x').click(); breach(); } }); });
-  }).observe(out, { childList: true });
+  });
+  $$('.tty-out').forEach(function (out) { incident.observe(out, { childList: true }); });
 
   // ---------- navigation vivante : les lettres se décodent, cassent, se reconstruisent ----------
   function letters() {
