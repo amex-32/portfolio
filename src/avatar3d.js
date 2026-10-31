@@ -15,7 +15,7 @@ const TONE = `
 window.akAvatar = function (box, o) {
   let gl;
   try { gl = new WebGLRenderer({ antialias: false, alpha: true }); } catch (e) { box.hidden = true; return; }
-  gl.setPixelRatio(.75); // gros pixels, agrandis nets par le CSS
+  gl.setPixelRatio(1); // pixels nets d'un point CSS, quelle que soit la densité de l'écran
   const scene = new Scene(), camera = new PerspectiveCamera(20, 1, .1, 50), pivot = new Group();
   const uFill = { value: new Color() };
   const accent = () => uFill.value.set(getComputedStyle(document.documentElement).getPropertyValue('--fill').trim()).convertLinearToSRGB();
