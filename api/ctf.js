@@ -1,6 +1,6 @@
 // Mini-CTF : 6 flags cachés dans le site, un classement par nombre de flags trouvés.
 // GET  /api/ctf                -> { rows: [{ pseudo, found }], total: 6 }
-// POST /api/ctf {pseudo, flag} -> { ok: true, found, total, already } ou 400 { error }
+// POST /api/ctf {pseudo, flag} -> { ok: true, flag, found, total, already } ou 400 { error }
 const crypto = require('crypto');
 const { PSEUDO } = require('./scores.js');
 const { db, ensure, tooFast } = require('./_lib.js');
@@ -48,7 +48,7 @@ async function handler(req, res) {
       await schema();
       const [r] = await db().execute('INSERT IGNORE INTO game_ctf.found (pseudo, flag) VALUES (?, ?)', [body.pseudo, i]);
       const [[row]] = await db().execute('SELECT COUNT(*) AS n FROM game_ctf.found WHERE pseudo = ?', [body.pseudo]);
-      return res.status(200).json({ ok: true, found: Number(row.n), total: HASHES.length, already: r.affectedRows === 0 });
+      return res.status(200).json({ ok: true, flag: i, found: Number(row.n), total: HASHES.length, already: r.affectedRows === 0 });
     }
     res.setHeader('Allow', 'GET, POST');
     return res.status(405).json({ error: 'méthode non autorisée' });

@@ -397,7 +397,7 @@ UI2 = {
         "ci_shift": "Décalage", "ci_ok": "Valider",
         "ctf_h": "Mini-CTF",
         "ctf_p": "Six flags au format FLAG{…} sont cachés dans ce site. Trouve-les, puis soumets-les dans le terminal : tape <code>pseudo ton_pseudo</code>, puis <code>flag FLAG{…}</code>.",
-        "ctf_hints": ["Le code source de l'accueil a un secret.", "Les en-têtes HTTP parlent plus qu'on ne croit.", "Les robots savent des choses (et le base64 aussi).", "La console du navigateur, en ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A", "Une œuvre de la galerie en dit plus qu'elle n'en montre (métadonnées)."],
+        "ctf_tease": "Tape <code>ctf</code> pour voir les verrous, et <code>hint 1</code> quand tu bloques : chaque appel en dit un peu plus. Tout commence par ce que la page ne montre pas.",
         "ctf_open": "Ouvrir le terminal",
         "ext_h": "En dehors du code",
         "ext_lead": "Quand je ne suis pas devant un terminal, qu'est-ce que je fais ?",
@@ -453,7 +453,7 @@ UI2 = {
         "ci_shift": "Shift", "ci_ok": "Submit",
         "ctf_h": "Mini-CTF",
         "ctf_p": "Six flags in the FLAG{…} format are hidden in this site. Find them, then submit them in the terminal: type <code>pseudo your_name</code>, then <code>flag FLAG{…}</code>.",
-        "ctf_hints": ["The home page source code has a secret.", "HTTP headers say more than you think.", "Robots know things (and so does base64).", "The browser console, in ROT13.", "↑ ↑ ↓ ↓ ← → ← → B A", "One artwork in the gallery says more than it shows (metadata)."],
+        "ctf_tease": "Type <code>ctf</code> to see the locks, and <code>hint 1</code> when you are stuck: each call says a little more. It all starts with what the page does not show.",
         "ctf_open": "Open the terminal",
         "ext_h": "Away from the code",
         "ext_lead": "When I'm not in front of a terminal, what do I do?",
@@ -611,7 +611,7 @@ WRITEUPS = [
                     "La limite de débit est propre à chaque instance serverless. Elle suffit contre le spam simple ; au-delà, il faudrait une règle dans le pare-feu de l'hébergeur."]),
                 ("5. Vérifier", [
                     "<code>curl -I</code> sur la page d'accueil affiche tous les en-têtes. En parcourant le site, la console du navigateur ne doit montrer aucune violation de CSP.",
-                    "Et pour t'entraîner : six flags sont cachés dans ce site. L'onglet CTF de la page Jeux donne les indices."]),
+                    "Et pour t'entraîner : six flags sont cachés dans ce site. Ouvre le terminal et tape ctf pour commencer."]),
             ],
         },
         "en": {
@@ -638,7 +638,7 @@ WRITEUPS = [
                     "Rate limiting is per serverless instance. It is enough against simple spam; beyond that, it would take a rule in the host's firewall."]),
                 ("5. Checking", [
                     "<code>curl -I</code> on the home page shows every header. While browsing the site, the browser console should show no CSP violation.",
-                    "And to practise: six flags are hidden in this site. The CTF tab on the Games page gives the hints."]),
+                    "And to practise: six flags are hidden in this site. Open the terminal and type ctf to start."]),
             ],
         },
     },

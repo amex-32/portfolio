@@ -29,7 +29,7 @@ Pour afficher une adresse e-mail ou activer le formulaire de contact, renseigner
 
 ## Mini-CTF
 
-Six flags sont cachés dans le site ; ils se soumettent dans le terminal (`pseudo …` puis `flag FLAG{…}`). Les flags en clair sont dans `tools/ctf.json` (non déployé) ; `api/ctf.js` ne garde que leurs empreintes SHA-256 et enregistre les flags trouvés dans la base `game_ctf`. Pour changer un flag : `tools/ctf.json`, l'empreinte dans `api/ctf.js`, et sa cachette (`vercel.json` ou `js/site.js` pour les flags 2, 4 et 5 ; commentaire JPEG de `img/gallery/clive-mugshot.jpg` pour le 6). `node tools/test.js` vérifie que chaque flag est à sa place et n'apparaît nulle part ailleurs.
+Six flags sont cachés dans le site ; ils se soumettent dans le terminal (`pseudo …` puis `flag FLAG{…}`). La commande `ctf` affiche les verrous, `hint <n>` révèle trois paliers d'indices par verrou, et `ls -a` montre des fichiers cachés. Les flags en clair sont dans `tools/ctf.json` (non déployé) ; `api/ctf.js` ne garde que leurs empreintes SHA-256 et enregistre les flags trouvés dans la base `game_ctf`. Pour changer un flag : `tools/ctf.json`, l'empreinte dans `api/ctf.js`, et sa cachette (`vercel.json` ou `js/site.js` pour les flags 2, 4 et 5 ; commentaire JPEG de `img/gallery/clive-mugshot.jpg` pour le 6). `node tools/test.js` vérifie que chaque flag est à sa place et n'apparaît nulle part ailleurs.
 
 ## Classements des jeux
 

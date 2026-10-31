@@ -182,7 +182,7 @@ def games_panels(lang):
   <div class="ci-ctl"><button class="round" id="ci-down" type="button" aria-label="−1">◀</button><span>{u["ci_shift"]} <b id="ci-shift">0</b></span><button class="round" id="ci-up" type="button" aria-label="+1">▶</button><button class="xp-btn" id="ci-ok" type="button">{u["ci_ok"]}</button></div>
   <p class="lead help">{u["ci_help"]}</p></div></div><aside class="sb" data-game="cipher"></aside></div></div>
 <div class="gp" id="g-ctf"><div class="cols"><div class="play ctf"><h3>{u["ctf_h"]}</h3><p>{u["ctf_p"]}</p>
-  <ol>{"".join(f"<li>{esc(h)}</li>" for h in u["ctf_hints"])}</ol><button class="btn btn-primary" type="button" data-act="term">{u["ctf_open"]}</button></div><aside class="sb" data-ctf></aside></div></div>'''
+  <p>{u["ctf_tease"]}</p><button class="btn btn-primary" type="button" data-act="term">{u["ctf_open"]}</button></div><aside class="sb" data-ctf></aside></div></div>'''
 
 
 # ---------------------------------------------------------------- briques

@@ -623,10 +623,10 @@ code { font: 500 .9em var(--mono); padding: 1px 5px; background: var(--panel-hi)
 .tty .tty-x { width: 16px; height: 16px; display: grid; place-items: center; padding: 0; font: 500 9px/1 var(--mono); color: #fff; background: var(--alert); border: none; cursor: pointer; }
 .tty .tty-x:hover { color: #0e0e0e; background: var(--fill); }
 .tty-out { flex: 1; min-height: 160px; overflow-y: auto; padding: 12px 14px 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.tty-out .cmd { color: var(--fill); } .tty-out .ok { color: var(--fill); } .tty-out .err { color: #ff4438; }
+.tty-out .cmd { color: var(--fill); } .tty-out .ok { color: var(--fill); } .tty-out .err { color: #ff4438; } .tty-out .dim { color: #8c8c8c; }
 .tty-out a { color: var(--fill); text-decoration: underline; text-underline-offset: 3px; }
 .tty-in { display: flex; align-items: center; gap: 10px; padding: 8px 14px 14px; }
-.tty-in .p { color: var(--fill); }
+.tty-in .p { max-width: 55%; color: var(--fill); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tty-in input { flex: 1; min-width: 0; font: inherit; color: var(--term-text); background: transparent; border: none; outline: none; caret-color: var(--fill); }
 
 /* ---------- Lecteur de musique (dans la barre système) ---------- */

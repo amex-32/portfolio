@@ -196,7 +196,7 @@
 
   // ---------- mini-CTF : un flag pour qui ouvre la console ----------
   console.log('%c amex@portfolio ', 'background:#7cc4ff;color:#0d1726;font-weight:700;border-radius:4px',
-    root.lang === 'en' ? 'Curious? Good. Flag 4/6, in ROT13:' : 'Curieux ? Tant mieux. Flag 4/6, en ROT13 :', 'SYNT{e0g13_1a_gu3_p0af0y3}');
+    root.lang === 'en' ? 'Curious? Good. This one does not read as is:' : 'Curieux ? Tant mieux. Celui-ci ne se lit pas tel quel :', 'SYNT{e0g13_1a_gu3_p0af0y3}');
 
   // ---------- terminal : navigation au clavier et soumission des flags ----------
   var tty = $('.tty-bg'), openTty = function () {};
@@ -204,27 +204,47 @@
     var out = $('.tty-out', tty), cli = $('input', tty), hist = [], hi = 0, PSEUDO = /^[A-Za-z0-9_-]{2,16}$/;
     var en = root.lang === 'en';
     var TT = en ? {
-      hello: 'Type help to see the commands.', nohist: 'no history yet', unknown: 'command not found: ', nofile: 'no such page: ',
-      help: ['help            this list', 'ls [projects]   list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
-        'whoami          who am I', 'github          my GitHub profile', 'ctf             the mini-CTF rules', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
+      hello: ['amex@portfolio, tty1', 'Type help to see the commands.'], nohist: 'no history yet', unknown: 'command not found: ', nofile: 'no such page: ',
+      help: ['help            this list', 'ls [-a] [path]  list the pages (or the projects)', 'cd <page>       go to a page or a project', 'cat <page>      describe a page or a project',
+        'whoami          who am I', 'github          my GitHub profile', 'ctf             the vault: locks and progress', 'hint <n>        one more hint for lock n', 'pseudo <name>   choose your nickname', 'flag <FLAG{…}>  submit a flag (or paste it alone)', 'top             CTF leaderboard',
         'music           my tracks', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · login · logout · theme · clear · exit'],
       whoami: 'Alexandre K., cybersecurity student (Ynov, Sophia Antipolis). Looking for an internship or work-study.',
-      ctf: ['6 flags in the FLAG{…} format are hidden in this site.', '1. The home page source code has a secret.', '2. HTTP headers say more than you think.',
-        '3. Robots know things (and so does base64).', '4. The browser console, in ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. One artwork in the gallery says more than it shows (metadata).',
-        'Then: pseudo <name>, and flag FLAG{…}'],
+      vault: 'THE VAULT', opened: 'open', shut: 'locked', ctfFoot: 'hint <n> · pseudo <name> · flag FLAG{…} · top', ctfTease: 'It all starts with what the page does not show.',
+      levels: ['easy', 'medium', 'hard'], hintUse: 'usage: hint <1-6>', hintEnd: 'no more hints for this lock.',
+      hints: [
+        ['What your browser displays is not all it received.', 'Developers sometimes leave notes that only the browser reads.', 'View the source of the home page and look for a comment.'],
+        ['A page never travels alone: something arrives before it.', 'It is neither in the HTML nor in the JS. Look at the response, not its content.', 'Network tab of the dev tools, or curl -I: read what the server sends with the document.'],
+        ['Some visitors are not human, and they get instructions.', 'Search engines read one file before anything else, at the root of the site.', 'One line in that file is not meant for robots. Text ending in = can often be decoded.'],
+        ['The site talks, just not to the person looking at the page.', 'Developers have a place where a site writes what it is doing. F12.', 'What you find there is almost readable. Caesar is close: shift by half the alphabet.'],
+        ['Some gestures have been passed down since the 80s.', 'No button here: it happens on the keyboard, on any page.', 'A ten-key cheat code from 1986. What it displays reads backwards.'],
+        ['An image holds more than its pixels.', 'Go to the gallery. One portrait looks guilty of something.', 'A mugshot. Download it, then exiftool or strings.']
+      ],
+      notes: ['todo before prod:', '- strip the comments, they are all still there', '- check what we tell the robots'],
+      readme: ['Nothing to see here.', 'Whoever got this far knows the rest does not show on the page.'],
+      log: ['03:12  GET /wp-admin  404', '03:12  GET /.env  404', '03:14  HEAD /  200  curl/8.5', '03:14  ...and they read every line of the answer.'],
       nowPlaying: 'now playing: ', paused: 'paused.', noTrack: 'no such track: ', pseudoFlag: 'nickname and flag are two commands: pseudo <name>, then flag FLAG{…}',
       pseudoIs: 'nickname: ', noPseudo: 'choose a nickname first: pseudo <name>', badPseudo: '2 to 16 characters: letters, digits, _ or -.',
       usageFlag: 'usage: flag FLAG{…}', bad: 'wrong flag, keep looking.', slow: 'too fast, try again in a few seconds.', err: 'leaderboard unavailable.',
       got: 'correct flag! ', already: 'already found. ', found: ' flags found', all: 'All flags found. Well done!', none: 'no one yet.', sudo: 'amex is not in the sudoers file. This incident will be reported.'
     } : {
-      hello: 'Tape help pour voir les commandes.', nohist: 'historique vide', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
-      help: ['help            cette liste', 'ls [projets]    lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
-        'whoami          qui suis-je', 'github          mon profil GitHub', 'ctf             les règles du mini-CTF', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
+      hello: ['amex@portfolio, tty1', 'Tape help pour voir les commandes.'], nohist: 'historique vide', unknown: 'commande introuvable : ', nofile: 'page introuvable : ',
+      help: ['help            cette liste', 'ls [-a] [dir]   lister les pages (ou les projets)', 'cd <page>       aller sur une page ou un projet', 'cat <page>      décrire une page ou un projet',
+        'whoami          qui suis-je', 'github          mon profil GitHub', 'ctf             le coffre : verrous et progression', 'hint <n>        un indice de plus pour le verrou n', 'pseudo <nom>    choisir ton pseudo', 'flag <FLAG{…}>  soumettre un flag (ou colle-le seul)', 'top             classement du CTF',
         'music           mes morceaux', 'play [n] · pause · next · like · shuffle', 'pwd · tree · echo · date · history · uname · login · logout · theme · clear · exit'],
       whoami: 'Alexandre K., étudiant en cybersécurité (Ynov, Sophia Antipolis). Je cherche un stage ou une alternance.',
-      ctf: ['6 flags au format FLAG{…} sont cachés dans ce site.', '1. Le code source de l\'accueil a un secret.', '2. Les en-têtes HTTP parlent plus qu\'on ne croit.',
-        '3. Les robots savent des choses (et le base64 aussi).', '4. La console du navigateur, en ROT13.', '5. ↑ ↑ ↓ ↓ ← → ← → B A', '6. Une œuvre de la galerie en dit plus qu\'elle n\'en montre (métadonnées).',
-        'Ensuite : pseudo <nom>, puis flag FLAG{…}'],
+      vault: 'LE COFFRE', opened: 'ouvert', shut: 'fermé', ctfFoot: 'hint <n> · pseudo <nom> · flag FLAG{…} · top', ctfTease: 'Tout commence par ce que la page ne montre pas.',
+      levels: ['facile', 'moyen', 'dur'], hintUse: 'usage : hint <1-6>', hintEnd: 'plus d\'indice pour ce verrou.',
+      hints: [
+        ['Ce que ton navigateur affiche n\'est pas tout ce qu\'il a reçu.', 'Les développeurs laissent parfois des notes que seul le navigateur lit.', 'Affiche le code source de l\'accueil et cherche un commentaire.'],
+        ['Une page ne voyage jamais seule : quelque chose arrive avant elle.', 'Ce n\'est ni dans le HTML ni dans le JS. Regarde la réponse, pas son contenu.', 'Onglet Réseau des outils de développement, ou curl -I : lis ce que le serveur envoie avec le document.'],
+        ['Certains visiteurs ne sont pas humains, et on leur laisse des consignes.', 'Les moteurs de recherche lisent un fichier avant tout le reste, à la racine du site.', 'Une ligne de ce fichier n\'est pas pour les robots. Un texte qui finit par = se décode souvent.'],
+        ['Le site parle, mais pas à la personne qui regarde la page.', 'Les développeurs ont un endroit où un site écrit ce qu\'il fait. F12.', 'Ce que tu y trouves est presque lisible. César n\'est pas loin : décale de la moitié de l\'alphabet.'],
+        ['Certains gestes se transmettent depuis les années 80.', 'Aucun bouton ici : ça se passe au clavier, sur n\'importe quelle page.', 'Un code de triche de dix touches, né en 1986. Ce qu\'il affiche se lit à l\'envers.'],
+        ['Une image contient plus que ses pixels.', 'Va dans la galerie. Un portrait a l\'air coupable de quelque chose.', 'Un mugshot. Télécharge-le, puis exiftool ou strings.']
+      ],
+      notes: ['à faire avant la prod :', '- retirer les commentaires, ils sont tous encore là', '- vérifier ce qu\'on raconte aux robots'],
+      readme: ['Rien à voir ici.', 'Qui arrive jusque-là sait que le reste ne se voit pas sur la page.'],
+      log: ['03:12  GET /wp-admin  404', '03:12  GET /.env  404', '03:14  HEAD /  200  curl/8.5', '03:14  ...et il a lu chaque ligne de la réponse.'],
       nowPlaying: 'en lecture : ', paused: 'en pause.', noTrack: 'morceau introuvable : ', pseudoFlag: 'pseudo et flag sont deux commandes : pseudo <nom>, puis flag FLAG{…}',
       pseudoIs: 'pseudo : ', noPseudo: 'choisis d\'abord un pseudo : pseudo <nom>', badPseudo: '2 à 16 caractères : lettres, chiffres, _ ou -.',
       usageFlag: 'usage : flag FLAG{…}', bad: 'flag incorrect, continue de chercher.', slow: 'trop rapide, réessaie dans quelques secondes.', err: 'classement indisponible.',
@@ -235,6 +255,14 @@
       out.scrollTop = out.scrollHeight;
     };
     var name = function (p) { return en ? p.k[p.k.length - 1] : p.k[0]; };
+    // verrous du CTF : le nom ne dit pas où chercher, le second champ est un index de TT.levels
+    var LOCKS = [['shadow', 0], ['wire', 1], ['sentry', 1], ['backstage', 0], ['muscle', 1], ['pigment', 2]];
+    var keep = function (k, v) { try { if (v) localStorage.setItem(k, JSON.stringify(v)); return JSON.parse(localStorage.getItem(k)) || []; } catch (e) { return v || []; } };
+    // dossier caché, visible seulement avec ls -a
+    var FILES = { '.notes': TT.notes, '.vault/README': TT.readme, '.vault/session.log': TT.log }, vault = false;
+    var here = function () { return '~/amex' + (vault ? '/.vault' : location.pathname.replace(/(\/index)?(\.html)?\/?$/, '')); };
+    var prompt = function () { $('.tty-in .p', tty).textContent = here() + ' $'; $('.term-bar em', tty).textContent = 'amex@portfolio: ' + here(); };
+    var file = function (a) { a = (a || '').replace(/^(\.\/|~\/)/, ''); return FILES[(vault ? '.vault/' : '') + a] || FILES[a]; };
     var find = function (x) {
       x = (x || '').toLowerCase().replace(/\/+$/, '');
       if (x === '' || x === '~' || x === '..' || x === '/') return data.pages[0];
@@ -250,6 +278,7 @@
         .then(function (x) {
           if (x.s === 200) {
             found(x.d.found); nowTick();
+            var open = keep('ak-locks'); if (open.indexOf(x.d.flag) < 0) keep('ak-locks', open.concat(x.d.flag));
             print((x.d.already ? TT.already : TT.got) + x.d.found + ' / ' + x.d.total + TT.found, 'ok');
             if (x.d.found === x.d.total) print(TT.all, 'ok');
             window.dispatchEvent(new CustomEvent('ak-flag'));
@@ -266,15 +295,22 @@
     var CMDS = {
       help: function () { print(TT.help); },
       ls: function (a) {
-        a = (a || '').replace(/(^|\s)-\w+/g, '').trim(); // ls -l, ls -la : options ignorées
+        var all = /(^|\s)-\w*a/.test(a || ''); // ls -a montre les fichiers cachés ; les autres options sont ignorées
+        a = (a || '').replace(/(^|\s)-\w+/g, '').trim();
+        if (vault && (!a || a === '.') || a.replace(/\/$/, '') === '.vault') return print('README  session.log');
         var p = find(a);
         if (a && p === data.pages[1]) return print(data.projects.map(function (q) { return q.s; }).join('  '));
         if (a && !p) return print(TT.nofile + a, 'err');
-        print(data.pages.map(function (q) { return name(q) + '/'; }).join('  '));
+        print((all ? '.notes  .vault/  ' : '') + data.pages.map(function (q) { return name(q) + '/'; }).join('  '));
       },
-      cd: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); location.href = p.u; },
-      cat: function (a) { var p = find(a); if (!p) return print(TT.nofile + a, 'err'); print(p.d); },
-      pwd: function () { print('~/amex' + location.pathname.replace(/(\/index)?(\.html)?\/?$/, '')); },
+      cd: function (a) {
+        var dir = (a || '').replace(/\/$/, '');
+        if (dir === '.vault' || vault && dir === '.') { vault = true; return prompt(); }
+        if (vault && (!dir || dir === '..' || dir === '~')) { vault = false; return prompt(); }
+        var p = find(a); if (!p) return print(TT.nofile + a, 'err'); location.href = p.u;
+      },
+      cat: function (a) { var c = file(a); if (c) return print(c); var p = find(a); if (!p) return print(TT.nofile + a, 'err'); print(p.d); },
+      pwd: function () { print(here()); },
       tree: function () {
         var lines = ['~/amex'];
         data.pages.forEach(function (q, i, all) {
@@ -293,7 +329,23 @@
         a.href = data.gh; a.target = '_blank'; a.rel = 'noopener'; a.textContent = data.gh.replace(/^https:\/\//, '') + ' ↗';
         d.appendChild(a); out.appendChild(d); out.scrollTop = out.scrollHeight; window.open(data.gh, '_blank', 'noopener');
       },
-      ctf: function () { print(TT.ctf); },
+      ctf: function () {
+        var open = keep('ak-locks'), used = keep('ak-hints');
+        print(TT.vault + '  ' + found() + ' / ' + LOCKS.length, 'ok');
+        LOCKS.forEach(function (l, i) {
+          var on = open.indexOf(i) > -1;
+          print((i + 1) + '  ' + (l[0] + '          ').slice(0, 11) + (TT.levels[l[1]] + '        ').slice(0, 8) + (on ? '● ' + TT.opened : '○ ' + TT.shut) + (used[i] ? '  [' + used[i] + '/3]' : ''), on ? 'ok' : '');
+        });
+        print([TT.ctfFoot, TT.ctfTease], 'dim');
+      },
+      hint: function (a) {
+        var i = parseInt(a, 10) - 1, used = keep('ak-hints');
+        if (!(i >= 0 && i < LOCKS.length)) return print(TT.hintUse, 'err');
+        var done = used[i] === 3, n = done ? 3 : (used[i] || 0) + 1; // un palier de plus à chaque appel, les précédents restent affichés
+        used[i] = n; keep('ak-hints', used);
+        print(TT.hints[i].slice(0, n).map(function (h, k) { return '[' + (k + 1) + '/3] ' + h; }));
+        if (done) print(TT.hintEnd, 'dim');
+      },
       pseudo: function (a) {
         if (!a) return print(TT.pseudoIs + (pseudo() || '–'));
         if (/FLAG\{/i.test(a)) return print(TT.pseudoFlag, 'err');
@@ -334,7 +386,7 @@
       sudo: function () { print(TT.sudo, 'err'); }
     };
     var exec = function (line) {
-      print('$ ' + line.replace(/^(\s*login\s+).*/i, '$1••••'), 'cmd'); // le mot de passe ne reste pas affiché
+      print(here() + ' $ ' + line.replace(/^(\s*login\s+).*/i, '$1••••'), 'cmd'); // le mot de passe ne reste pas affiché
       var parts = line.trim().split(/\s+/), c = parts[0].toLowerCase();
       if (!c) return;
       if (/^flag\{/.test(c)) return flag(parts[0]); // un flag collé seul
@@ -344,7 +396,8 @@
     openTty = function () {
       if (bg) bg.classList.remove('open');
       tty.classList.add('open');
-      if (!out.childNodes.length) print(TT.hello);
+      if (!out.childNodes.length) { print(TT.hello[0], 'ok'); print(TT.hello[1], 'dim'); }
+      prompt();
       cli.focus();
     };
     // Tab : complète la commande, ou la page / le projet après cd, ls, cat ; Tab répété = candidat suivant
@@ -353,7 +406,7 @@
       if (!tab) {
         var m = /^(\s*)(\S*)(?:(\s+)(\S*))?$/.exec(cli.value); if (!m) return;
         var arg = m[3] != null, typed = arg ? m[4] : m[2], word = typed.toLowerCase(), base = cli.value.slice(0, cli.value.length - typed.length);
-        var pool = arg ? (/^(cd|ls|cat)$/i.test(m[2]) ? data.pages.map(function (q) { return name(q) + '/'; }).concat(data.projects.map(function (q) { return q.s; })) : []) : Object.keys(CMDS);
+        var pool = arg ? (/^(cd|ls|cat)$/i.test(m[2]) ? data.pages.map(function (q) { return name(q) + '/'; }).concat(data.projects.map(function (q) { return q.s; }), word[0] === '.' ? Object.keys(FILES).concat('.vault/') : []) : []) : Object.keys(CMDS);
         var hits = pool.filter(function (c) { return c.indexOf(word) === 0; });
         if (!hits.length) return;
         tab = { base: base, hits: hits, i: -1 };
