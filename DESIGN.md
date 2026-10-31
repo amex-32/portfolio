@@ -11,6 +11,7 @@ Console de contrôle inspirée de l'interface de Marathon (Bungie) et de Watch D
 | Accent unique | `#c6ff3d`, en aplat avec texte `#0e0e0e` |
 | Texte | `#e8e8e2`, secondaire `#8c8c8c`, décor seul `#6e6e6e` |
 | Alerte | aplat `#e0201b`, texte `#ff4438`, fond `#2a0606` |
+| Code Breaker, mal placé | `#ffb000`, `#5ce1ff` si l'accent est déjà ambre ; toujours doublé de pointillés |
 
 Le rouge `#e0201b` ne sert jamais pour du petit texte sur fond sombre (3,85:1). Thème clair : mode inversé sur `#e8e8e2`, accent texte `#3f6600`, aplats toujours lime.
 
@@ -31,6 +32,8 @@ Steppé : `steps()` ou coupe nette, jamais de rebond. Un écran se construit par
 | 5 Rectangle lime | clic sur une carte projet ; version courte pour palette, terminal, visionneuse |
 | 6 Radar | À propos |
 | 7 SYS BREACH | page 404 et commande `sudo` |
+
+La page 404 montre aussi une console 3D (`model/psp.glb`, three.js dans `js/psp3d.js`) : son écran affiche le vrai lecteur et ses boutons le pilotent. Les images des projets et de la galerie sont en noir et blanc, la couleur revient au survol.
 
 ## Mise en page
 

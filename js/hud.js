@@ -10,7 +10,7 @@
   var once = function (k) { try { if (sessionStorage.getItem(k)) return false; sessionStorage.setItem(k, '1'); } catch (e) {} return true; };
   var pick = function (s) { return s[Math.floor(Math.random() * s.length)]; };
   var every = function (fn, ms) { timers.push(setInterval(function () { if (!document.hidden) fn(); }, ms)); };
-  window.akHudStop = function () { timers.forEach(clearInterval); };
+  window.akHudStop = function () { timers.forEach(clearInterval); theme.disconnect(); };
   var el = function (tag, cls, html) { var n = document.createElement(tag); n.className = cls || ''; if (html) n.innerHTML = html; n.setAttribute('aria-hidden', 'true'); return n; };
   // glyphes en gros pixels : une chaîne par ligne
   var AK = ['0111000010001', '1000100010010', '1000100010100', '1111100011000', '1000100010100', '1000100010010', '1000100010001'];
@@ -21,6 +21,20 @@
     rows.forEach(function (row, y) { row.split('').forEach(function (c, x) { if (c === '1') r += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>'; }); });
     return '<svg class="' + (cls || '') + '" viewBox="0 0 ' + rows[0].length + ' ' + rows.length + '" fill="currentColor">' + r + '</svg>';
   }
+
+  // curseur à la couleur de l'accent : un SVG ne lit pas les variables CSS, on le redessine quand le thème change
+  function cursor() {
+    var c = getComputedStyle(root).getPropertyValue('--accent').trim();
+    var dot = function (s, r, hot, end) {
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + s + '" height="' + s + '"><circle cx="' + s / 2 + '" cy="' + s / 2 + '" r="' + r + '" fill="' + c + '" stroke="#0e0e0e" stroke-width="1.4"/></svg>';
+      return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '") ' + hot + ' ' + hot + ', ' + end;
+    };
+    root.style.setProperty('--cur', dot(12, 4.2, 6, 'auto'));
+    root.style.setProperty('--cur-on', dot(18, 6.6, 9, 'pointer'));
+  }
+  var theme = new MutationObserver(cursor);
+  theme.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-accent'] });
+  cursor();
 
   // ---------- texte qui se décode caractère par caractère ----------
   var NOISE = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789/+#';
@@ -201,26 +215,21 @@
     ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.className === 'err' && /sudoers/.test(n.textContent)) { $('.tty-x').click(); breach(); } }); });
   }).observe(out, { childList: true });
 
-  // ---------- navigation vivante : les lettres vacillent, cassent, se reconstruisent ----------
+  // ---------- navigation vivante : les lettres se décodent, cassent, se reconstruisent ----------
   function letters() {
     if (calm()) return;
     $$('.tabs a').forEach(function (a) {
-      var text = a.textContent, hits = 0, shake = 0;
+      var text = a.textContent, hits = 0;
       a.setAttribute('aria-label', text);
       a.innerHTML = text.split('').map(function (ch) { return '<span class="ch" aria-hidden="true">' + ch + '</span>'; }).join('');
       var chars = $$('.ch', a);
       a.addEventListener('pointerenter', function () {
         scramble(a, 220);
-        if (++hits >= 6) { // shortcut: seuil fixe de 6 survols, à rendre réglable si un autre élément reprend l'effet
-          hits = 0;
-          g.timeline().to(chars, { x: function () { return (Math.random() * 60 - 30) | 0; }, y: function () { return (Math.random() * 30 - 15) | 0; }, rotation: function () { return (Math.random() * 90 - 45) | 0; }, autoAlpha: 0, duration: .16, ease: 'steps(3)' })
-            .to(chars, { x: 0, y: 0, rotation: 0, autoAlpha: 1, duration: .1, ease: 'steps(3)', stagger: .025 });
-          return;
-        }
-        shake = setInterval(function () { chars.forEach(function (c) { g.set(c, { x: pick([-1, 0, 1]), y: pick([-1, 0, 0, 1]), rotation: pick([-6, 0, 0, 6]) }); }); }, 70);
-        timers.push(shake);
+        if (++hits < 6) return; // shortcut: seuil fixe de 6 survols, à rendre réglable si un autre élément reprend l'effet
+        hits = 0;
+        g.timeline().to(chars, { x: function () { return (Math.random() * 60 - 30) | 0; }, y: function () { return (Math.random() * 30 - 15) | 0; }, rotation: function () { return (Math.random() * 90 - 45) | 0; }, autoAlpha: 0, duration: .16, ease: 'steps(3)' })
+          .to(chars, { x: 0, y: 0, rotation: 0, autoAlpha: 1, duration: .1, ease: 'steps(3)', stagger: .025 });
       });
-      a.addEventListener('pointerleave', function () { clearInterval(shake); g.set(chars, { x: 0, y: 0, rotation: 0 }); });
     });
   }
 
@@ -315,8 +324,27 @@
     });
   }
 
+  // ---------- 404 : journal de la requête, console 3D qui pilote le lecteur ----------
+  function lost() {
+    var log = $('.nf-log'), stage = $('.psp-stage');
+    if (!log) return;
+    var at = calm() ? 0 : 1.5; // après SYS BREACH
+    ['GET ' + location.pathname, 'ROUTE ' + '.'.repeat(12) + ' <b>NOT FOUND</b>', '> ' + (en ? 'SIGNAL LOST, RETURN ADVISED' : 'SIGNAL PERDU, RETOUR CONSEILLÉ')].forEach(function (line, i) {
+      var d = document.createElement('div');
+      if (i) d.innerHTML = line; else d.textContent = line;
+      log.appendChild(d);
+      if (at) g.from(d, { autoAlpha: 0, duration: .01, delay: at + .3 + i * .24 });
+    });
+    var act = function (sel) { var real = $(sel); if (real) real.click(); };
+    $('.psp-keys').addEventListener('click', function (e) { var b = e.target.closest('[data-do]'); if (b) act(b.dataset.do); });
+    var go = function () { window.akPsp(stage, { url: 'model/psp.glb', at: at, calm: calm(), act: act }); };
+    if (window.akPsp) return go();
+    var s = document.createElement('script'); s.src = 'js/psp3d.js'; s.onload = go; document.body.appendChild(s); // 500 Ko : seulement ici
+  }
+
   document.body.appendChild(el('div', 'hud-logo', pixels(AK)));
-  tele(); rack(); radar(); letters(); hover(); halftone();
+  $$('.heat').forEach(function (h) { h.scrollLeft = h.scrollWidth; }); // sur téléphone : ouvert sur les semaines récentes
+  tele(); rack(); radar(); letters(); hover(); halftone(); lost();
   booted(gate);
   if ($('.nf')) booted(breach);
   boot();

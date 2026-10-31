@@ -1,5 +1,5 @@
 // Classements des mini-jeux : une base MySQL (TiDB Cloud) par jeu, un score par pseudo.
-// GET  /api/scores?game=snake            -> { rows: [{ pseudo, score }], best: "high" | "low" }
+// GET  /api/scores?game=memory           -> { rows: [{ pseudo, score }], best: "high" | "low" }
 // POST /api/scores {game, pseudo, score}  -> { ok: true, best: <meilleur score de ce pseudo> }
 const { db, ensure, tooFast } = require('./_lib.js');
 
@@ -7,7 +7,6 @@ const { db, ensure, tooFast } = require('./_lib.js');
 // min/max : bornes plausibles, rien d'autre n'est accepté.
 const GAMES = {
   '2048': { db: 'game_2048', best: 'high', min: 4, max: 3000000 },
-  snake: { db: 'game_snake', best: 'high', min: 1, max: 321 },
   memory: { db: 'game_memory', best: 'low', min: 8, max: 99 },
   code: { db: 'game_code', best: 'low', min: 1, max: 8 },
   cipher: { db: 'game_cipher', best: 'high', min: 1, max: 60 },

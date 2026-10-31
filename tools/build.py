@@ -101,7 +101,7 @@ def github_activity():
 
 
 def heatmap(lang, data):
-    """Grille unique : 1 colonne de libellés + 1 colonne par semaine, qui s'adapte à la largeur (pas de défilement)."""
+    """Grille unique : 1 colonne de libellés + 1 colonne par semaine, qui s'adapte à la largeur, et défile sur le côté sur téléphone."""
     t = UI[lang]
     days = data["contributions"]
     first = datetime.date.fromisoformat(days[0]["date"])
@@ -115,7 +115,7 @@ def heatmap(lang, data):
             '<i class="sq"></i>' if c is None else
             f'<i class="sq l{c["level"]}" title="{c["date"]} : {c["count"]}"></i>' for c in w + [None] * (7 - len(w)))
     legend = "".join(f'<i class="sq l{n}"></i>' for n in range(5))
-    return (f'<div class="heat" style="--weeks:{len(weeks)}">{out}</div>'
+    return (f'<div class="heat" tabindex="0" role="region" aria-label="{t["gh_total"]}" style="--weeks:{len(weeks)}">{out}</div>'
             f'<div class="heat-foot"><span>{data["total"]["lastYear"]} {t["gh_total"]}</span>'
             f'<span class="legend">{t["gh_less"]} {legend} {t["gh_more"]}</span></div>')
 
@@ -170,9 +170,6 @@ def games_panels(lang):
     t, u = GT[lang], UI[lang]
     return f'''
 <div class="gp" id="g-2048"><div class="cols"><div>{inner}</div><aside class="sb" data-game="2048"></aside></div></div>
-<div class="gp" id="g-snake"><div class="cols"><div class="play">
-  <div class="gbar"><span>{t["score"]} <b id="sn-score">0</b></span><span>{t["best"]} <b id="sn-best">0</b></span><span class="msg" id="sn-msg"></span><button class="xp-btn" id="sn-btn" type="button"></button></div>
-  <canvas id="snake" width="360" height="360"></canvas><p class="lead help" id="snake-help"></p></div><aside class="sb" data-game="snake"></aside></div></div>
 <div class="gp" id="g-memory"><div class="cols"><div class="play">
   <div class="gbar"><span>{t["moves"]} <b id="mem-moves">0</b></span><span>{t["time"]} <b id="mem-time">0s</b></span><span>{t["best"]} <b id="mem-best">–</b></span><span class="msg" id="mem-msg"></span><button class="xp-btn" id="mem-btn" type="button"></button></div>
   <div class="mem" id="mem"></div><p class="lead help" id="mem-help"></p></div><aside class="sb" data-game="memory"></aside></div></div>
@@ -487,7 +484,7 @@ def build_detail(lang, p):
 def build_game(lang):
     t, me = UI[lang], out_path(lang, "game")
     tabs = "".join(f'<button type="button" role="tab" data-g="{g}" aria-selected="false">{n}</button>'
-                   for g, n in zip(["g-2048", "g-snake", "g-memory", "g-code", "g-cipher", "g-ctf"], t["games_tabs"]))
+                   for g, n in zip(["g-2048", "g-memory", "g-code", "g-cipher", "g-ctf"], t["games_tabs"]))
     body = head_c(lang, me, t["nav"][2], t["games_title"], t["games_lead"]) + card(f'<div class="seg" role="tablist">{tabs}</div>{games_panels(lang)}')
     return chrome(lang, "game", None, me, f'{t["nav"][2]} — Alexandre K.', t["games_lead"], body,
                   '<script src="ROOT/js/game.js"></script><script src="ROOT/js/games.js"></script><script src="ROOT/js/scores.js"></script>')
@@ -588,14 +585,26 @@ def build_writeups(lang):
     return chrome(lang, "writeups", None, me, f'Write-ups — Alexandre K.', t["wu_lead"], body)
 
 
+def psp():
+    """Emplacement de la console 3D (js/psp3d.js) ; les touches HTML restent pour le clavier et le tactile."""
+    key = lambda act, label, txt: f'<button type="button" data-do="{act}" aria-label="{label}">{txt}</button>'
+    keys = (key(".pl-prev", "Morceau précédent", "◀") + key(".pl-play", "Lecture ou pause", "✕") + key(".pl-next", "Morceau suivant", "▶")
+            + key(".pl-like", "J'aime", "△") + key(".pl-shuffle", "Lecture aléatoire", "□"))
+    return (f'<div class="psp-wrap"><div class="psp-stage"></div><div class="psp-keys">{keys}</div>'
+            f'<p class="nf-hint">Glisser pour tourner · boutons de la console actifs</p>'
+            f'<p class="nf-credit">Modèle « <a href="https://sketchfab.com/3d-models/sony-psp-dca89d10ec304d0cab76837750df7761" target="_blank" rel="noopener">Sony PSP</a> » par Ilya Ostrovsky, '
+            f'<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, textures allégées.</p></div>')
+
+
 def build_404():
     t, me = UI["fr"], out_path("fr", "notfound")
     en = UI["en"]
-    body = card(f'<div class="head-c nf"><span class="label"><b>404</b> / not found</span><h1 class="page-title">{t["nf_title"]}</h1>'
+    body = card(f'<div class="nf"><div><span class="label"><b>404</b> / not found</span><span class="nf-code" data-t="404" aria-hidden="true">404</span><h1 class="page-title">{t["nf_title"]}</h1>'
+                f'<div class="nf-log" aria-hidden="true"></div>'
                 f'<p class="lead">{t["nf_lead"]}</p><p class="lead" lang="en">{en["nf_lead"]}</p>'
-                f'<div class="btn-row center"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
+                f'<div class="btn-row"><a class="btn btn-primary" href="index.html">{t["nf_home"]}</a>'
                 f'<a class="btn" href="en/index.html" lang="en">{en["nf_home"]}</a>'
-                f'<button class="btn" type="button" data-act="term">{t["nf_term"]}</button><a class="btn" href="jeux.html">{t["nf_game"]}</a></div></div>')
+                f'<button class="btn" type="button" data-act="term">{t["nf_term"]}</button><a class="btn" href="jeux.html">{t["nf_game"]}</a></div></div>{psp()}</div>')
     return chrome("fr", "notfound", None, me, "404 — Alexandre K.", t["nf_lead"], body)
 
 

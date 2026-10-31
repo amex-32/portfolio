@@ -61,11 +61,21 @@
   function fmt(s) { if (!isFinite(s)) return '–:––'; s = Math.floor(s || 0); return Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
   var known = function () { return isFinite(audio.duration) && audio.duration > 0; };
   function save() { try { sessionStorage.setItem('ak-player', JSON.stringify({ i: i, t: audio.currentTime || resumeAt, on: !audio.paused })); } catch (e) {} }
+  // le titre défile seulement s'il dépasse de la largeur fixe du lecteur
+  var now = $('.pl-now');
+  function fit() {
+    var s = now.firstChild;
+    if (!s) return;
+    now.classList.remove('roll');
+    if (s.offsetWidth <= now.clientWidth) return;
+    s.dataset.t = now.dataset.t; now.style.setProperty('--roll', Math.max(6, s.offsetWidth / 24) + 's'); now.classList.add('roll');
+  }
   function paint() {
     var on = !audio.paused, liked = isLiked(i);
     root.classList.toggle('playing', on);
     $$('.pl-play').forEach(function (b) { b.setAttribute('aria-label', on ? b.dataset.pause : b.dataset.play); });
-    $('.pl-title').textContent = $('.pl-now').textContent = tracks[i].t;
+    $('.pl-title').textContent = tracks[i].t;
+    if (now.dataset.t !== tracks[i].t) { now.dataset.t = tracks[i].t; now.innerHTML = '<span></span>'; now.firstChild.textContent = tracks[i].t; fit(); }
     list.forEach(function (b, k) { b.setAttribute('aria-current', k === i ? 'true' : 'false'); b.dataset.liked = isLiked(k) ? 'true' : 'false'; });
     likeBtn.setAttribute('aria-pressed', liked ? 'true' : 'false');
     likeBtn.setAttribute('aria-label', liked ? likeBtn.dataset.unlike : likeBtn.dataset.like);
@@ -130,6 +140,8 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') open(false); });
   $$('[data-act="music"]', document).forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); open(true); if (audio.paused) play(); }); });
   window.addEventListener('pagehide', save);
+  on(window, 'resize', fit);
+  if (document.fonts) document.fonts.ready.then(fit); // la largeur du titre change quand la police arrive
   if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('play', play);
     navigator.mediaSession.setActionHandler('pause', pause);
