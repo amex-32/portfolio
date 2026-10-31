@@ -129,7 +129,12 @@ h2 { font: 400 clamp(22px, 2.8vw, 33px)/1.15 var(--display); margin-bottom: 8px;
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; font: 500 12px var(--mono); color: var(--text2); text-transform: uppercase; letter-spacing: .08em; }
 .crumbs a { text-decoration: none; } .crumbs a:hover { color: var(--accent); }
 .head-c:has(> .avatar-box) { padding-right: 160px; }
-.avatar-box { position: absolute; top: 10px; right: 10px; bottom: 10px; width: 132px; background: var(--term-bg); border: 1px solid var(--line-hi); overflow: hidden; }
+.avatar-box { position: absolute; background: var(--term-bg); border: 1px solid var(--line-hi); overflow: hidden; }
+.head-c > .avatar-box { top: 10px; right: 10px; bottom: 10px; width: 132px; }
+.slide.intro > div:first-child { position: relative; container-type: inline-size; }
+/* centrée entre le texte (52ch, soit 459 px) et le terminal, 24 px après la colonne */
+.slide.intro .avatar-box { display: none; left: calc(50% + 142px); bottom: -56px; width: 200px; height: 212px; }
+@container (min-width: 680px) { .slide.intro .avatar-box { display: block; } }
 .avatar-box canvas { display: block; image-rendering: pixelated; }
 .head-c > .hud-halftone { position: absolute; right: 0; top: 0; height: 100%; width: min(38%, 420px); pointer-events: none; }
 

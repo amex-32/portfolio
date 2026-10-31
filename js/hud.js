@@ -340,10 +340,10 @@
     var go = function () { window.akPsp(stage, { url: 'model/psp.glb', at: at, calm: calm(), act: act }); };
     three('js/psp3d.js', go);
   }
-  // À propos : l'avatar 3D, dans la boîte de l'en-tête
+  // accueil et À propos : l'avatar 3D, s'il a la place de s'afficher
   function avatar() {
     var box = $('.avatar-box');
-    if (box) three(box.dataset.js, function () { window.akAvatar(box, { url: box.dataset.model, calm: calm() }); });
+    if (box && box.offsetParent) three(box.dataset.js, function () { window.akAvatar(box, { url: box.dataset.model, calm: calm() }); });
   }
   function three(src, go) { // 500 Ko : seulement sur les pages qui en ont besoin
     if (window.akPsp) return go();

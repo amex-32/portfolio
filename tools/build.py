@@ -380,6 +380,11 @@ def card(inner, cls="", extra=""):
     return f'<section class="card fadein {cls}"{extra}>{inner}</section>'
 
 
+def avatar_box(lang, me):
+    """Emplacement de l'avatar 3D (src/avatar3d.js)."""
+    return f'<div class="avatar-box" role="img" aria-label="{UI[lang]["about_avatar"]}" data-model="{rel(me, "model/avatar.glb")}" data-js="{rel(me, "js/psp3d.js")}"></div>'
+
+
 def head_c(lang, me, crumb_last, title, lead, extra=""):
     t = UI[lang]
     return (f'<div class="head-c"><div class="crumbs"><a href="{rel(me, out_path(lang, "home"))}">{t["crumb_home"]}</a><span>/</span><span>{crumb_last}</span></div>'
@@ -396,7 +401,7 @@ def build_home(lang):
         lines += f'<span class="line" style="animation-delay:{.3 + n * .35:.2f}s">{txt}</span>\n'
     intro = f'''<div class="slide intro on">
       <div><span class="label"><b>00</b> / {t["welcome"]}</span><h1>{t["h1"]}</h1><p>{t["bio"]}</p>
-        <div class="btn-row"><a class="btn btn-primary" href="{r("list")}">{t["cta_projects"]}</a><a class="btn" href="{r("contact")}">{t["cta_contact"]}</a></div></div>
+        <div class="btn-row"><a class="btn btn-primary" href="{r("list")}">{t["cta_projects"]}</a><a class="btn" href="{r("contact")}">{t["cta_contact"]}</a></div>{avatar_box(lang, me)}</div>
       <div class="term hero-tty"><div class="term-bar"><span></span><span></span><span></span><em>amex@kali: ~</em></div><div class="tty-out" aria-live="polite"><pre>{lines}</pre></div><label class="tty-in"><span class="p">$</span><input type="text" placeholder="help" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal"></label></div>
     </div>'''
     # carrousel : présentation, galerie, puis les projets choisis dans HOME_PROJECTS (les autres restent sur la page Projets)
@@ -512,8 +517,7 @@ def build_about(lang, data):
                f'<li><span>{t["now_top"]}</span><b data-now="top">…</b></li>'
                f'<li><span>GitHub</span><b>{last30} <small>{t["now_gh"]}</small></b></li>'
                f'<li><span>{t["now_ctf"]}</span><b>{NOW_FLAGS} / {len(CTF_FLAGS)}</b></li></ul>', "now-card")
-    avatar = f'<div class="avatar-box" role="img" aria-label="{t["about_avatar"]}" data-model="{rel(me, "model/avatar.glb")}" data-js="{rel(me, "js/psp3d.js")}"></div>'
-    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"], avatar) + f'<div class="about-grid">{left}<div class="stack">{now}{ext}{gh}{setup}</div></div>'
+    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"], avatar_box(lang, me)) + f'<div class="about-grid">{left}<div class="stack">{now}{ext}{gh}{setup}</div></div>'
     return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
 
 

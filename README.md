@@ -14,7 +14,7 @@ python3 -m http.server   # puis http://localhost:8000
 - `tools/build.py` : gabarits des pages, plus `404.html`, `robots.txt`, `sitemap.xml` et `.well-known/security.txt` ; `tools/content.py` : textes FR/EN, projets, write-ups, icônes
 - `style.css`, `js/site.js` : styles et interactions (palette ⌘K, terminal `²` ou `` ` ``, carrousel, thème, accent)
 - `src/psp3d.js` : console 3D de la page 404. `js/psp3d.js` en est le bundle : `NODE_PATH=<dossier avec three@0.170.0> esbuild src/psp3d.js --bundle --minify --format=iife --outfile=js/psp3d.js`. `model/psp.glb` vient de `tools/psp_model.py` (modèle d'Ilya Ostrovsky, CC BY 4.0)
-- `src/avatar3d.js` : avatar de la page À propos, inclus dans le même bundle. `model/avatar.glb` vient aussi de `tools/psp_model.py` (second argument : le fichier de sortie)
+- `src/avatar3d.js` : avatar de l'accueil et de la page À propos, inclus dans le même bundle. `model/avatar.glb` vient aussi de `tools/psp_model.py` (second argument : le fichier de sortie)
 - `tools/serve.py` : serveur local, renvoie `404.html` comme Vercel
 - `src/game.*` : 2048 (`js/game.js` est généré) ; `js/games.js` : Memory, Code Breaker, César
 - `src/trees.json` : arborescences affichées sur les pages projet

@@ -1,5 +1,5 @@
-// Avatar de la page À propos : modèle model/avatar.glb, tourne sur lui-même, rendu en deux tons dans la couleur d'accent.
-// Inclus dans js/psp3d.js (voir README) ; chargé par js/hud.js sur cette page uniquement.
+// Avatar de l'accueil et de la page À propos : modèle model/avatar.glb, tourne sur lui-même, rendu en deux tons dans la couleur d'accent.
+// Inclus dans js/psp3d.js (voir README) ; chargé par js/hud.js sur ces pages uniquement.
 import { AmbientLight, Box3, Color, DirectionalLight, Group, MeshLambertMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
@@ -56,7 +56,7 @@ window.akAvatar = function (box, o) {
 
   function frame(ms) {
     if (!gl.domElement.isConnected) { gl.setAnimationLoop(null); gl.dispose(); return; } // navigation douce : la page a changé
-    if (!seen) return;
+    if (!seen || box.closest('.slide:not(.on)')) return; // hors écran ou diapo du carrousel masquée
     if (++frames % 40 === 0) accent(); // le thème peut changer
     pivot.rotation.y = ms * .0009;
     gl.render(scene, camera);
