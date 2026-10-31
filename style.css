@@ -128,6 +128,9 @@ h2 { font: 400 clamp(22px, 2.8vw, 33px)/1.15 var(--display); margin-bottom: 8px;
 .page-title em, h2 em, h1 em { font-style: normal; color: var(--accent); }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; font: 500 12px var(--mono); color: var(--text2); text-transform: uppercase; letter-spacing: .08em; }
 .crumbs a { text-decoration: none; } .crumbs a:hover { color: var(--accent); }
+.head-c:has(> .avatar-box) { padding-right: 160px; }
+.avatar-box { position: absolute; top: 10px; right: 10px; bottom: 10px; width: 132px; background: var(--term-bg); border: 1px solid var(--line-hi); overflow: hidden; }
+.avatar-box canvas { display: block; image-rendering: pixelated; }
 .head-c > .hud-halftone { position: absolute; right: 0; top: 0; height: 100%; width: min(38%, 420px); pointer-events: none; }
 
 /* bouton : gris ou lime, rien entre les deux */

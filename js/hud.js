@@ -312,7 +312,7 @@
   function halftone() {
     if (innerWidth < 760) return;
     $$('.head-c').forEach(function (h) {
-      if (h.closest('.card')) return;
+      if (h.closest('.card') || $('.avatar-box', h)) return;
       var cv = el('canvas', 'hud-halftone'), w = cv.width = 420, H = cv.height = 150, c = cv.getContext('2d'), seed = hash(h.textContent);
       c.fillStyle = getComputedStyle(root).getPropertyValue('--accent').trim();
       for (var y = 0; y < H; y += 6) for (var x = 0; x < w; x += 6) {
@@ -338,13 +338,21 @@
     var act = function (sel) { var real = $(sel); if (real) real.click(); };
     $('.psp-keys').addEventListener('click', function (e) { var b = e.target.closest('[data-do]'); if (b) act(b.dataset.do); });
     var go = function () { window.akPsp(stage, { url: 'model/psp.glb', at: at, calm: calm(), act: act }); };
+    three('js/psp3d.js', go);
+  }
+  // À propos : l'avatar 3D, dans la boîte de l'en-tête
+  function avatar() {
+    var box = $('.avatar-box');
+    if (box) three(box.dataset.js, function () { window.akAvatar(box, { url: box.dataset.model, calm: calm() }); });
+  }
+  function three(src, go) { // 500 Ko : seulement sur les pages qui en ont besoin
     if (window.akPsp) return go();
-    var s = document.createElement('script'); s.src = 'js/psp3d.js'; s.onload = go; document.body.appendChild(s); // 500 Ko : seulement ici
+    var s = document.createElement('script'); s.src = src; s.onload = go; document.body.appendChild(s);
   }
 
   document.body.appendChild(el('div', 'hud-logo', pixels(AK)));
   $$('.heat').forEach(function (h) { h.scrollLeft = h.scrollWidth; }); // sur téléphone : ouvert sur les semaines récentes
-  tele(); rack(); radar(); letters(); hover(); halftone(); lost();
+  tele(); rack(); radar(); letters(); hover(); halftone(); lost(); avatar();
   booted(gate);
   if ($('.nf')) booted(breach);
   boot();

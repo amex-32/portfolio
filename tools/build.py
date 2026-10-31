@@ -512,7 +512,8 @@ def build_about(lang, data):
                f'<li><span>{t["now_top"]}</span><b data-now="top">…</b></li>'
                f'<li><span>GitHub</span><b>{last30} <small>{t["now_gh"]}</small></b></li>'
                f'<li><span>{t["now_ctf"]}</span><b>{NOW_FLAGS} / {len(CTF_FLAGS)}</b></li></ul>', "now-card")
-    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"]) + f'<div class="about-grid">{left}<div class="stack">{now}{ext}{gh}{setup}</div></div>'
+    avatar = f'<div class="avatar-box" role="img" aria-label="{t["about_avatar"]}" data-model="{rel(me, "model/avatar.glb")}" data-js="{rel(me, "js/psp3d.js")}"></div>'
+    body = head_c(lang, me, t["nav"][3], t["about_title"], t["about_lead"], avatar) + f'<div class="about-grid">{left}<div class="stack">{now}{ext}{gh}{setup}</div></div>'
     return chrome(lang, "about", None, me, f'{t["nav"][3]} — Alexandre K.', t["about_lead"], body)
 
 

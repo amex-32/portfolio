@@ -1,5 +1,5 @@
-"""Allège le modèle PSP pour le web : textures 1024 px en WebP, sol retiré. Une seule passe, résultat versionné dans model/psp.glb.
-Usage : python tools/psp_model.py chemin/vers/sony_psp.glb"""
+"""Allège un modèle pour le web : textures 1024 px en WebP, sol retiré. Une seule passe, résultat versionné dans model/.
+Usage : python tools/psp_model.py chemin/vers/modele.glb [model/sortie.glb]"""
 import io
 import json
 import struct
@@ -8,7 +8,7 @@ from pathlib import Path
 
 from PIL import Image
 
-src, out = Path(sys.argv[1]), Path(__file__).parent.parent / "model/psp.glb"
+src, out = Path(sys.argv[1]), Path(__file__).parent.parent / (sys.argv[2] if len(sys.argv) > 2 else "model/psp.glb")
 data = src.read_bytes()
 n = struct.unpack("<I", data[12:16])[0]
 gltf = json.loads(data[20:20 + n])

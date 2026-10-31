@@ -3,6 +3,7 @@
 import { Box3, CanvasTexture, Group, MeshBasicMaterial, PerspectiveCamera, PMREMGenerator, DirectionalLight, Quaternion, Raycaster, Scene, SRGBColorSpace, Vector2, Vector3, WebGLRenderer, ACESFilmicToneMapping } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import './avatar3d.js';
 
 // boutons du modèle : 1-4 croix, 5-8 triangle, rond, croix, carré
 const KEYS = { button2: '.pl-next', button4: '.pl-prev', button5: '.pl-like', button6: '.pl-next', button7: '.pl-play', button8: '.pl-shuffle' };
