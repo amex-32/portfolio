@@ -196,7 +196,7 @@ def poster(p, vt=False):
 
 def proj_card(lang, p, me, vt=False):
     d, t = p[lang], UI[lang]
-    return (f'<a class="proj" href="{rel(me, out_path(lang, "detail", p["slug"]))}" data-kind="{p["kind"]}">{poster(p, vt)}'
+    return (f'<a class="proj" href="{rel(me, out_path(lang, "detail", p["slug"]))}" data-kind="{p["kind"]}" data-tech="{"|".join(p["tech"])}">{poster(p, vt)}'
             f'<span class="pill">{t["kinds"][p["kind"]]}</span>'
             f'<div class="meta"><h3>{d["title"]}</h3><p>{d["short"]}</p></div><span class="go">{ico("right", 20)}</span></a>')
 
@@ -256,8 +256,9 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
     }
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{abs_url(out_path(l, lp, slug))}">' for l in ("fr", "en"))
     alts += f'<link rel="alternate" hreflang="x-default" href="{abs_url(out_path("fr", lp, slug))}">'
-    boot = ("<script>try{var d=document.documentElement,t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
-            "d.dataset.theme=t;var a=localStorage.getItem('accent');if(a)d.dataset.accent=a}catch(e){}</script>")
+    boot = ("<script>try{var d=document.documentElement,t=localStorage.getItem('theme')||'dark';"
+            "d.dataset.theme=t;var a=localStorage.getItem('accent');if(a)d.dataset.accent=a;"
+            "if(!sessionStorage.getItem('ak-boot')&&localStorage.getItem('ak-motion')!=='off'&&!matchMedia('(prefers-reduced-motion: reduce)').matches){sessionStorage.setItem('ak-boot','1');d.classList.add('booting')}}catch(e){}</script>")
     plain = lambda s: esc(re.sub(r"<[^>]+>", "", s)).replace('"', "&quot;")
     if page == "notfound":
         # servie à n'importe quelle adresse : <base> pour que les liens relatifs partent de la racine
@@ -291,7 +292,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content="{desc}">
-  <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#8fb4d8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141414">
   {seo}
   {icons}
   {FONTS.format(root=root)}
@@ -299,6 +300,7 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
   {boot}{flag}
 </head>
 <body>
+<div class="boot" aria-hidden="true"></div>
 <button class="tty-fab" type="button" data-act="term" aria-label="{t["ctf_open"]}" title="{t["ctf_open"]}">{ico("terminal", 20)}</button>
 <div class="urlbar">
   <button class="round" type="button" data-act="back" aria-label="{t["back"]}">{ico("left", 18)}</button>
@@ -344,6 +346,8 @@ def chrome(lang, page, slug, me, title, desc, body, extra_js=""):
 <script type="application/json" id="cmd-data">{json.dumps(cmd, ensure_ascii=False).replace("</", "<\\/")}</script>
 <script src="{root}js/site.js"></script>
 {extra_js.replace("ROOT/", root)}
+<script src="{root}js/gsap.min.js"></script>
+<script src="{root}js/hud.js"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

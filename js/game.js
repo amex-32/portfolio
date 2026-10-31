@@ -23,21 +23,21 @@ function esc(s){ return String(s).replace(/[&<>'"]/g,function(c){return {"&":"&a
 
     // ---- Tile colors ----
     const COLORS = {
-      2:    {bg:'#f0f8ff',color:'#1a3050'},
-      4:    {bg:'#d0e8ff',color:'#1a3050'},
-      8:    {bg:'#88c8ff',color:'#0a2040'},
-      16:   {bg:'#6699ff',color:'#fff'},
-      32:   {bg:'#ffcc66',color:'#5a3000'},
-      64:   {bg:'#ff9944',color:'#fff'},
-      128:  {bg:'#ff7777',color:'#fff'},
-      256:  {bg:'#ff55aa',color:'#fff'},
-      512:  {bg:'#cc44ff',color:'#fff'},
-      1024: {bg:'#7744ff',color:'#fff'},
-      2048: {bg:'#ffd700',color:'#3a2000'},
+      2:    {bg:'#2e2e2e',color:'#e8e8e2'},
+      4:    {bg:'#3a3a3a',color:'#e8e8e2'},
+      8:    {bg:'#4a4a4a',color:'#e8e8e2'},
+      16:   {bg:'#5a5a5a',color:'#fff'},
+      32:   {bg:'#8c8c8c',color:'#0e0e0e'},
+      64:   {bg:'#b8b8b0',color:'#0e0e0e'},
+      128:  {bg:'#e8e8e2',color:'#0e0e0e'},
+      256:  {bg:'#dcf58f',color:'#0e0e0e'},
+      512:  {bg:'#d3fa6a',color:'#0e0e0e'},
+      1024: {bg:'#cdfd52',color:'#0e0e0e'},
+      2048: {bg:'#c6ff3d',color:'#0e0e0e'},
     };
 
     function tileStyle(v){
-      const c = COLORS[v] || {bg:'#4488ff',color:'#fff'};
+      const c = COLORS[v] || {bg:'#c6ff3d',color:'#0e0e0e'};
       return `background:${c.bg};color:${c.color};`;
     }
 

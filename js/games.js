@@ -71,9 +71,9 @@ if (typeof document !== 'undefined') (function () {
       g.clearRect(0, 0, cv.width, cv.height);
       g.fillStyle = 'rgba(255,255,255,.05)';
       for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) if ((i + j) % 2) g.fillRect(i * S, j * S, S, S);
-      g.fillStyle = '#ff6b6b'; g.beginPath(); g.arc(food.x * S + S / 2, food.y * S + S / 2, S / 2 - 3, 0, 7); g.fill();
+      g.fillStyle = '#ff4438'; g.fillRect(food.x * S + 3, food.y * S + 3, S - 6, S - 6);
       g.fillStyle = accent();
-      body.forEach(function (c, i) { g.globalAlpha = i ? .85 : 1; g.beginPath(); g.roundRect ? g.roundRect(c.x * S + 1, c.y * S + 1, S - 2, S - 2, 6) : g.rect(c.x * S + 1, c.y * S + 1, S - 2, S - 2); g.fill(); });
+      body.forEach(function (c, i) { g.globalAlpha = i ? .85 : 1; g.fillRect(c.x * S + 1, c.y * S + 1, S - 2, S - 2); });
       g.globalAlpha = 1;
     }
     function tick() {
