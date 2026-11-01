@@ -3,8 +3,8 @@
 import { AmbientLight, Box3, DirectionalLight, Group, MeshLambertMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer, WebGLRenderTarget } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-const CHARS = '.:-=+*#%@';
-const CELL_W = 3.6, CELL_H = 6; // taille d'un caractère : voir .avatar-box pre
+const CHARS = '.,:;-~=+*oxX%#&@';
+const CELL_W = 2.4, CELL_H = 4; // taille d'un caractère : voir .avatar-box pre
 
 window.akAvatar = function (box, o) {
   let gl;
@@ -53,11 +53,17 @@ window.akAvatar = function (box, o) {
     pivot.rotation.y = o.calm ? -.4 : ms * .0009;
     gl.render(scene, camera);
     gl.readRenderTargetPixels(target, 0, 0, cols, rows, pixels);
-    let text = '';
+    const light = (i) => Math.sqrt((pixels[i] * .299 + pixels[i + 1] * .587 + pixels[i + 2] * .114) / 255); // la cible de rendu reste en valeurs linéaires
+    let low = 1, high = 0, text = '';
+    for (let i = 0; i < pixels.length; i += 4) {
+      if (pixels[i + 3] < 128) continue;
+      const l = light(i); low = Math.min(low, l); high = Math.max(high, l);
+    }
     for (let y = rows - 1; y >= 0; y--) { // WebGL lit de bas en haut
       for (let x = 0; x < cols; x++) {
-        const i = (y * cols + x) * 4, l = Math.sqrt((pixels[i] * .299 + pixels[i + 1] * .587 + pixels[i + 2] * .114) / 255); // la cible de rendu reste en valeurs linéaires
-        text += pixels[i + 3] < 128 ? ' ' : CHARS[Math.min(CHARS.length - 1, Math.floor(l * CHARS.length))];
+        const i = (y * cols + x) * 4;
+        // étalé sur toute la rampe, sinon le personnage n'utilise que quelques caractères
+        text += pixels[i + 3] < 128 ? ' ' : CHARS[Math.min(CHARS.length - 1, Math.floor((light(i) - low) / (high - low || 1) * CHARS.length))];
       }
       text += '\n';
     }
