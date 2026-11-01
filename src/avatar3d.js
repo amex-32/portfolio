@@ -1,34 +1,29 @@
-// Avatar de l'accueil et de la page À propos : modèle model/avatar.glb, tourne sur lui-même, rendu en deux tons dans la couleur d'accent.
+// Avatar de l'accueil et de la page À propos : modèle model/avatar.glb, tourne sur lui-même, rendu en caractères ASCII dans la couleur d'accent.
 // Inclus dans js/psp3d.js (voir README) ; chargé par js/hud.js sur ces pages uniquement.
-import { AmbientLight, Box3, Color, DirectionalLight, Group, MeshLambertMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import { AmbientLight, Box3, DirectionalLight, Group, MeshLambertMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer, WebGLRenderTarget } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-// posté après la conversion sRGB : luminance en quatre paliers tramés, contour dans l'accent, lignes de balayage
-const TONE = `
-  float l = dot(gl_FragColor.rgb, vec3(.299, .587, .114));
-  float grain = fract(52.9829189 * fract(dot(floor(gl_FragCoord.xy), vec2(.06711056, .00583715))));
-  float rim = pow(1. - abs(dot(normalize(normal), normalize(vViewPosition))), 3.);
-  vec3 tone = mix(vec3(.05), uFill, floor(l * 4. + grain) / 4.);
-  gl_FragColor.rgb = mix(tone, uFill, step(.5, rim)) * (mod(gl_FragCoord.y, 3.) < 1. ? .78 : 1.);
-`;
+const CHARS = '.:-=+*#%@';
+const CELL_W = 3.6, CELL_H = 6; // taille d'un caractère : voir .avatar-box pre
 
 window.akAvatar = function (box, o) {
   let gl;
   try { gl = new WebGLRenderer({ antialias: false, alpha: true }); } catch (e) { box.hidden = true; return; }
-  gl.setPixelRatio(1); // pixels nets d'un point CSS, quelle que soit la densité de l'écran
   const scene = new Scene(), camera = new PerspectiveCamera(20, 1, .1, 50), pivot = new Group();
-  const uFill = { value: new Color() };
-  const accent = () => uFill.value.set(getComputedStyle(document.documentElement).getPropertyValue('--fill').trim()).convertLinearToSRGB();
+  const target = new WebGLRenderTarget(1, 1), pre = document.createElement('pre');
   const sun = new DirectionalLight('#fff', 2.6); sun.position.set(2, 3, 4);
   scene.add(new AmbientLight('#fff', 1.1), sun, pivot);
-  accent();
 
-  let view = 1, frames = 0, seen = true;
+  let view = 1, frames = 0, seen = true, cols = 1, rows = 1, pixels;
   const fit = () => {
     const w = box.clientWidth, h = box.clientHeight;
-    gl.setSize(w, h); camera.aspect = w / h;
+    if (!w || !h) return; // box masquée par le CSS
+    cols = Math.ceil(w / CELL_W); rows = Math.ceil(h / CELL_H);
+    target.setSize(cols, rows); pixels = new Uint8Array(cols * rows * 4);
+    camera.aspect = w / h;
     camera.position.z = view / 2 / Math.tan(camera.fov * Math.PI / 360) / Math.min(1, camera.aspect);
     camera.updateProjectionMatrix();
+    frames = 0;
   };
   new ResizeObserver(fit).observe(box); fit();
 
@@ -39,26 +34,33 @@ window.akAvatar = function (box, o) {
       if (m.name.startsWith('carryable')) return m.removeFromParent(); // le jouet n'est pas rattaché à la main : il flotte à la taille
       const was = m.material;
       m.material = new MeshLambertMaterial({ map: was.map, color: was.color, vertexColors: !!m.geometry.attributes.color });
-      m.material.onBeforeCompile = (s) => {
-        s.uniforms.uFill = uFill;
-        s.fragmentShader = 'uniform vec3 uFill;\n' + s.fragmentShader.replace('#include <dithering_fragment>', TONE);
-      };
     });
     pivot.add(g.scene);
     const size = new Box3().setFromObject(g.scene, true), mid = size.getCenter(new Vector3());
     g.scene.position.sub(mid);
     view = (size.max.y - size.min.y) * 1.08; fit();
-    box.appendChild(gl.domElement);
-    if (o.calm) { pivot.rotation.y = -.4; return gl.render(scene, camera); }
+    box.appendChild(pre);
+    gl.setRenderTarget(target);
     gl.setAnimationLoop(frame);
     new IntersectionObserver((e) => { seen = e[0].isIntersecting; }).observe(box);
   }, undefined, () => { box.hidden = true; });
 
   function frame(ms) {
-    if (!gl.domElement.isConnected) { gl.setAnimationLoop(null); gl.dispose(); return; } // navigation douce : la page a changé
+    if (!pre.isConnected) { gl.setAnimationLoop(null); target.dispose(); gl.dispose(); return; } // navigation douce : la page a changé
     if (!seen || box.closest('.slide:not(.on)')) return; // hors écran ou diapo du carrousel masquée
-    if (++frames % 40 === 0) accent(); // le thème peut changer
-    pivot.rotation.y = ms * .0009;
+    if (o.calm && frames) return; // image fixe
+    frames++;
+    pivot.rotation.y = o.calm ? -.4 : ms * .0009;
     gl.render(scene, camera);
+    gl.readRenderTargetPixels(target, 0, 0, cols, rows, pixels);
+    let text = '';
+    for (let y = rows - 1; y >= 0; y--) { // WebGL lit de bas en haut
+      for (let x = 0; x < cols; x++) {
+        const i = (y * cols + x) * 4, l = Math.sqrt((pixels[i] * .299 + pixels[i + 1] * .587 + pixels[i + 2] * .114) / 255); // la cible de rendu reste en valeurs linéaires
+        text += pixels[i + 3] < 128 ? ' ' : CHARS[Math.min(CHARS.length - 1, Math.floor(l * CHARS.length))];
+      }
+      text += '\n';
+    }
+    pre.textContent = text;
   }
 };

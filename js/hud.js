@@ -343,7 +343,14 @@
   // accueil et À propos : l'avatar 3D, s'il a la place de s'afficher
   function avatar() {
     var box = $('.avatar-box');
-    if (box && box.offsetParent) three(box.dataset.js, function () { window.akAvatar(box, { url: box.dataset.model, calm: calm() }); });
+    if (!box) return;
+    var show = function () { // masquée tant que la fenêtre est trop petite : chargée quand elle apparaît
+      if (!box.offsetParent) return;
+      wait.disconnect();
+      three(box.dataset.js, function () { window.akAvatar(box, { url: box.dataset.model, calm: calm() }); });
+    };
+    var wait = new ResizeObserver(show);
+    wait.observe(box); show(); // un onglet en arrière-plan ne déclenche pas ResizeObserver
   }
   function three(src, go) { // 500 Ko : seulement sur les pages qui en ont besoin
     if (window.akPsp) return go();

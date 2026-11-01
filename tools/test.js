@@ -44,6 +44,8 @@ assert(read('js/site.js').includes(rot13(flags[3])), 'flag 4 : ROT13 dans la con
 assert(read('js/site.js').includes(flags[4].split('').reverse().join('')), 'flag 5 : code Konami');
 assert(fs.readFileSync(path.join(root, 'img/gallery/clive-mugshot.jpg')).includes(flags[5]), 'flag 6 : commentaire JPEG du mugshot');
 assert.strictEqual(flags.length, 6);
+// Avatar : le modèle est là et le bundle a été reconstruit depuis src/avatar3d.js.
+assert(fs.existsSync(path.join(root, 'model/avatar.glb')) && read('js/psp3d.js').includes('akAvatar'), 'avatar : modèle ou bundle absent');
 const ignored = read('.vercelignore').split('\n').map((l) => l.trim().replace(/\/$/, '')).filter((l) => l && !l.startsWith('#'));
 const deployed = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((e) => {
   const rel = path.posix.join(dir, e.name);
