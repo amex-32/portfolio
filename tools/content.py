@@ -524,7 +524,8 @@ HOME_GALLERY = ("clive-neon", "flame-radio", "knight")
 # Masterisés par un script ffmpeg ponctuel : passe-haut 30 Hz, compression 2:1, -14 LUFS, limiteur -1,5 dB, MP3 192 kbps.
 TRACKS = [("jolagreen-type-beat", "Jolagreen Type Beat"), ("post-punk", "Post Punk"), ("trap-star", "Trap Star"), ("hip-hop", "Hip Hop"),
           ("ivory", "Ivory"), ("night-shift", "Night Shift"), ("marseille", "Marseille 01.06.2026"), ("batman", "Batman"),
-          ("lost-and-found", "Lost & Found"), ("low-tide", "Low Tide"), ("spiderman-ost", "Spider-Man OST")]
+          ("lost-and-found", "Lost & Found"), ("low-tide", "Low Tide"), ("spiderman-ost", "Spider-Man OST"),
+          ("limping-clockwork", "Limping Clockwork"), ("attic-riot", "Attic Riot"), ("solder-dreams", "Solder Dreams"), ("static-after-midnight", "Static After Midnight")]
 
 # Œuvres de la galerie, dans img/gallery/ : <slug>.webp (ou .jpg) et <slug>-thumb.webp. Date au format AAAA-MM, "" si inconnue.
 GALLERY = [
