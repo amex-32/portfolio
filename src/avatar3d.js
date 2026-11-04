@@ -3,8 +3,8 @@
 import { AmbientLight, Box3, DirectionalLight, Group, MeshLambertMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer, WebGLRenderTarget } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-const CHARS = '.,:;-~=+*oxX%#&@';
-const CELL_W = 2.4, CELL_H = 4; // taille d'un caractère : voir .avatar-box pre
+const CHARS = '.\'`^",:;Il!i~+_-?]1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$';
+const CELL_W = 1.8, CELL_H = 3; // taille d'un caractère : voir .avatar-box pre
 
 window.akAvatar = function (box, o) {
   let gl;
