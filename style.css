@@ -793,6 +793,7 @@ html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="
   a, button, summary, select, label[for], .proj, .gal-item, .gal-album, [role="button"] { cursor: var(--cur-on, pointer) !important; }
   button[disabled], [aria-disabled="true"] { cursor: var(--cur, default) !important; }
   input, textarea { cursor: text !important; }
+  input[type="range"] { cursor: var(--cur-on, pointer) !important; }
 }
 
 /* petites classes utilitaires (remplacent les styles en ligne des gabarits) */
